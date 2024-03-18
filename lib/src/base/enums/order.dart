@@ -1,0 +1,4 @@
+enum WooSortOrder {
+  asc,
+  desc;
+}
