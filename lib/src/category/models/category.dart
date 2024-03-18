@@ -1,23 +1,37 @@
 import 'package:faker/faker.dart';
 
+import '../enums/category_display.dart';
 import 'category_image.dart';
 import 'category_links.dart';
 
 class WooProductCategory {
-  /// Category ID.
+  /// Unique identifier for the resource.
   int? id;
 
   /// Category name.
   String? name;
 
-  /// Category slug.
+  /// An alphanumeric identifier for the resource unique to its type.
   String? slug;
+
+  /// The ID for the parent of the resource.
   int? parent;
+
+  /// HTML description of the resource.
   String? description;
-  String? display;
+
+  /// Category archive display type. Options: default, products, subcategories and both. Default is default.
+  WooCategoryDisplay? display;
+
+  /// Image data.
   WooProductCategoryImage? image;
+
+  /// Menu order, used to custom sort the resource.
   int? menuOrder;
+
+  /// Number of published products for the resource.
   int? count;
+
   WooProductCategoryLinks? links;
 
   WooProductCategory(
@@ -73,7 +87,13 @@ class WooProductCategory {
 
   factory WooProductCategory.fake() => WooProductCategory(
         id: Faker().randomGenerator.integer(100),
-        name: Faker().person.name(),
+        name: Faker().lorem.word(),
+        slug: Faker().lorem.word(),
+        parent: Faker().randomGenerator.integer(100),
         description: Faker().lorem.sentence(),
+        display: WooCategoryDisplay.fake(),
+        image: WooProductCategoryImage.fake(),
+        menuOrder: Faker().randomGenerator.integer(100),
+        count: Faker().randomGenerator.integer(100),
       );
 }

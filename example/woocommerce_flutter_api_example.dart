@@ -7,7 +7,7 @@ void main() async {
     password: 'ldp[sald]',
     useFaker: true,
   );
-  final products = await woocommerce.getProducts(useFaker: false);
+  final products = await woocommerce.getCategories();
 
   print(products);
 }

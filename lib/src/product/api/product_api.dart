@@ -109,7 +109,7 @@ extension WooProductApi on WooCommerce {
     }
 
     final response = await dio.get(
-      _Endpoints.products,
+      _ProductEndpoints.products,
       queryParameters: _resolveQueryParametersForGettingProducts(
         context: context,
         page: page,
@@ -302,7 +302,7 @@ extension WooProductApi on WooCommerce {
       return WooProduct.fake();
     }
 
-    final response = await dio.get(_Endpoints.singleProduct(id));
+    final response = await dio.get(_ProductEndpoints.singleProduct(id));
 
     return WooProduct.fromJson(response.data as Map<String, dynamic>);
   }

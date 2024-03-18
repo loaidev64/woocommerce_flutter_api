@@ -1,6 +1,6 @@
 part of 'product_api.dart';
 
-abstract class _Endpoints {
+abstract class _ProductEndpoints {
   static String get products => '/products';
 
   static String singleProduct(int id) => '/products/$id';
