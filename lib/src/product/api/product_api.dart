@@ -294,4 +294,16 @@ extension WooProductApi on WooCommerce {
 
     return map;
   }
+
+  Future<WooProduct> getProduct(int id, {bool? useFaker}) async {
+    final isUsingFaker = useFaker ?? this.useFaker;
+
+    if (isUsingFaker) {
+      return WooProduct.fake();
+    }
+
+    final response = await dio.get(_Endpoints.singleProduct(id));
+
+    return WooProduct.fromJson(response.data as Map<String, dynamic>);
+  }
 }
