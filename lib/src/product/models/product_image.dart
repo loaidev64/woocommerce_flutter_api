@@ -1,4 +1,4 @@
-import 'package:faker/faker.dart';
+import 'package:woocommerce_flutter_api/src/helpers/fake_helper.dart';
 
 class WooProductImage {
   /// Image ID.
@@ -39,14 +39,14 @@ class WooProductImage {
         dateCreatedGMT = DateTime.parse(json['date_created_gmt']);
 
   factory WooProductImage.fake() => WooProductImage(
-        Faker().randomGenerator.integer(100),
-        Faker().image.image(),
-        Faker().lorem.word(),
-        Faker().lorem.word(),
-        Faker().date.dateTime(minYear: 2024, maxYear: 2050),
-        Faker().date.dateTime(minYear: 2024, maxYear: 2050),
-        Faker().date.dateTime(minYear: 2024, maxYear: 2050),
-        Faker().date.dateTime(minYear: 2024, maxYear: 2050),
+        FakeHelper.integer(),
+        FakeHelper.image(),
+        FakeHelper.word(),
+        FakeHelper.word(),
+        FakeHelper.datetime(),
+        FakeHelper.datetime(),
+        FakeHelper.datetime(),
+        FakeHelper.datetime(),
       );
 
   @override

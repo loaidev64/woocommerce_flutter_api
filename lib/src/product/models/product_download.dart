@@ -1,4 +1,4 @@
-import 'package:faker/faker.dart';
+import 'package:woocommerce_flutter_api/src/helpers/fake_helper.dart';
 
 class WooProductDownload {
   /// File ID.
@@ -24,8 +24,8 @@ class WooProductDownload {
       };
 
   factory WooProductDownload.fake() => WooProductDownload(
-        Faker().randomGenerator.integer(100).toString(),
-        Faker().lorem.word(),
-        Faker().internet.httpsUrl(),
+        FakeHelper.integer().toString(),
+        FakeHelper.word(),
+        FakeHelper.url(),
       );
 }

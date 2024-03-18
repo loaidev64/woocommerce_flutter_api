@@ -1,4 +1,3 @@
-export './metadata.dart';
 export './product.dart';
 export './product_dimension.dart';
 export './product_download.dart';

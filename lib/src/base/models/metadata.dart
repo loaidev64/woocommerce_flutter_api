@@ -1,4 +1,4 @@
-import 'package:faker/faker.dart';
+import 'package:woocommerce_flutter_api/src/helpers/fake_helper.dart';
 
 class WooMetaData {
   /// Meta ID.
@@ -20,8 +20,8 @@ class WooMetaData {
   Map<String, dynamic> toJson() => {'id': id, 'key': key, 'value': value};
 
   factory WooMetaData.fake() => WooMetaData(
-        Faker().randomGenerator.integer(100),
-        Faker().lorem.word(),
-        Faker().lorem.word(),
+        FakeHelper.integer(),
+        FakeHelper.word(),
+        FakeHelper.word(),
       );
 }

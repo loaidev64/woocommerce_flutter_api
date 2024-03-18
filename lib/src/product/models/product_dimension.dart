@@ -1,4 +1,4 @@
-import 'package:faker/faker.dart';
+import 'package:woocommerce_flutter_api/src/helpers/fake_helper.dart';
 
 class WooProductDimension {
   /// Product length.
@@ -21,8 +21,8 @@ class WooProductDimension {
       {'length': length, 'width': width, 'height': height};
 
   factory WooProductDimension.fake() => WooProductDimension(
-        Faker().randomGenerator.integer(100).toString(),
-        Faker().randomGenerator.integer(100).toString(),
-        Faker().randomGenerator.integer(100).toString(),
+        FakeHelper.integer().toString(),
+        FakeHelper.integer().toString(),
+        FakeHelper.integer().toString(),
       );
 }

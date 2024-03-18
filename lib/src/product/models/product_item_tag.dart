@@ -1,4 +1,4 @@
-import 'package:faker/faker.dart';
+import 'package:woocommerce_flutter_api/src/helpers/fake_helper.dart';
 
 class WooProductItemTag {
   /// Tag ID.
@@ -23,8 +23,8 @@ class WooProductItemTag {
   toString() => 'Tag: $name';
 
   factory WooProductItemTag.fake() => WooProductItemTag(
-        Faker().randomGenerator.integer(100),
-        Faker().lorem.word(),
-        Faker().internet.httpsUrl(),
+        FakeHelper.integer(),
+        FakeHelper.word(),
+        FakeHelper.url(),
       );
 }

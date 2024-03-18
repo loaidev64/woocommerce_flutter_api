@@ -1,4 +1,4 @@
-import 'package:faker/faker.dart';
+import 'package:woocommerce_flutter_api/src/helpers/fake_helper.dart';
 
 import '../enums/category_display.dart';
 import 'category_image.dart';
@@ -86,14 +86,14 @@ class WooProductCategory {
   toString() => toJson().toString();
 
   factory WooProductCategory.fake() => WooProductCategory(
-        id: Faker().randomGenerator.integer(100),
-        name: Faker().lorem.word(),
-        slug: Faker().lorem.word(),
-        parent: Faker().randomGenerator.integer(100),
-        description: Faker().lorem.sentence(),
+        id: FakeHelper.integer(),
+        name: FakeHelper.word(),
+        slug: FakeHelper.word(),
+        parent: FakeHelper.integer(),
+        description: FakeHelper.sentence(),
         display: WooCategoryDisplay.fake(),
         image: WooProductCategoryImage.fake(),
-        menuOrder: Faker().randomGenerator.integer(100),
-        count: Faker().randomGenerator.integer(100),
+        menuOrder: FakeHelper.integer(),
+        count: FakeHelper.integer(),
       );
 }

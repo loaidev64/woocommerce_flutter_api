@@ -1,4 +1,5 @@
 import 'package:faker/faker.dart';
+import 'package:woocommerce_flutter_api/src/helpers/fake_helper.dart';
 
 class WooProductItemAttribute {
   /// Attribute ID.
@@ -40,12 +41,12 @@ class WooProductItemAttribute {
       };
 
   factory WooProductItemAttribute.fake() => WooProductItemAttribute(
-        Faker().randomGenerator.integer(100),
-        Faker().lorem.word(),
-        Faker().randomGenerator.integer(100),
-        Faker().randomGenerator.boolean(),
-        Faker().randomGenerator.boolean(),
-        List.filled(Faker().randomGenerator.integer(10), Faker().lorem.word()),
+        FakeHelper.integer(),
+        FakeHelper.word(),
+        FakeHelper.integer(),
+        FakeHelper.boolean(),
+        FakeHelper.boolean(),
+        List.filled(Faker().randomGenerator.integer(10), FakeHelper.word()),
       );
 }
 
@@ -69,8 +70,8 @@ class WooProductDefaultAttribute {
   Map<String, dynamic> toJson() => {'id': id, 'name': name, 'option': option};
 
   factory WooProductDefaultAttribute.fake() => WooProductDefaultAttribute(
-        Faker().randomGenerator.integer(100),
-        Faker().lorem.word(),
-        Faker().lorem.word(),
+        FakeHelper.integer(),
+        FakeHelper.word(),
+        FakeHelper.word(),
       );
 }

@@ -1,4 +1,4 @@
-import 'package:faker/faker.dart';
+import 'package:woocommerce_flutter_api/src/helpers/fake_helper.dart';
 
 class WooProductCategoryImage {
   /// Image ID.
@@ -60,13 +60,13 @@ class WooProductCategoryImage {
   }
 
   factory WooProductCategoryImage.fake() => WooProductCategoryImage(
-        id: Faker().randomGenerator.integer(100),
-        dateCreated: Faker().date.dateTime(minYear: 2024, maxYear: 2050),
-        dateCreatedGmt: Faker().date.dateTime(minYear: 2024, maxYear: 2050),
-        dateModified: Faker().date.dateTime(minYear: 2024, maxYear: 2050),
-        dateModifiedGmt: Faker().date.dateTime(minYear: 2024, maxYear: 2050),
-        src: Faker().image.image(),
-        name: Faker().lorem.word(),
-        alt: Faker().lorem.word(),
+        id: FakeHelper.integer(),
+        dateCreated: FakeHelper.datetime(),
+        dateCreatedGmt: FakeHelper.datetime(),
+        dateModified: FakeHelper.datetime(),
+        dateModifiedGmt: FakeHelper.datetime(),
+        src: FakeHelper.image(),
+        name: FakeHelper.word(),
+        alt: FakeHelper.word(),
       );
 }
