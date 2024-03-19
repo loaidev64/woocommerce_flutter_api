@@ -1,4 +1,4 @@
-enum WooProductFilterWithOption {
+enum WooProductFilterWithType {
   relatedIds,
   upsellIds,
   crossSellIds,

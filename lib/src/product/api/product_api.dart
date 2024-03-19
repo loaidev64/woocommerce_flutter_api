@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:woocommerce_flutter_api/src/product/models/product_with_childrens.dart';
 import 'package:woocommerce_flutter_api/woocommerce_flutter_api.dart';
 
 part 'endpoints.dart';
@@ -309,45 +310,50 @@ extension WooProductApi on WooCommerce {
     return WooProduct.fromJson(response.data as Map<String, dynamic>);
   }
 
-  //TODO:: add a description to this method
-  Future<WooProduct> getProductWithOptions(
-      WooProduct product, List<WooProductFilterWithOption> options,
+  /// gets a product with related products
+  ///
+  /// [product] the product that you want to get it's related products
+  ///
+  /// [types] the types that you want to get for [product]
+  Future<WooProductWithChildrens> getProductWithOptions(
+      WooProduct product, List<WooProductFilterWithType> types,
       {bool? useFaker}) async {
     final isUsingFaker = useFaker ?? this.useFaker;
 
     if (isUsingFaker) {
-      return product;
+      return WooProductWithChildrens.fake().copyWith(mainProduct: product);
     }
 
     final response = await dio.get(_ProductEndpoints.products,
-        queryParameters: _resolveQueryParametersForGettingProductWithOption(
-            options, product));
+        queryParameters:
+            _resolveQueryParametersForGettingProductWithOption(types, product));
 
-    return WooProduct.fromJson(response.data as Map<String, dynamic>);
+    return WooProductWithChildrens.fromData(
+        response.data as List<Map<String, dynamic>>, product);
   }
 
   Map<String, dynamic> _resolveQueryParametersForGettingProductWithOption(
-      List<WooProductFilterWithOption> options, WooProduct product) {
+      List<WooProductFilterWithType> options, WooProduct product) {
     final map = <String, dynamic>{};
     final includes = <int>[product.id!];
 
     for (final option in options) {
-      if (option == WooProductFilterWithOption.crossSellIds) {
+      if (option == WooProductFilterWithType.crossSellIds) {
         includes.addAll(product.crossSellIds ?? []);
       }
-      if (option == WooProductFilterWithOption.groupedProducts) {
+      if (option == WooProductFilterWithType.groupedProducts) {
         includes.addAll(product.groupedProducts ?? []);
       }
-      if (option == WooProductFilterWithOption.relatedIds) {
+      if (option == WooProductFilterWithType.relatedIds) {
         includes.addAll(product.relatedIds ?? []);
       }
-      if (option == WooProductFilterWithOption.upsellIds) {
+      if (option == WooProductFilterWithType.upsellIds) {
         includes.addAll(product.upsellIds ?? []);
       }
-      if (option == WooProductFilterWithOption.variations) {
+      if (option == WooProductFilterWithType.variations) {
         includes.addAll(product.variations ?? []);
       }
-      if (option == WooProductFilterWithOption.parentId) {
+      if (option == WooProductFilterWithType.parentId) {
         if (product.parentId case final id?) {
           includes.add(id);
         }
