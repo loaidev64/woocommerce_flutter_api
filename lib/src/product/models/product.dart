@@ -24,7 +24,7 @@ class WooProduct {
   /// Product slug.
   final String? slug;
 
-  ///  	Product URL.
+  /// Product URL.
   final String? permalink;
 
   /// The date the variation was created, in the site's timezone.

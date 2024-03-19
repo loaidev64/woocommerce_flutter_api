@@ -4,6 +4,10 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 
+/// The class that holds all of the methods
+///
+/// if you want to call some api that it's not already implemented in
+/// this class you can use [dio] object to call the api
 class WooCommerce {
   late final Dio dio;
 
