@@ -302,8 +302,59 @@ extension WooProductApi on WooCommerce {
       return WooProduct.fake();
     }
 
-    final response = await dio.get(_ProductEndpoints.singleProduct(id));
+    final response = await dio.get(
+      _ProductEndpoints.singleProduct(id),
+    );
 
     return WooProduct.fromJson(response.data as Map<String, dynamic>);
+  }
+
+  //TODO:: add a description to this method
+  Future<WooProduct> getProductWithOptions(
+      WooProduct product, List<WooProductFilterWithOption> options,
+      {bool? useFaker}) async {
+    final isUsingFaker = useFaker ?? this.useFaker;
+
+    if (isUsingFaker) {
+      return product;
+    }
+
+    final response = await dio.get(_ProductEndpoints.products,
+        queryParameters: _resolveQueryParametersForGettingProductWithOption(
+            options, product));
+
+    return WooProduct.fromJson(response.data as Map<String, dynamic>);
+  }
+
+  Map<String, dynamic> _resolveQueryParametersForGettingProductWithOption(
+      List<WooProductFilterWithOption> options, WooProduct product) {
+    final map = <String, dynamic>{};
+    final includes = <int>[product.id!];
+
+    for (final option in options) {
+      if (option == WooProductFilterWithOption.crossSellIds) {
+        includes.addAll(product.crossSellIds ?? []);
+      }
+      if (option == WooProductFilterWithOption.groupedProducts) {
+        includes.addAll(product.groupedProducts ?? []);
+      }
+      if (option == WooProductFilterWithOption.relatedIds) {
+        includes.addAll(product.relatedIds ?? []);
+      }
+      if (option == WooProductFilterWithOption.upsellIds) {
+        includes.addAll(product.upsellIds ?? []);
+      }
+      if (option == WooProductFilterWithOption.variations) {
+        includes.addAll(product.variations ?? []);
+      }
+      if (option == WooProductFilterWithOption.parentId) {
+        if (product.parentId case final id?) {
+          includes.add(id);
+        }
+      }
+    }
+    map['include'] = includes.join(',');
+
+    return map;
   }
 }
