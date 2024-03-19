@@ -9,6 +9,11 @@ export 'src/product/api/product_api.dart';
 export 'src/product/enums/enums.dart';
 export 'src/product/models/models.dart';
 
+// variations
+export 'src/variation/api/variation_api.dart';
+export 'src/variation/enums/enums.dart';
+export 'src/variation/models/models.dart';
+
 // categories
 export 'src/category/api/category_api.dart';
 export 'src/category/enums/enums.dart';

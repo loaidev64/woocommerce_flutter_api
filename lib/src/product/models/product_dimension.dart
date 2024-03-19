@@ -10,7 +10,7 @@ class WooProductDimension {
   /// Product height.
   final String? height;
 
-  WooProductDimension(this.length, this.height, this.width);
+  const WooProductDimension({this.length, this.height, this.width});
 
   WooProductDimension.fromJson(Map<String, dynamic> json)
       : length = json['length'],
@@ -21,8 +21,8 @@ class WooProductDimension {
       {'length': length, 'width': width, 'height': height};
 
   factory WooProductDimension.fake() => WooProductDimension(
-        FakeHelper.integer().toString(),
-        FakeHelper.integer().toString(),
-        FakeHelper.integer().toString(),
+        length: FakeHelper.integer().toString(),
+        height: FakeHelper.integer().toString(),
+        width: FakeHelper.integer().toString(),
       );
 }

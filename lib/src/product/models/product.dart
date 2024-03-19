@@ -27,7 +27,17 @@ class WooProduct {
   ///  	Product URL.
   final String? permalink;
 
-  //TODO:: add the dates
+  /// The date the variation was created, in the site's timezone.
+  DateTime? dateCreated;
+
+  /// The date the variation was created, as GMT.
+  DateTime? dateCreatedGmt;
+
+  /// The date the variation was last modified, in the site's timezone.
+  DateTime? dateModified;
+
+  /// The date the variation was last modified, as GMT.
+  DateTime? dateModifiedGmt;
 
   /// Product type. Options: simple, grouped, external and variable. Default is simple.
   final WooProductType? type;
@@ -59,7 +69,17 @@ class WooProduct {
   /// Product sale price.
   final double? salePrice;
 
-  //TODO:: add the on sale dates
+  /// Start date of sale price, in the site's timezone.
+  DateTime? dateOnSaleFrom;
+
+  /// Start date of sale price, as GMT.
+  DateTime? dateOnSaleFromGmt;
+
+  /// End date of sale price, in the site's timezone.
+  DateTime? dateOnSaleTo;
+
+  /// End date of sale price, as GMT.
+  DateTime? dateOnSaleToGmt;
 
   /// Price formatted in HTML.
   final String? priceHtml;
@@ -199,6 +219,14 @@ class WooProduct {
     this.status,
     this.featured,
     this.catalogVisibility,
+    this.dateCreated,
+    this.dateCreatedGmt,
+    this.dateModified,
+    this.dateModifiedGmt,
+    this.dateOnSaleFrom,
+    this.dateOnSaleFromGmt,
+    this.dateOnSaleTo,
+    this.dateOnSaleToGmt,
     this.description,
     this.shortDescription,
     this.sku,
@@ -254,6 +282,14 @@ class WooProduct {
       : id = json['id'],
         name = json['name'],
         slug = json['slug'],
+        dateCreated = DateTime.parse(json['date_created']),
+        dateCreatedGmt = DateTime.parse(json['date_modified_gmt']),
+        dateModified = DateTime.parse(json['date_modified']),
+        dateModifiedGmt = DateTime.parse(json['date_created_gmt']),
+        dateOnSaleFrom = DateTime.parse(json['date_on_sale_from']),
+        dateOnSaleFromGmt = DateTime.parse(json['date_on_sale_from_gmt']),
+        dateOnSaleTo = DateTime.parse(json['date_on_sale_to']),
+        dateOnSaleToGmt = DateTime.parse(json['date_on_sale_to_gmt']),
         permalink = json['permalink'],
         type = WooProductType.fromString(json['type']),
         status = WooProductStatus.fromString(json['status']),
@@ -398,5 +434,13 @@ class WooProduct {
         groupedProducts: FakeHelper.listOfIntegers(),
         menuOrder: FakeHelper.integer(),
         metaData: FakeHelper.list(() => WooMetaData.fake()),
+        dateCreated: FakeHelper.datetime(),
+        dateCreatedGmt: FakeHelper.datetime(),
+        dateModified: FakeHelper.datetime(),
+        dateModifiedGmt: FakeHelper.datetime(),
+        dateOnSaleFrom: FakeHelper.datetime(),
+        dateOnSaleFromGmt: FakeHelper.datetime(),
+        dateOnSaleTo: FakeHelper.datetime(),
+        dateOnSaleToGmt: FakeHelper.datetime(),
       );
 }
