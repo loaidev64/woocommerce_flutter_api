@@ -35,4 +35,15 @@ extension WooNotificationApi on WooCommerce {
 
     return (response.data as Map<String, dynamic>)['message'] == 'success';
   }
+
+  /// Stores fcm tokens
+  Future<bool> storeFcm(String token) async {
+    final response = await dio.post(_NotificationEndpoints.fcm, data: {
+      'current_user': await LocalStorageHelper.getSecurityUserId(),
+      'gen_token': token,
+      'device_id': 'mobile',
+    });
+
+    return (response.data as Map<String, dynamic>)['status'];
+  }
 }
