@@ -33,5 +33,12 @@ export 'src/notification/models/models.dart';
 export 'src/cart/api/cart_api.dart';
 export 'src/cart/models/models.dart';
 
+// authentication
+export 'src/authentication/api/authentication_api.dart';
+export 'src/authentication/models/models.dart';
+
 // base
 export 'src/base/base.dart';
+
+// helpers
+export 'src/helpers/helpers.dart';

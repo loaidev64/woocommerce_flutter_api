@@ -14,9 +14,9 @@ extension WooCartApi on WooCommerce {
       return WooCart.fake();
     }
 
-    //TODO:: send the user_id from the local storage
-
-    final response = await dio.get(_CartEndpoints.cart);
+    final response = await dio.get(_CartEndpoints.cart, queryParameters: {
+      'user_id': await LocalStorageHelper.getSecurityUserId(),
+    });
 
     return WooCart.fromJson(response.data as Map<String, dynamic>);
   }
@@ -32,10 +32,9 @@ extension WooCartApi on WooCommerce {
       return WooCart.fake();
     }
 
-    //TODO:: send the user_id from the local storage
-
     final response = await dio.post(_CartEndpoints.cart, data: {
       'products': items.map((item) => item.toJson()).toList(),
+      'user_id': await LocalStorageHelper.getSecurityUserId(),
     });
 
     return WooCart.fromJson(response.data as Map<String, dynamic>);

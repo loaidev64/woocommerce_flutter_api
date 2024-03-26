@@ -1,4 +1,4 @@
-import 'package:faker/faker.dart';
+import 'package:woocommerce_flutter_api/woocommerce_flutter_api.dart';
 
 class WooShipping {
   /// First name.
@@ -66,14 +66,14 @@ class WooShipping {
   }
 
   factory WooShipping.fake() => WooShipping(
-        firstName: Faker().person.firstName(),
-        lastName: Faker().person.lastName(),
-        address1: Faker().address.neighborhood(),
-        address2: Faker().address.neighborhood(),
-        city: Faker().address.city(),
-        country: Faker().address.country(),
-        state: Faker().address.state(),
-        company: Faker().company.name(),
-        postcode: Faker().address.zipCode(),
+        firstName: FakeHelper.firstName(),
+        lastName: FakeHelper.lastName(),
+        address1: FakeHelper.address(),
+        address2: FakeHelper.address(),
+        city: FakeHelper.city(),
+        country: FakeHelper.country(),
+        state: FakeHelper.state(),
+        company: FakeHelper.company(),
+        postcode: FakeHelper.zipCode(),
       );
 }

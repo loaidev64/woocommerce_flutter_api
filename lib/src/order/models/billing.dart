@@ -1,5 +1,5 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'package:faker/faker.dart';
+import 'package:woocommerce_flutter_api/woocommerce_flutter_api.dart';
 
 class WooBilling {
   /// First name.
@@ -79,17 +79,17 @@ class WooBilling {
   }
 
   factory WooBilling.fake() => WooBilling(
-        firstName: Faker().person.firstName(),
-        lastName: Faker().person.lastName(),
-        address1: Faker().address.neighborhood(),
-        address2: Faker().address.neighborhood(),
-        city: Faker().address.city(),
-        country: Faker().address.country(),
-        state: Faker().address.state(),
-        company: Faker().company.name(),
-        email: Faker().internet.freeEmail(),
-        phone: Faker().phoneNumber.us(),
-        postcode: Faker().address.zipCode(),
+        firstName: FakeHelper.firstName(),
+        lastName: FakeHelper.lastName(),
+        address1: FakeHelper.address(),
+        address2: FakeHelper.address(),
+        city: FakeHelper.city(),
+        country: FakeHelper.country(),
+        state: FakeHelper.state(),
+        company: FakeHelper.company(),
+        email: FakeHelper.email(),
+        phone: FakeHelper.phoneNumber(),
+        postcode: FakeHelper.zipCode(),
       );
 
   @override

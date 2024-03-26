@@ -24,4 +24,24 @@ abstract class FakeHelper {
       List.generate(_faker.randomGenerator.integer(10), (index) => model());
 
   static List<int> listOfIntegers() => _faker.randomGenerator.numbers(100, 20);
+
+  static String firstName() => _faker.person.firstName();
+
+  static String lastName() => _faker.person.lastName();
+
+  static String email() => _faker.internet.freeEmail();
+
+  static String address() => _faker.address.neighborhood();
+
+  static String city() => _faker.address.city();
+
+  static String country() => _faker.address.country();
+
+  static String state() => _faker.address.state();
+
+  static String company() => _faker.company.name();
+
+  static String phoneNumber() => _faker.phoneNumber.us();
+
+  static String zipCode() => _faker.address.zipCode();
 }

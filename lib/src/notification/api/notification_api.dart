@@ -1,5 +1,3 @@
-import 'package:woocommerce_flutter_api/src/helpers/fake_helper.dart';
-import 'package:woocommerce_flutter_api/src/helpers/local_storage_helper.dart';
 import 'package:woocommerce_flutter_api/woocommerce_flutter_api.dart';
 
 part 'endpoints.dart';
