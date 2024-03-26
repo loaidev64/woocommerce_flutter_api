@@ -24,6 +24,11 @@ export 'src/order/api/order_api.dart';
 export 'src/order/enums/enums.dart';
 export 'src/order/models/models.dart';
 
+// notifications
+export 'src/notification/api/notification_api.dart';
+export 'src/notification/enums/enums.dart';
+export 'src/notification/models/models.dart';
+
 // cart
 export 'src/cart/api/cart_api.dart';
 export 'src/cart/models/models.dart';

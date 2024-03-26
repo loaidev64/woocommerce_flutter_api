@@ -1,6 +1,7 @@
 import 'package:woocommerce_flutter_api/src/cart/models/cart_item.dart';
 import 'package:woocommerce_flutter_api/src/helpers/fake_helper.dart';
 
+//TODO:: is not compatable with plugin yet
 class WooCart {
   /// Count of items in cart.
   int? itemsCount;
