@@ -8,5 +8,7 @@ void main() async {
     useFaker: true,
   );
 
-  final response = await woocommerce.forgotPassword('dasmpodkas');
+  final response = await woocommerce.getProducts();
+
+  print(response);
 }
