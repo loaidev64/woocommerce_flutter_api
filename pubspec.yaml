@@ -1,6 +1,6 @@
 name: woocommerce_flutter_api
 description: Woocommerce flutter api integration with external plugin created by loaidev64@gmail.com and published by amjadqasem07@gmail.com.
-version: 0.0.1
+version: 1.0.1
 repository: https://github.com/loaidev64/woocommerce_flutter_api.git
 platforms:
   android:
