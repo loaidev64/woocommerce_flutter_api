@@ -1,10 +1,10 @@
 name: woocommerce_flutter_api
-description: A starting point for Dart libraries or applications.
+description: Woocommerce flutter api integration.
 version: 1.0.0
-# repository: https://github.com/my_org/my_repo
+repository: https://github.com/loaidev64/woocommerce_flutter_api.git
 
 environment:
-  sdk: ^3.3.1
+  sdk: '>=3.1.0 <4.0.0'
 
 # Add regular dependencies here.
 dependencies:

@@ -37,7 +37,7 @@ extension WooAuthenticationApi on WooCommerce {
 
   Future<({int userId, String code})> forgotPassword(String email) async {
     final response = await dio.post(
-      _AuthenticationEndpoints.changePassword,
+      _AuthenticationEndpoints.forgotPassword,
       data: {
         'email': email,
       },
@@ -49,4 +49,6 @@ extension WooAuthenticationApi on WooCommerce {
 
     return (userId: userId, code: code);
   }
+
+  //TODO:: logout
 }

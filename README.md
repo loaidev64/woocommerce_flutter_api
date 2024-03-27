@@ -11,29 +11,35 @@ and the Flutter guide for
 [developing packages and plugins](https://flutter.dev/developing-packages). 
 -->
 
-TODO: Put a short description of the package here that helps potential users
-know whether this package might be useful for them.
+This is a package to woocommerce api.
 
 ## Features
 
-TODO: List what your package can do. Maybe include images, gifs, or videos.
+- Authentication
+- Notifications
+- Cart
+- Woocommerce API
 
 ## Getting started
 
-TODO: List prerequisites and provide or point to information on how to
-start using the package.
+flutter pub add woocommerce_flutter_api
 
 ## Usage
 
-TODO: Include short and useful examples for package users. Add longer examples
-to `/example` folder. 
 
 ```dart
-const like = 'sample';
+final woocommerce = WooCommerce(
+    baseUrl: 'https://example.com',
+    username: 'ck_12abc34n56j',
+    password: 'cs_1uab8h3s3op',
+    useFaker: true,
+  );
+
+final products = await woocommerce.getProducts();
+
+print(products);
 ```
 
 ## Additional information
 
-TODO: Tell users more about the package: where to find more information, how to 
-contribute to the package, how to file issues, what response they can expect 
-from the package authors, and more.
+You can reach us using amjadqasem07@gmail.com if you have some questions.

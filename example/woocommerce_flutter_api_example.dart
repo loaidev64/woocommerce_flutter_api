@@ -7,7 +7,6 @@ void main() async {
     password: 'ldp[sald]',
     useFaker: true,
   );
-  final products = await woocommerce.getCart();
 
-  print(products);
+  final response = await woocommerce.forgotPassword('dasmpodkas');
 }

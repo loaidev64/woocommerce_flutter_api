@@ -8,7 +8,6 @@ export 'src/woocommerce_flutter_api_base.dart';
 export 'src/product/api/product_api.dart';
 export 'src/product/enums/enums.dart';
 export 'src/product/models/models.dart';
-
 // variations
 export 'src/variation/api/variation_api.dart';
 export 'src/variation/enums/enums.dart';
