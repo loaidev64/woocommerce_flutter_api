@@ -11,7 +11,7 @@ and the Flutter guide for
 [developing packages and plugins](https://flutter.dev/developing-packages). 
 -->
 
-This is a package to woocommerce api.
+This is a package to woocommerce api for flutter.
 
 ## Features
 
