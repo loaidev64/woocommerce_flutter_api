@@ -5,6 +5,8 @@ abstract class FakeHelper {
 
   static int integer() => _faker.randomGenerator.integer(100);
 
+  static String code() => _faker.randomGenerator.numbers(9, 6).join();
+
   static String word() => _faker.lorem.word();
 
   static String sentence() => _faker.lorem.sentence();

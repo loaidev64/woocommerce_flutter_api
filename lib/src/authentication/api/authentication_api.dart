@@ -4,6 +4,10 @@ part 'endpoints.dart';
 
 extension WooAuthenticationApi on WooCommerce {
   Future<void> login(String email, String password) async {
+    if (useFaker) {
+      return;
+    }
+
     final response = await dio.post(_AuthenticationEndpoints.login, data: {
       'email': email,
       'password': password,
@@ -14,6 +18,9 @@ extension WooAuthenticationApi on WooCommerce {
   }
 
   Future<void> register(WooCustomer customer) async {
+    if (useFaker) {
+      return;
+    }
     final response = await dio.post(
       _AuthenticationEndpoints.register,
       data: customer.toJson(),
@@ -24,6 +31,9 @@ extension WooAuthenticationApi on WooCommerce {
   }
 
   Future<void> changePassword(String password) async {
+    if (useFaker) {
+      return;
+    }
     final response = await dio.post(
       _AuthenticationEndpoints.changePassword,
       data: {
@@ -36,6 +46,9 @@ extension WooAuthenticationApi on WooCommerce {
   }
 
   Future<({int userId, String code})> forgotPassword(String email) async {
+    if (useFaker) {
+      return (userId: FakeHelper.integer(), code: FakeHelper.code());
+    }
     final response = await dio.post(
       _AuthenticationEndpoints.forgotPassword,
       data: {
