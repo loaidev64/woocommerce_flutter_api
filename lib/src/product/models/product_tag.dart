@@ -36,8 +36,8 @@ class WooProductTag {
   @override
   toString() => 'Tag: $name';
 
-  factory WooProductTag.fake() => WooProductTag(
-        FakeHelper.integer(),
+  factory WooProductTag.fake([int? tagId]) => WooProductTag(
+        tagId ?? FakeHelper.integer(),
         FakeHelper.word(),
         FakeHelper.url(),
         FakeHelper.sentence(),

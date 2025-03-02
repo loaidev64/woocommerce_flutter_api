@@ -137,4 +137,51 @@ extension WooProductTagApi on WooCommerce {
 
     return WooProductTag.fromJson(response.data as Map<String, dynamic>);
   }
+
+  Future<WooProductTag> createProductTag(WooProductTag tag,
+      {bool? useFaker}) async {
+    final isUsingFaker = useFaker ?? this.useFaker;
+
+    if (isUsingFaker) {
+      return tag;
+    }
+
+    final response = await dio.post(
+      _ProductTagEndpoints.tags,
+      data: tag.toJson(),
+    );
+
+    return WooProductTag.fromJson(response.data as Map<String, dynamic>);
+  }
+
+  Future<WooProductTag> updateProductTag(WooProductTag tag,
+      {bool? useFaker}) async {
+    final isUsingFaker = useFaker ?? this.useFaker;
+
+    if (isUsingFaker) {
+      return tag;
+    }
+
+    final response = await dio.put(
+      _ProductTagEndpoints.singleTag(tag.id!),
+      data: tag.toJson(),
+    );
+
+    return WooProductTag.fromJson(response.data as Map<String, dynamic>);
+  }
+
+  Future<WooProductTag> deleteProductTag(int tagId, {bool? useFaker}) async {
+    final isUsingFaker = useFaker ?? this.useFaker;
+
+    if (isUsingFaker) {
+      return WooProductTag.fake(tagId);
+    }
+
+    final response = await dio
+        .delete(_ProductTagEndpoints.singleTag(tagId), queryParameters: {
+      'force': true,
+    });
+
+    return WooProductTag.fromJson(response.data as Map<String, dynamic>);
+  }
 }
