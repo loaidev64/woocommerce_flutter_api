@@ -6,6 +6,7 @@ export 'src/woocommerce_flutter_api_base.dart';
 
 // products
 export 'src/product/api/product_api.dart';
+export 'src/product/api/product_tag_api.dart';
 export 'src/product/enums/enums.dart';
 export 'src/product/models/models.dart';
 // variations
@@ -22,6 +23,11 @@ export 'src/category/models/models.dart';
 export 'src/order/api/order_api.dart';
 export 'src/order/enums/enums.dart';
 export 'src/order/models/models.dart';
+
+// coupons
+export 'src/coupon/api/coupon_api.dart';
+export 'src/coupon/enums/coupon_sort.dart';
+export 'src/coupon/models/coupon.dart';
 
 // notifications
 export 'src/notification/api/notification_api.dart';
