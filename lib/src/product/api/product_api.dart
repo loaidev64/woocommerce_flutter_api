@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:woocommerce_flutter_api/src/product/models/product_with_childrens.dart';
 import 'package:woocommerce_flutter_api/woocommerce_flutter_api.dart';
 
-part 'endpoints.dart';
+part 'product_endpoints.dart';
 
 extension WooProductApi on WooCommerce {
   /// [context] Scope under which the request is made; determines fields present in response. Options: view and edit. Default is view.

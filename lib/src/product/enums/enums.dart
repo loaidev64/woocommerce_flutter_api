@@ -5,3 +5,4 @@ export 'product_stock_status.dart';
 export 'product_tax_status.dart';
 export 'product_type.dart';
 export 'product_filter_with_option.dart';
+export 'product_tag_sort.dart';

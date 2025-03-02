@@ -12,7 +12,7 @@ import 'product_dimension.dart';
 import 'product_download.dart';
 import 'product_image.dart';
 import 'product_item_attribute.dart';
-import 'product_item_tag.dart';
+import 'product_tag.dart';
 
 class WooProduct {
   /// Unique identifier for the resource.
@@ -187,7 +187,7 @@ class WooProduct {
   final List<WooProductCategory> categories;
 
   /// List of tags.
-  final List<WooProductItemTag> tags;
+  final List<WooProductTag> tags;
 
   /// List of images.
   final List<WooProductImage> images;
@@ -342,7 +342,7 @@ class WooProduct {
             .map((i) => WooProductCategory.fromJson(i))
             .toList(),
         tags = (json['tags'] as List)
-            .map((i) => WooProductItemTag.fromJson(i))
+            .map((i) => WooProductTag.fromJson(i))
             .toList(),
         images = (json['images'] as List)
             .map((i) => WooProductImage.fromJson(i))
@@ -425,7 +425,7 @@ class WooProduct {
         parentId: FakeHelper.integer(),
         purchaseNote: FakeHelper.word(),
         categories: FakeHelper.list(() => WooProductCategory.fake()),
-        tags: FakeHelper.list(() => WooProductItemTag.fake()),
+        tags: FakeHelper.list(() => WooProductTag.fake()),
         images: FakeHelper.list(() => WooProductImage.fake()),
         attributes: FakeHelper.list(() => WooProductItemAttribute.fake()),
         defaultAttributes:
