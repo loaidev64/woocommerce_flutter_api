@@ -95,10 +95,10 @@ This package is actively being developed, and the following features have been i
 - Fetching Products  
 - Order Management (Retrieve, Create, Update, and Delete orders)  
 - Product Tags API (Get, Create, Update, Delete product tags)  
+- Coupon Management (Retrieve, Create, Update, and Delete coupons)  
 
 ### Upcoming Features 🚀  
 - Customer Management (Retrieve, Create, Update, and Delete customers)  
-- Coupon Management (Retrieve, Create, Update, and Delete coupons)  
 - Order Additional Features (actions, notes, refunds)  
 - Product Additional Features (shipping classes, reviews)  
 - Reports API

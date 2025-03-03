@@ -150,4 +150,70 @@ extension WooCouponApi on WooCommerce {
 
     return map;
   }
+
+  Future<WooCoupon> getCoupon(int id, {bool? useFaker}) async {
+    final isUsingFaker = useFaker ?? this.useFaker;
+
+    if (isUsingFaker) {
+      return WooCoupon.fake(id);
+    }
+
+    final response = await dio.get(
+      _CouponEndpoints.singleCoupon(id),
+    );
+
+    return WooCoupon.fromJson(response.data as Map<String, dynamic>);
+  }
+
+  Future<WooCoupon> createCoupon(WooCoupon coupon, {bool? useFaker}) async {
+    final isUsingFaker = useFaker ?? this.useFaker;
+
+    if (isUsingFaker) {
+      return coupon;
+    }
+
+    final response = await dio.post(
+      _CouponEndpoints.coupons,
+      data: coupon.toJson(),
+    );
+
+    return WooCoupon.fromJson(response.data as Map<String, dynamic>);
+  }
+
+  Future<WooCoupon> updateCoupon(WooCoupon coupon, {bool? useFaker}) async {
+    final isUsingFaker = useFaker ?? this.useFaker;
+
+    if (isUsingFaker) {
+      return coupon;
+    }
+
+    final response = await dio.put(
+      _CouponEndpoints.singleCoupon(coupon.id!),
+      data: coupon.toJson(),
+    );
+
+    return WooCoupon.fromJson(response.data as Map<String, dynamic>);
+  }
+
+  /// [force] Use true whether to permanently delete the order, Default is false.
+  Future<bool> deleteCoupon(
+    int id, {
+    bool? useFaker,
+    bool force = false,
+  }) async {
+    final isUsingFaker = useFaker ?? this.useFaker;
+
+    if (isUsingFaker) {
+      return true;
+    }
+
+    await dio.delete(
+      _CouponEndpoints.singleCoupon(id),
+      queryParameters: {
+        'force': force,
+      },
+    );
+
+    return true;
+  }
 }

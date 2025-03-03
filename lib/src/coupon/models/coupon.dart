@@ -158,8 +158,8 @@ class WooCoupon {
             .toList(),
       );
 
-  factory WooCoupon.fake() => WooCoupon(
-        id: FakeHelper.integer(),
+  factory WooCoupon.fake([int? id]) => WooCoupon(
+        id: id ?? FakeHelper.integer(),
         code: FakeHelper.code(),
         amount: FakeHelper.decimal().toString(),
         dateCreated: FakeHelper.datetime(),
@@ -187,4 +187,34 @@ class WooCoupon {
         usedBy: FakeHelper.list(() => FakeHelper.word()),
         metaData: FakeHelper.list(() => WooMetaData.fake()),
       );
+
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'code': code,
+        'amount': amount,
+        'date_created': dateCreated?.toIso8601String(),
+        'date_created_gmt': dateCreatedGmt?.toIso8601String(),
+        'date_modified': dateModified?.toIso8601String(),
+        'date_modified_gmt': dateModifiedGmt?.toIso8601String(),
+        'discount_type': discountType,
+        'description': description,
+        'date_expires': dateExpires?.toIso8601String(),
+        'date_expires_gmt': dateExpiresGmt?.toIso8601String(),
+        'usage_count': usageCount,
+        'individual_use': individualUse,
+        'product_ids': productIds,
+        'excluded_product_ids': excludedProductIds,
+        'usage_limit': usageLimit,
+        'usage_limit_per_user': usageLimitPerUser,
+        'limit_usage_to_x_items': limitUsageToXItems,
+        'free_shipping': freeShipping,
+        'product_categories': productCategories,
+        'excluded_product_categories': excludedProductCategories,
+        'exclude_sale_items': excludeSaleItems,
+        'minimum_amount': minimumAmount,
+        'maximum_amount': maximumAmount,
+        'email_restrictions': emailRestrictions,
+        'used_by': usedBy,
+        'meta_data': metaData?.map((meta) => meta.toJson()).toList(),
+      };
 }
