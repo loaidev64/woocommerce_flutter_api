@@ -166,7 +166,8 @@ class WooCoupon {
         dateCreatedGmt: FakeHelper.datetime(),
         dateModified: FakeHelper.datetime(),
         dateModifiedGmt: FakeHelper.datetime(),
-        discountType: FakeHelper.word(),
+        discountType:
+            FakeHelper.randomItem(['percent', 'fixed_cart', 'fixed_product']),
         description: FakeHelper.sentence(),
         dateExpires: FakeHelper.datetime(),
         dateExpiresGmt: FakeHelper.datetime(),

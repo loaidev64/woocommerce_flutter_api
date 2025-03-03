@@ -46,4 +46,7 @@ abstract class FakeHelper {
   static String phoneNumber() => _faker.phoneNumber.us();
 
   static String zipCode() => _faker.address.zipCode();
+
+  static T randomItem<T>(List<T> items) =>
+      _faker.randomGenerator.element(items);
 }
