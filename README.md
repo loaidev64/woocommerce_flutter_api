@@ -84,6 +84,38 @@ Fetch a list of products:
 final response = await woocommerce.getProducts();
 ```
 
+## Roadmap  
+
+This package is actively being developed, and the following features have been implemented so far:  
+
+### Implemented Features ✅  
+- Authentication (Login & Secure Storage)  
+- Fetching Notifications  
+- Managing Cart (Retrieve user cart)  
+- Fetching Products  
+- Order Management (Retrieve, Create, Update, and Delete orders)  
+- Product Tags API (Get, Create, Update, Delete product tags)  
+
+### Upcoming Features 🚀  
+- Customer Management (Retrieve, Create, Update, and Delete customers)  
+- Coupon Management (Retrieve, Create, Update, and Delete coupons)  
+- Order Additional Features (actions, notes, refunds)  
+- Product Additional Features (shipping classes, reviews)  
+- Reports API
+- Refunds API
+- Tax rates API
+- Tax classes API
+- Webhook API
+- Settings API
+- Setting Options API
+- Payment Gateways API
+- Shipping API (zones, locations, methods)
+- System status API 
+- System status tools API 
+- Data API 
+<!-- - Wishlist Functionality   -->
+
+
 ## Contributing
 
 Contributions are welcome! If you have suggestions, bug fixes, or improvements, please open an issue or submit a pull request. Your contributions will help make this package even better.
