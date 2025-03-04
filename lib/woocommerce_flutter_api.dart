@@ -40,7 +40,9 @@ export 'src/cart/models/models.dart';
 
 // authentication
 export 'src/authentication/api/authentication_api.dart';
+export 'src/authentication/api/customer_api.dart';
 export 'src/authentication/models/models.dart';
+export 'src/authentication/enums/enums.dart';
 
 // base
 export 'src/base/base.dart';
