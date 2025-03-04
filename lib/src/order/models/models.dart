@@ -10,3 +10,4 @@ export 'shipping.dart';
 export 'tax_line.dart';
 export 'tax.dart';
 export 'order_note.dart';
+export 'order_refund.dart';
