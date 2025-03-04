@@ -257,4 +257,20 @@ extension WooOrderApi on WooCommerce {
 
     return true;
   }
+
+  /// trigger an email to the customer with the details of their order, if the order contains a customer email address.
+  Future<String> sendOrderDetailsToCustomer(
+    int orderId, {
+    bool? useFaker,
+  }) async {
+    final isUsingFaker = useFaker ?? this.useFaker;
+
+    if (isUsingFaker) {
+      return 'Order details sent to woo@example.com, via REST API.';
+    }
+
+    final response = await dio.post(_OrderEndpoints.sendOrderDetails(orderId));
+
+    return (response.data as Map<String, String>)['message']!;
+  }
 }
