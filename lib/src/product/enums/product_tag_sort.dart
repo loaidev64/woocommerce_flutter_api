@@ -1,7 +1,7 @@
 // ignore_for_file: constant_identifier_names
 
 /// Enum for sorting WooCommerce product tags by different attributes.
-enum WooProductTagSort {
+enum WooSortProductTag {
   id,
   include,
   name,

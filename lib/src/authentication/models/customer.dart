@@ -94,10 +94,10 @@ class WooCustomer {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['id'] = id;
-    data['date_created'] = dateCreated;
-    data['date_created_gmt'] = dateCreatedGmt;
-    data['date_modified'] = dateModified;
-    data['date_modified_gmt'] = dateModifiedGmt;
+    data['date_created'] = dateCreated?.toIso8601String();
+    data['date_created_gmt'] = dateCreatedGmt?.toIso8601String();
+    data['date_modified'] = dateModified?.toIso8601String();
+    data['date_modified_gmt'] = dateModifiedGmt?.toIso8601String();
     data['email'] = email;
     if (firstName != null) {
       data['first_name'] = firstName;
@@ -137,8 +137,8 @@ class WooCustomer {
     return id.hashCode;
   }
 
-  factory WooCustomer.fake() => WooCustomer(
-        id: FakeHelper.integer(),
+  factory WooCustomer.fake([int? id]) => WooCustomer(
+        id: id ?? FakeHelper.integer(),
         firstName: FakeHelper.firstName(),
         lastName: FakeHelper.lastName(),
         email: FakeHelper.email(),

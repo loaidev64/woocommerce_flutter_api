@@ -1,6 +1,6 @@
 import 'package:woocommerce_flutter_api/woocommerce_flutter_api.dart';
 
-part 'endpoints.dart';
+part 'authentication_endpoints.dart';
 
 extension WooAuthenticationApi on WooCommerce {
   Future<void> login(String email, String password) async {
