@@ -182,4 +182,21 @@ extension WooCustomernApi on WooCommerce {
 
     return true;
   }
+
+  Future<List<WooCustomerDownload>> getCustomerDownloads(
+    int customerId, {
+    bool? useFaker,
+  }) async {
+    final isUsingFaker = useFaker ?? this.useFaker;
+
+    if (isUsingFaker) {
+      return FakeHelper.list(() => WooCustomerDownload.fake());
+    }
+
+    final response = await dio.get(_CustomerEndpoints.downloads(customerId));
+
+    return (response.data as List)
+        .map((item) => WooCustomerDownload.fromJson(item))
+        .toList();
+  }
 }
