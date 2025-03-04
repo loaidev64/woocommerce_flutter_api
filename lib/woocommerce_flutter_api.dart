@@ -21,6 +21,7 @@ export 'src/category/models/models.dart';
 
 // orders
 export 'src/order/api/order_api.dart';
+export 'src/order/api/order_note_api.dart';
 export 'src/order/enums/enums.dart';
 export 'src/order/models/models.dart';
 
