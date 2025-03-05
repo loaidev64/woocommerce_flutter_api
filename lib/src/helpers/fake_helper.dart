@@ -13,7 +13,7 @@ abstract class FakeHelper {
 
   static String url() => _faker.internet.httpsUrl();
 
-  static String image() => _faker.image.image();
+  static String image() => _faker.image.loremPicsum();
 
   static DateTime datetime() =>
       _faker.date.dateTime(minYear: 2024, maxYear: 2050);
