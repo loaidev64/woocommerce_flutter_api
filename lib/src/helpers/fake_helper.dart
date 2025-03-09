@@ -3,7 +3,8 @@ import 'package:faker/faker.dart';
 abstract class FakeHelper {
   static final _faker = Faker();
 
-  static int integer() => _faker.randomGenerator.integer(100);
+  static int integer({int? min, int? max}) =>
+      _faker.randomGenerator.integer(max ?? 100, min: min ?? 0);
 
   static String code() => _faker.randomGenerator.numbers(9, 6).join();
 
