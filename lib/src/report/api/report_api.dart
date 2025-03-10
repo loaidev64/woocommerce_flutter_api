@@ -29,7 +29,7 @@ extension WooReportApi on WooCommerce {
 
     final response = await dio.get(
       _ReportEndpoints.sales,
-      queryParameters: _resolveQueryParametersForSalesReport(
+      queryParameters: _resolveQueryParametersForSalesAndTopSellersReport(
         context: context,
         period: period,
         dateMin: dateMin,
@@ -42,8 +42,47 @@ extension WooReportApi on WooCommerce {
         .toList();
   }
 
+  /// Fetches the top sellers report from WooCommerce.
+  ///
+  /// [context] Scope under which the request is made; determines fields present in response. Default is view.
+  ///
+  /// [period] Report period. Default is today's date. Options: week, month, last_month and year
+  ///
+  /// [dateMin] Return sales for a specific start date, in the format `YYYY-MM-DD`.
+  ///
+  /// [dateMax] Return sales for a specific end date, in the format `YYYY-MM-DD`.
+  ///
+  /// [useFaker] If true, returns fake data for testing purposes.
+  Future<List<WooTopSellersReport>> getTopSellersReport({
+    WooContext context = WooContext.view,
+    WooReportPeriod? period,
+    String? dateMin,
+    String? dateMax,
+    bool? useFaker,
+  }) async {
+    final isUsingFaker = useFaker ?? this.useFaker;
+
+    if (isUsingFaker) {
+      return FakeHelper.list(WooTopSellersReport.fake);
+    }
+
+    final response = await dio.get(
+      _ReportEndpoints.sales,
+      queryParameters: _resolveQueryParametersForSalesAndTopSellersReport(
+        context: context,
+        period: period,
+        dateMin: dateMin,
+        dateMax: dateMax,
+      ),
+    );
+
+    return (response.data as List)
+        .map((e) => WooTopSellersReport.fromJson(e))
+        .toList();
+  }
+
   /// Resolves query parameters for the sales report API request.
-  Map<String, dynamic> _resolveQueryParametersForSalesReport({
+  Map<String, dynamic> _resolveQueryParametersForSalesAndTopSellersReport({
     required WooContext context,
     required WooReportPeriod? period,
     required String? dateMin,
