@@ -27,6 +27,10 @@ export 'src/order/api/order_note_api.dart';
 export 'src/order/enums/enums.dart';
 export 'src/order/models/models.dart';
 
+// orders
+export 'src/refund/api/refund_api.dart';
+export 'src/refund/models/models.dart';
+
 // coupons
 export 'src/coupon/api/coupon_api.dart';
 export 'src/coupon/enums/coupon_sort.dart';

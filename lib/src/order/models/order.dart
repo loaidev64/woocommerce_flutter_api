@@ -137,7 +137,7 @@ class WooOrder {
   List<WooOrderCouponLine>? couponLines;
 
   /// List of refunds
-  List<WooRefund>? refunds;
+  List<WooRefunds>? refunds;
 
   /// Define if the order is paid. It will set the status to processing and reduce stock items. Default is false.
   bool? setPaid;
@@ -262,7 +262,7 @@ class WooOrder {
     if (json['refunds'] != null) {
       refunds = [];
       json['refunds'].forEach((v) {
-        refunds!.add(WooRefund.fromJson(v));
+        refunds!.add(WooRefunds.fromJson(v));
       });
     }
   }
@@ -379,7 +379,7 @@ class WooOrder {
         shippingLines: FakeHelper.list(() => WooShippingLine.fake()),
         feeLines: FakeHelper.list(() => WooOrderFeeLine.fake()),
         couponLines: FakeHelper.list(() => WooOrderCouponLine.fake()),
-        refunds: FakeHelper.list(() => WooRefund.fake()),
+        refunds: FakeHelper.list(() => WooRefunds.fake()),
         setPaid: FakeHelper.boolean(),
       );
 }
