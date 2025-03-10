@@ -4,3 +4,4 @@ export 'coupon_total_report.dart';
 export 'customer_total_report.dart';
 export 'order_total_report.dart';
 export 'product_total_report.dart';
+export 'review_total_report.dart';

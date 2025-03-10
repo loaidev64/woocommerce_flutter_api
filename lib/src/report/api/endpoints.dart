@@ -12,4 +12,6 @@ abstract class _ReportEndpoints {
   static String get ordersTotal => '/reports/orders/totals';
 
   static String get productsTotal => '/reports/products/totals';
+
+  static String get reviewsTotal => '/reports/reviews/totals';
 }
