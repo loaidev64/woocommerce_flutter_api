@@ -40,6 +40,8 @@ abstract class FakeHelper {
 
   static String country() => _faker.address.country();
 
+  static String countryCode() => _faker.address.countryCode();
+
   static String state() => _faker.address.state();
 
   static String company() => _faker.company.name();
