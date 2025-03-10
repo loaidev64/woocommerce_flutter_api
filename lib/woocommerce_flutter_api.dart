@@ -41,6 +41,11 @@ export 'src/notification/models/models.dart';
 export 'src/cart/api/cart_api.dart';
 export 'src/cart/models/models.dart';
 
+// report
+export 'src/report/models/models.dart';
+export 'src/report/enums/enums.dart';
+export 'src/report/api/report_api.dart';
+
 // authentication
 export 'src/authentication/api/authentication_api.dart';
 export 'src/authentication/api/customer_api.dart';
