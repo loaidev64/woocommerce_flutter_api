@@ -1,6 +1,6 @@
 import 'package:woocommerce_flutter_api/src/helpers/fake_helper.dart';
 
-class WooRefund {
+class WooRefunds {
   /// Refund ID.
   int? id;
 
@@ -10,9 +10,9 @@ class WooRefund {
   /// Refund total.
   double? total;
 
-  WooRefund({this.id, this.reason, this.total});
+  WooRefunds({this.id, this.reason, this.total});
 
-  WooRefund.fromJson(Map<String, dynamic> json) {
+  WooRefunds.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     reason = json['reason'];
     total = double.tryParse(json['total']);
@@ -26,7 +26,7 @@ class WooRefund {
     return data;
   }
 
-  factory WooRefund.fake() => WooRefund(
+  factory WooRefunds.fake() => WooRefunds(
         id: FakeHelper.integer(),
         reason: FakeHelper.sentence(),
         total: FakeHelper.decimal(),
