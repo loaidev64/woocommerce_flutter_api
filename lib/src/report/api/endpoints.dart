@@ -6,4 +6,6 @@ abstract class _ReportEndpoints {
   static String get topSellers => '/reports/top_sellers';
 
   static String get couponsTotal => '/reports/coupons/totals';
+
+  static String get customersTotal => '/reports/customers/totals';
 }
