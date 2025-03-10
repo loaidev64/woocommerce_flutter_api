@@ -98,13 +98,13 @@ This package is actively being developed, and the following features have been i
 - Coupon Management (Retrieve, Create, Update, and Delete coupons)  
 - Customer Management (Retrieve, Create, Update, and Delete customers)  
 - Order Additional Features (actions, notes, refunds)  
-
-### Upcoming Features 🚀  
 - Product Additional Features (shipping classes, reviews)  
 - Reports API
-- Refunds API
 - Tax rates API
 - Tax classes API
+
+### Upcoming Features 🚀  
+- Refunds API
 - Webhook API
 - Settings API
 - Setting Options API

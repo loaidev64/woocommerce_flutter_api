@@ -50,6 +50,7 @@ export 'src/report/api/report_api.dart';
 export 'src/tax/models/models.dart';
 export 'src/tax/enums/enums.dart';
 export 'src/tax/api/tax_rate_api.dart';
+export 'src/tax/api/tax_class_api.dart';
 
 // authentication
 export 'src/authentication/api/authentication_api.dart';
