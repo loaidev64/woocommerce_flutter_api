@@ -140,4 +140,21 @@ extension WooReportApi on WooCommerce {
         .map((e) => WooCustomerTotalReport.fromJson(e))
         .toList();
   }
+
+  Future<List<WooOrderTotalReport>> getOrdersTotalReport(
+      {bool? useFaker}) async {
+    final isUsingFaker = useFaker ?? this.useFaker;
+
+    if (isUsingFaker) {
+      return FakeHelper.list(WooOrderTotalReport.fake);
+    }
+
+    final response = await dio.get(
+      _ReportEndpoints.ordersTotal,
+    );
+
+    return (response.data as List)
+        .map((e) => WooOrderTotalReport.fromJson(e))
+        .toList();
+  }
 }
