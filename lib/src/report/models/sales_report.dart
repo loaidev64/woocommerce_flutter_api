@@ -118,7 +118,7 @@ class WooSalesReport {
       totalsGroupedBy.hashCode ^
       totals.hashCode;
 
-  factory WooSalesReport.fake([int? id]) => WooSalesReport(
+  factory WooSalesReport.fake() => WooSalesReport(
         totalSales: FakeHelper.decimal().toString(),
         netSales: FakeHelper.decimal().toString(),
         averageSales: FakeHelper.decimal().toString(),

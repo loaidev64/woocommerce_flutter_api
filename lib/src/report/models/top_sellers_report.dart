@@ -43,7 +43,7 @@ class WooTopSellersReport {
   @override
   int get hashCode => title.hashCode ^ productId.hashCode ^ quantity.hashCode;
 
-  factory WooTopSellersReport.fake([int? id]) => WooTopSellersReport(
+  factory WooTopSellersReport.fake() => WooTopSellersReport(
         title: FakeHelper.word(),
         productId: FakeHelper.integer(),
         quantity: FakeHelper.integer(),

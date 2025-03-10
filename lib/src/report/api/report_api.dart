@@ -67,7 +67,7 @@ extension WooReportApi on WooCommerce {
     }
 
     final response = await dio.get(
-      _ReportEndpoints.sales,
+      _ReportEndpoints.topSellers,
       queryParameters: _resolveQueryParametersForSalesAndTopSellersReport(
         context: context,
         period: period,
@@ -105,5 +105,22 @@ extension WooReportApi on WooCommerce {
     }
 
     return map;
+  }
+
+  Future<List<WooCouponTotalReport>> getCouponsTotalReport(
+      {bool? useFaker}) async {
+    final isUsingFaker = useFaker ?? this.useFaker;
+
+    if (isUsingFaker) {
+      return FakeHelper.list(WooCouponTotalReport.fake);
+    }
+
+    final response = await dio.get(
+      _ReportEndpoints.couponsTotal,
+    );
+
+    return (response.data as List)
+        .map((e) => WooCouponTotalReport.fromJson(e))
+        .toList();
   }
 }
