@@ -13,3 +13,8 @@
 - Introduced `WooProductTagSort` enum for sorting product tags.
 - Improved API structure and documentation.
 - Fixed minor issues in query parameter handling.
+
+## 1.1.0
+
+- Added support for product review, shipping classses, reports, tax rates and tax classes.
+- Improved API structure and documentation.

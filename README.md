@@ -102,9 +102,9 @@ This package is actively being developed, and the following features have been i
 - Reports API
 - Tax rates API
 - Tax classes API
+- Refunds API
 
 ### Upcoming Features 🚀  
-- Refunds API
 - Webhook API
 - Settings API
 - Setting Options API
