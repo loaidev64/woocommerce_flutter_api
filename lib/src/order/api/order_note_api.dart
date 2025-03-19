@@ -76,7 +76,7 @@ extension WooOrderNoteApi on WooCommerce {
   }
 
   /// [force] Required to be true, as resource does not support trashing.
-  Future<bool> deleteOrder(
+  Future<bool> deleteOrderNote(
     int orderId,
     int noteId, {
     bool? useFaker,
