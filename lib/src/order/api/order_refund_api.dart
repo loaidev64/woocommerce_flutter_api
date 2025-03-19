@@ -181,7 +181,7 @@ extension WooOrderRefundApi on WooCommerce {
   }
 
   /// [force] Required to be true, as resource does not support trashing.
-  Future<bool> deleteOrder(
+  Future<bool> deleteOrderRefund(
     int orderId,
     int refundId, {
     bool? useFaker,
