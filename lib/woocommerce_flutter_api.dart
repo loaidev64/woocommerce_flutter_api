@@ -11,6 +11,7 @@ export 'src/product/api/product_shipping_class_api.dart';
 export 'src/product/api/product_review_api.dart';
 export 'src/product/enums/enums.dart';
 export 'src/product/models/models.dart';
+
 // variations
 export 'src/variation/api/variation_api.dart';
 export 'src/variation/enums/enums.dart';
@@ -43,6 +44,10 @@ export 'src/payment_gateway/models/models.dart';
 export 'src/shipping/api/shipping_zone_api.dart';
 export 'src/shipping/api/shipping_zone_location_api.dart';
 export 'src/shipping/models/models.dart';
+
+// shipping method
+export 'src/shipping_method/api/shipping_method_api.dart';
+export 'src/shipping_method/models/models.dart';
 
 // coupons
 export 'src/coupon/api/coupon_api.dart';
