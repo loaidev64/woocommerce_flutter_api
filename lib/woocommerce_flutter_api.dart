@@ -39,6 +39,10 @@ export 'src/settings/models/models.dart';
 export 'src/payment_gateway/api/payment_gateway_api.dart';
 export 'src/payment_gateway/models/models.dart';
 
+// payment gateways
+export 'src/shipping/api/shipping_zone_api.dart';
+export 'src/shipping/models/models.dart';
+
 // coupons
 export 'src/coupon/api/coupon_api.dart';
 export 'src/coupon/enums/coupon_sort.dart';
