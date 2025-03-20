@@ -18,3 +18,7 @@
 
 - Added support for product review, shipping classses, reports, tax rates and tax classes.
 - Improved API structure and documentation.
+
+# 1.2.0
+
+- Almost finished with all of the apis in Woocommerce official api.
