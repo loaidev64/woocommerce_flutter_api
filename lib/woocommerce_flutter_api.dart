@@ -58,6 +58,11 @@ export 'src/coupon/api/coupon_api.dart';
 export 'src/coupon/enums/coupon_sort.dart';
 export 'src/coupon/models/coupon.dart';
 
+// webhooks
+export 'src/webhook/api/webhook_api.dart';
+export 'src/webhook/enums/enums.dart';
+export 'src/webhook/models/models.dart';
+
 // notifications
 export 'src/notification/api/notification_api.dart';
 export 'src/notification/enums/enums.dart';
