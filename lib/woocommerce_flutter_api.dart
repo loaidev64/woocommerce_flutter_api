@@ -53,6 +53,10 @@ export 'src/shipping_method/models/models.dart';
 export 'src/system_status/api/system_status_api.dart';
 export 'src/system_status/models/models.dart';
 
+// data
+export 'src/data/api/data_api.dart';
+export 'src/data/models/models.dart';
+
 // coupons
 export 'src/coupon/api/coupon_api.dart';
 export 'src/coupon/enums/coupon_sort.dart';
