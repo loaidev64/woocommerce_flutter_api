@@ -103,8 +103,6 @@ This package is actively being developed, and the following features have been i
 - Tax rates API
 - Tax classes API
 - Refunds API
-
-### Upcoming Features 🚀  
 - Webhook API
 - Settings API
 - Setting Options API
@@ -113,7 +111,9 @@ This package is actively being developed, and the following features have been i
 - System status API 
 - System status tools API 
 - Data API 
-<!-- - Wishlist Functionality   -->
+
+### Upcoming Features 🚀  
+- Better documentation
 
 
 ## Contributing
