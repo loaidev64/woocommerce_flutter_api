@@ -50,6 +50,8 @@ abstract class FakeHelper {
 
   static String zipCode() => _faker.address.zipCode();
 
+  static String currencyCode() => _faker.currency.code();
+
   static T randomItem<T>(List<T> items) =>
       _faker.randomGenerator.element(items);
 }
