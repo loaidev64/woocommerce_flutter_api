@@ -57,7 +57,13 @@ In this mode, every API call (e.g., authentication, notifications, cart, product
 Login and securely store the user ID:
 
 ```dart
-await woocommerce.login('<email>', '<password>');
+try {
+  await woocommerce.login('<email>', '<password>');
+  // Login successful, user ID is stored securely
+} catch (e) {
+  // Handle login error
+  print('Login failed: $e');
+}
 ```
 
 ### Notifications
@@ -65,7 +71,16 @@ await woocommerce.login('<email>', '<password>');
 Fetch all notifications for the currently logged in user:
 
 ```dart
-final notifications = await woocommerce.getNotifications();
+try {
+  final notifications = await woocommerce.getNotifications();
+  // Process the list of notifications
+  notifications.forEach((notification) {
+    print('Notification: ${notification.message}'); 
+  });
+} catch (e) {
+  // Handle error fetching notifications
+  print('Error fetching notifications: $e');
+}
 ```
 
 ### Cart
@@ -73,16 +88,190 @@ final notifications = await woocommerce.getNotifications();
 Retrieve the cart for the current user:
 
 ```dart
-final cart = await woocommerce.getCart();
+try {
+  final cart = await woocommerce.getCart();
+  // Process cart data
+  print('Cart Total: ${cart.totals?.totalPrice}');
+  cart.items?.forEach((item) {
+    print('Item: ${item.name}, Quantity: ${item.quantity}');
+  });
+} catch (e) {
+  // Handle error fetching cart
+  print('Error fetching cart: $e');
+}
 ```
 
 ### WooCommerce API
 
-Fetch a list of products:
+#### Fetching a List of Products
+
+Retrieve a paginated list of products with various filtering options:
 
 ```dart
-final response = await woocommerce.getProducts();
+try {
+  // Fetch the first 10 published products, ordered by title ascending
+  final products = await woocommerce.getProducts(
+    perPage: 10,
+    page: 1,
+    status: WooFilterStatus.publish,
+    orderBy: WooSortOrderBy.title,
+    order: WooSortOrder.asc,
+  );
+  // Process the list of products
+  products.forEach((product) {
+    print('Product: ${product.name} - Price: ${product.price}');
+  });
+} catch (e) {
+  // Handle error fetching products
+  print('Error fetching products: $e');
+}
 ```
+
+#### Fetching a Single Product by ID
+
+Retrieve details for a specific product using its ID:
+
+```dart
+try {
+  final productId = 123; // Replace with the actual product ID
+  final product = await woocommerce.getProduct(productId);
+  // Process the product details
+  print('Fetched Product: ${product.name}');
+  print('Description: ${product.description}');
+} catch (e) {
+  // Handle error fetching single product
+  print('Error fetching product $productId: $e');
+}
+```
+
+#### Fetching Products with Related Data (`getProductWithOptions`)
+
+Often, when displaying a product detail screen, you need not only the main product data but also related information like variations, upsells, cross-sells, or grouped products. Making separate API calls for each of these can be inefficient.
+
+The `getProductWithOptions` method solves this by fetching the main product *and* specified related products in a single, optimized request.
+
+**When to Use:**
+
+Use this method typically on a product detail screen. After a user navigates from a product list (where you might have used `getProducts`) to view a specific item, call `getProductWithOptions` to gather all necessary data for that view efficiently.
+
+**How it Works:**
+
+You provide an already fetched `WooProduct` object and a list of `WooProductFilterWithType` enums specifying which related data you need (e.g., `variations`, `upsellIds`, `relatedIds`). The method returns a `WooProductWithChildrens` object containing the `mainProduct` and lists of the requested related products.
+
+**Example:**
+
+Assume you have a `selectedProduct` object (fetched previously) and you want to display its details along with its variations and upsell products.
+
+```dart
+// Assuming 'selectedProduct' is a WooProduct object you already have
+// and 'woocommerce' is your initialized WooCommerce instance.
+
+try {
+  // Specify the related data types you need
+  final optionsToFetch = [
+    WooProductFilterWithType.variations, // Fetch product variations
+    WooProductFilterWithType.upsellIds,  // Fetch upsell products
+    WooProductFilterWithType.relatedIds, // Fetch related products
+  ];
+
+  final productWithDetails = await woocommerce.getProductWithOptions(
+    selectedProduct,
+    optionsToFetch,
+  );
+
+  // Now you can access the main product and the fetched related data
+  print('Main Product: ${productWithDetails.mainProduct.name}');
+
+  if (productWithDetails.variations != null && productWithDetails.variations!.isNotEmpty) {
+    print('--- Variations ---');
+    productWithDetails.variations!.forEach((variation) {
+      print('Variation: ${variation.name} - Price: ${variation.price}');
+      // Display variation attributes, price, etc.
+    });
+  }
+
+  if (productWithDetails.upsellProducts != null && productWithDetails.upsellProducts!.isNotEmpty) {
+    print('--- Upsell Products ---');
+    productWithDetails.upsellProducts!.forEach((upsell) {
+      print('Upsell: ${upsell.name}');
+      // Display upsell products (e.g., in a carousel)
+    });
+  }
+  
+  if (productWithDetails.relatedProducts != null && productWithDetails.relatedProducts!.isNotEmpty) {
+    print('--- Related Products ---');
+    productWithDetails.relatedProducts!.forEach((related) {
+      print('Related: ${related.name}');
+      // Display related products
+    });
+  }
+
+} catch (e) {
+  // Handle errors fetching product details
+  print('Error fetching product with options: $e');
+}
+```
+
+This approach significantly reduces the number of network requests compared to fetching each piece of related data separately.
+
+#### Making Custom API Calls
+
+While this package aims to cover the most common WooCommerce REST API endpoints, you might encounter scenarios where you need to:
+
+1.  Call an endpoint not yet implemented by this package.
+2.  Interact with custom endpoints added by other WooCommerce plugins.
+
+For these cases, the package exposes the configured `Dio` instance directly via `woocommerce.dio`. This allows you to make arbitrary HTTP requests to your WooCommerce site, leveraging the base URL, authentication headers, and logging interceptor already set up by the `WooCommerce` class.
+
+**Example:**
+
+Let's say you need to fetch data from a custom endpoint `/wp-json/my-custom-plugin/v1/data` added by another plugin.
+
+```dart
+import 'package:dio/dio.dart'; // Import Dio
+
+// Assuming 'woocommerce' is your initialized WooCommerce instance.
+
+final customEndpoint = '/my-custom-plugin/v1/data'; // Relative path to the custom endpoint
+
+try {
+  // Use the exposed dio instance for the custom GET request
+  final response = await woocommerce.dio.get(
+    customEndpoint,
+    queryParameters: {
+      'filter': 'some_value', // Add any necessary query parameters
+      'limit': 5,
+    },
+  );
+
+  // Check if the request was successful (status code 2xx)
+  if (response.statusCode! >= 200 && response.statusCode! < 300) {
+    // Process the response data (likely a Map or List)
+    print('Custom API Response: ${response.data}');
+    // You might need to parse response.data into your custom Dart models
+  } else {
+    // Handle non-successful status codes
+    print('Custom API request failed with status: ${response.statusCode}');
+    print('Response body: ${response.data}');
+  }
+
+} on DioException catch (e) {
+  // Handle Dio-specific errors (network issues, timeouts, etc.)
+  print('Dio error calling custom endpoint $customEndpoint: $e');
+  if (e.response != null) {
+    // The server responded with an error status code
+    print('Error response data: ${e.response?.data}');
+  } else {
+    // Error setting up or sending the request
+    print('Error message: ${e.message}');
+  }
+} catch (e) {
+  // Handle any other unexpected errors
+  print('Unexpected error calling custom endpoint $customEndpoint: $e');
+}
+```
+
+Using `woocommerce.dio` gives you the flexibility to interact with any part of the WooCommerce REST API (or related custom APIs) directly, while still benefiting from the package's setup for authentication and base URL configuration. Remember to consult the WooCommerce REST API documentation or the documentation of the specific plugin for details on available endpoints, parameters, and expected response formats.
 
 ## Roadmap  
 
@@ -111,10 +300,10 @@ This package is actively being developed, and the following features have been i
 - System status API 
 - System status tools API 
 - Data API 
+- Exposed `dio` instance for custom API calls
 
 ### Upcoming Features 🚀  
 - Better documentation
-
 
 ## Contributing
 
