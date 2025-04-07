@@ -22,3 +22,8 @@
 # 1.2.0
 
 - Almost finished with all of the apis in Woocommerce official api.
+
+# 1.2.1
+
+- Improved API structure and documentation.
+- Added interceptors property to Woocommerce class
