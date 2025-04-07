@@ -6,6 +6,9 @@ void main() async {
     username: 'djasio',
     password: 'ldp[sald]',
     useFaker: true,
+    interceptors: [
+      // DioCacheInterceptor(),
+    ],
   );
 
   final response = await woocommerce.getProducts();

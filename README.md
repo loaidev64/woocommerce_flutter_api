@@ -31,6 +31,9 @@ final woocommerce = WooCommerce(
   useFaker: true,
   isDebug: true, // true by default
   apiPath: '<some-custom-path>',
+  interceptors: [
+      // DioCacheInterceptor(),
+  ],
 );
 ```
 ### Using Fake Data (`useFaker`)
@@ -47,6 +50,9 @@ final woocommerce = WooCommerce(
   useFaker: true,
   isDebug: true, // true by default
   apiPath: '<some-custom-path>',
+  interceptors: [
+      // DioCacheInterceptor(),
+  ],
 );
 ```
 

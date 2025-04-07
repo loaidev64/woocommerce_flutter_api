@@ -38,6 +38,7 @@ class WooCommerce {
     this.apiPath = '/wp-json/wc/v3',
     this.isDebug = true,
     this.useFaker = false,
+    List<Interceptor>? interceptors,
   }) {
     final authToken = base64.encode(utf8.encode('$username:$password'));
     dio = Dio(
@@ -56,5 +57,7 @@ class WooCommerce {
         responseBody: true,
       ));
     }
+
+    if (interceptors != null) dio.interceptors.addAll(interceptors);
   }
 }
