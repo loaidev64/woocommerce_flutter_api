@@ -27,3 +27,7 @@
 
 - Improved API structure and documentation.
 - Added interceptors property to Woocommerce class
+
+# 1.2.2
+
+- Fixes issue #23 in category orderby queryParameter.
