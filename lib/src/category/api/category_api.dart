@@ -17,7 +17,7 @@ extension WooCategoryApi on WooCommerce {
   ///
   /// [order] Order sort attribute ascending or descending. Options: asc and desc. Default is desc.
   ///
-  /// [orderBy] Sort collection by object attribute. Options: date, id, include, title, slug, price, popularity and rating. Default is date.
+  /// [orderBy] Sort collection by resource attribute. Options: id, include, name, slug, term_group, description and count. Default is name.
   ///
   /// [hideEmpty] Whether to hide resources not assigned to any products. Default is false.
   ///
@@ -36,7 +36,7 @@ extension WooCategoryApi on WooCommerce {
     List<int>? exclude,
     List<int>? include,
     WooSortOrder order = WooSortOrder.desc,
-    WooSortOrderBy orderBy = WooSortOrderBy.date,
+    WooCategoryOrderBy orderBy = WooCategoryOrderBy.name,
     bool? hideEmpty,
     int? parent,
     int? product,
@@ -80,7 +80,7 @@ extension WooCategoryApi on WooCommerce {
     required List<int>? exclude,
     required List<int>? include,
     required WooSortOrder order,
-    required WooSortOrderBy orderBy,
+    required WooCategoryOrderBy orderBy,
     required bool? hideEmpty,
     required int? parent,
     required int? product,
