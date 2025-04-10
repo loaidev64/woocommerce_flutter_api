@@ -43,6 +43,7 @@ extension WooOrderApi on WooCommerce {
   ///
   /// [dp] Number of decimal points to use in each resource. Default is 2.
   ///
+  ///
   /// [useFaker], fakes the api request
   Future<List<WooOrder>> getOrders({
     WooContext context = WooContext.view,
