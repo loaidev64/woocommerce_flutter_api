@@ -443,4 +443,109 @@ class WooProduct {
         dateOnSaleTo: FakeHelper.datetime(),
         dateOnSaleToGmt: FakeHelper.datetime(),
       );
+
+  Map<String, dynamic> toJson() {
+    final map = <String, dynamic>{};
+
+    if (id != null) map['id'] = id;
+    if (name != null) map['name'] = name;
+    if (slug != null) map['slug'] = slug;
+    if (permalink != null) map['permalink'] = permalink;
+    if (dateCreated != null) {
+      map['date_created'] = dateCreated!.toIso8601String();
+    }
+    if (dateCreatedGmt != null) {
+      map['date_created_gmt'] = dateCreatedGmt!.toIso8601String();
+    }
+    if (dateModified != null) {
+      map['date_modified'] = dateModified!.toIso8601String();
+    }
+    if (dateModifiedGmt != null) {
+      map['date_modified_gmt'] = dateModifiedGmt!.toIso8601String();
+    }
+    if (dateOnSaleFrom != null) {
+      map['date_on_sale_from'] = dateOnSaleFrom!.toIso8601String();
+    }
+    if (dateOnSaleFromGmt != null) {
+      map['date_on_sale_from_gmt'] = dateOnSaleFromGmt!.toIso8601String();
+    }
+    if (dateOnSaleTo != null) {
+      map['date_on_sale_to'] = dateOnSaleTo!.toIso8601String();
+    }
+    if (dateOnSaleToGmt != null) {
+      map['date_on_sale_to_gmt'] = dateOnSaleToGmt!.toIso8601String();
+    }
+    if (type != null) map['type'] = type!.name;
+    if (status != null) map['status'] = status!.name;
+    if (featured != null) map['featured'] = featured;
+    if (catalogVisibility != null) {
+      map['catalog_visibility'] = catalogVisibility!.name;
+    }
+    if (description != null) map['description'] = description;
+    if (shortDescription != null) map['short_description'] = shortDescription;
+    if (sku != null) map['sku'] = sku;
+    if (price != null) map['price'] = price!.toString();
+    if (regularPrice != null) map['regular_price'] = regularPrice!.toString();
+    if (salePrice != null) map['sale_price'] = salePrice!.toString();
+    if (priceHtml != null) map['price_html'] = priceHtml;
+    if (onSale != null) map['on_sale'] = onSale;
+    if (purchasable != null) map['purchasable'] = purchasable;
+    if (totalSales != null) map['total_sales'] = totalSales;
+    if (virtual != null) map['virtual'] = virtual;
+    if (downloadable != null) map['downloadable'] = downloadable;
+    if (downloads.isNotEmpty) {
+      map['downloads'] = downloads.map((e) => e.toJson()).toList();
+    }
+    if (downloadLimit != null) map['download_limit'] = downloadLimit;
+    if (downloadExpiry != null) map['download_expiry'] = downloadExpiry;
+    if (externalUrl != null) map['external_url'] = externalUrl;
+    if (buttonText != null) map['button_text'] = buttonText;
+    if (taxStatus != null) map['tax_status'] = taxStatus!.name;
+    if (taxClass != null) map['tax_class'] = taxClass;
+    if (manageStock != null) map['manage_stock'] = manageStock;
+    if (stockQuantity != null) map['stock_quantity'] = stockQuantity;
+    if (stockStatus != null) map['stock_status'] = stockStatus!.name;
+    if (backorders != null) map['backorders'] = backorders!.name;
+    if (backordersAllowed != null) {
+      map['backorders_allowed'] = backordersAllowed;
+    }
+    if (backordered != null) map['backordered'] = backordered;
+    if (soldIndividually != null) map['sold_individually'] = soldIndividually;
+    if (weight != null) map['weight'] = weight;
+    if (dimensions != null) map['dimensions'] = dimensions!.toJson();
+    if (shippingRequired != null) map['shipping_required'] = shippingRequired;
+    if (shippingTaxable != null) map['shipping_taxable'] = shippingTaxable;
+    if (shippingClass != null) map['shipping_class'] = shippingClass;
+    if (shippingClassId != null) map['shipping_class_id'] = shippingClassId;
+    if (reviewsAllowed != null) map['reviews_allowed'] = reviewsAllowed;
+    if (averageRating != null) map['average_rating'] = averageRating;
+    if (ratingCount != null) map['rating_count'] = ratingCount;
+    if (relatedIds != null) map['related_ids'] = relatedIds;
+    if (upsellIds != null) map['upsell_ids'] = upsellIds;
+    if (crossSellIds != null) map['cross_sell_ids'] = crossSellIds;
+    if (parentId != null) map['parent_id'] = parentId;
+    if (purchaseNote != null) map['purchase_note'] = purchaseNote;
+    if (categories.isNotEmpty) {
+      map['categories'] = categories.map((e) => e.toJson()).toList();
+    }
+    if (tags.isNotEmpty) map['tags'] = tags.map((e) => e.toJson()).toList();
+    if (images.isNotEmpty) {
+      map['images'] = images.map((e) => e.toJson()).toList();
+    }
+    if (attributes.isNotEmpty) {
+      map['attributes'] = attributes.map((e) => e.toJson()).toList();
+    }
+    if (defaultAttributes.isNotEmpty) {
+      map['default_attributes'] =
+          defaultAttributes.map((e) => e.toJson()).toList();
+    }
+    if (variations != null) map['variations'] = variations;
+    if (groupedProducts != null) map['grouped_products'] = groupedProducts;
+    if (menuOrder != null) map['menu_order'] = menuOrder;
+    if (metaData.isNotEmpty) {
+      map['meta_data'] = metaData.map((e) => e.toJson()).toList();
+    }
+
+    return map;
+  }
 }

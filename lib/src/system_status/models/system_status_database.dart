@@ -33,6 +33,6 @@ class WooSystemStatusDatabase {
     wcDatabaseVersion: '7.4.0',
     databasePrefix: 'wp_',
     maxmindGeoipDatabase: FakeHelper.sentence(),
-    databaseTables: FakeHelper.list(() => 'wp_' + FakeHelper.word()),
+    databaseTables: FakeHelper.list(() => 'wp_${FakeHelper.word()}'),
   );
 }
