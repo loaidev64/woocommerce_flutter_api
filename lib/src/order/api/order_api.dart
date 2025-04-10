@@ -43,6 +43,7 @@ extension WooOrderApi on WooCommerce {
   ///
   /// [dp] Number of decimal points to use in each resource. Default is 2.
   ///
+  ///
   /// [useFaker], fakes the api request
   Future<List<WooOrder>> getOrders({
     WooContext context = WooContext.view,
@@ -58,7 +59,7 @@ extension WooOrderApi on WooCommerce {
     List<int>? include,
     int? offset,
     WooSortOrder order = WooSortOrder.desc,
-    WooSortOrderBy orderBy = WooSortOrderBy.date,
+    WooOrderOrderBy orderBy = WooOrderOrderBy.date,
     List<int>? parent,
     List<int>? parentExclude,
     List<WooOrderStatus> status = const [WooOrderStatus.any],
@@ -118,7 +119,7 @@ extension WooOrderApi on WooCommerce {
     required List<int>? include,
     required int? offset,
     required WooSortOrder order,
-    required WooSortOrderBy orderBy,
+    required WooOrderOrderBy orderBy,
     required List<int>? parent,
     required List<int>? parentExclude,
     required List<WooOrderStatus> status,
