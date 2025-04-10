@@ -31,3 +31,9 @@
 # 1.2.2
 
 - Fixes issue #23 in category orderby queryParameter.
+
+# 1.3.0
+
+- Fixes issue in getOrders orderby queryParameter.
+- Added create, update, delete product category apis.
+- Added create, update, delete, duplicate product apis.
