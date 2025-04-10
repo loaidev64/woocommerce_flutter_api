@@ -363,4 +363,67 @@ extension WooProductApi on WooCommerce {
 
     return map;
   }
+
+  Future<WooProduct> createProduct(WooProduct product, {bool? useFaker}) async {
+    final isUsingFaker = useFaker ?? this.useFaker;
+
+    if (isUsingFaker) {
+      return WooProduct.fake();
+    }
+
+    final response = await dio.post(
+      _ProductEndpoints.products,
+      data: product.toJson(),
+    );
+
+    return WooProduct.fromJson(response.data);
+  }
+
+  /// Duplicates an existing product
+  Future<WooProduct> duplicateProduct(int productId, {bool? useFaker}) async {
+    final isUsingFaker = useFaker ?? this.useFaker;
+
+    if (isUsingFaker) {
+      return WooProduct.fake();
+    }
+
+    final response = await dio.post(
+      _ProductEndpoints.duplicateProduct(productId),
+    );
+
+    return WooProduct.fromJson(response.data);
+  }
+
+  Future<WooProduct> updateProduct(int id, WooProduct product,
+      {bool? useFaker}) async {
+    final isUsingFaker = useFaker ?? this.useFaker;
+
+    if (isUsingFaker) {
+      return WooProduct.fake();
+    }
+
+    final response = await dio.put(
+      _ProductEndpoints.singleProduct(id),
+      data: product.toJson(),
+    );
+
+    return WooProduct.fromJson(response.data);
+  }
+
+  /// [force] Whether to permanently delete the product (defaults to false - move to trash)
+  Future<WooProduct> deleteProduct(int id,
+      {bool force = false, bool? useFaker}) async {
+    final isUsingFaker = useFaker ?? this.useFaker;
+
+    if (isUsingFaker) {
+      return WooProduct.fake();
+    }
+
+    final response = await dio.delete(
+      _ProductEndpoints.singleProduct(id),
+      queryParameters: {'force': force},
+    );
+
+    return WooProduct.fromJson(response.data);
+  }
 }
