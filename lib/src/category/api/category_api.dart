@@ -136,4 +136,64 @@ extension WooCategoryApi on WooCommerce {
 
     return WooProductCategory.fromJson(response.data as Map<String, dynamic>);
   }
+
+  Future<WooProductCategory> createCategory(
+    WooProductCategory category, {
+    bool? useFaker,
+  }) async {
+    final isUsingFaker = useFaker ?? this.useFaker;
+
+    if (isUsingFaker) {
+      return WooProductCategory.fake();
+    }
+
+    final response = await dio.post(
+      _CategoryEndpoints.categories,
+      data: category.toJson(),
+    );
+
+    return WooProductCategory.fromJson(response.data as Map<String, dynamic>);
+  }
+
+  Future<WooProductCategory> updateCategory(
+    WooProductCategory category, {
+    bool? useFaker,
+  }) async {
+    final isUsingFaker = useFaker ?? this.useFaker;
+
+    if (isUsingFaker) {
+      return WooProductCategory.fake();
+    }
+
+    final response = await dio.put(
+      _CategoryEndpoints.singleCategory(category.id!),
+      data: category.toJson(),
+    );
+
+    return WooProductCategory.fromJson(response.data as Map<String, dynamic>);
+  }
+
+  /// [force] Whether to permanently delete the category instead of moving to trash. Default is false.
+  ///
+  /// [useFaker] Fakes the api request for testing purposes.
+  Future<bool> deleteCategory(
+    int id, {
+    bool force = false,
+    bool? useFaker,
+  }) async {
+    final isUsingFaker = useFaker ?? this.useFaker;
+
+    if (isUsingFaker) {
+      return true;
+    }
+
+    await dio.delete(
+      _CategoryEndpoints.singleCategory(id),
+      queryParameters: {
+        'force': force,
+      },
+    );
+
+    return true;
+  }
 }
