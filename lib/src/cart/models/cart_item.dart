@@ -1,5 +1,4 @@
 import 'package:faker/faker.dart';
-import 'package:woocommerce_flutter_api/src/helpers/fake_helper.dart';
 import 'package:woocommerce_flutter_api/woocommerce_flutter_api.dart';
 
 class WooCartItem {
