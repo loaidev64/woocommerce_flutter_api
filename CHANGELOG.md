@@ -1,3 +1,7 @@
+## 1.4.0
+
+- Updated dependencies to the latest versions.
+
 ## 1.0.0
 
 - Initial version.
