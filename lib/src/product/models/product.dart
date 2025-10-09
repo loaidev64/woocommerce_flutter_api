@@ -14,6 +14,66 @@ import 'product_image.dart';
 import 'product_item_attribute.dart';
 import 'product_tag.dart';
 
+/// Represents a WooCommerce product with all its attributes and metadata.
+///
+/// This class models a complete WooCommerce product including basic information,
+/// pricing, inventory, shipping, categories, tags, images, and more.
+///
+/// ## Key Features
+///
+/// - **Product Information**: Name, description, SKU, type, status
+/// - **Pricing**: Regular price, sale price, price formatting
+/// - **Inventory Management**: Stock quantity, stock status, backorders
+/// - **Shipping**: Weight, dimensions, shipping class
+/// - **Categories & Tags**: Product categorization and tagging
+/// - **Images**: Product gallery and featured images
+/// - **Attributes**: Custom product attributes and variations
+/// - **SEO**: Slug, permalink for search engine optimization
+///
+/// ## Usage Examples
+///
+/// ### Creating a Simple Product
+///
+/// ```dart
+/// final product = WooProduct(
+///   name: 'Sample Product',
+///   type: WooProductType.simple,
+///   status: WooProductStatus.publish,
+///   price: 29.99,
+///   description: 'A sample product description',
+/// );
+/// ```
+///
+/// ### Working with Product Data
+///
+/// ```dart
+/// // Check if product is on sale
+/// if (product.onSale == true) {
+///   print('Sale price: ${product.salePrice}');
+/// }
+///
+/// // Get product images
+/// for (final image in product.images) {
+///   print('Image URL: ${image.src}');
+/// }
+///
+/// // Check stock status
+/// if (product.stockStatus == WooProductStockStatus.instock) {
+///   print('Product is in stock');
+/// }
+/// ```
+///
+/// ## JSON Serialization
+///
+/// The class supports full JSON serialization for API communication:
+///
+/// ```dart
+/// // Convert to JSON for API requests
+/// final json = product.toJson();
+///
+/// // Create from JSON response
+/// final product = WooProduct.fromJson(jsonData);
+/// ```
 class WooProduct {
   /// Unique identifier for the resource.
   final int? id;
@@ -282,14 +342,30 @@ class WooProduct {
       : id = json['id'],
         name = json['name'],
         slug = json['slug'],
-        dateCreated = DateTime.parse(json['date_created']),
-        dateCreatedGmt = DateTime.parse(json['date_modified_gmt']),
-        dateModified = DateTime.parse(json['date_modified']),
-        dateModifiedGmt = DateTime.parse(json['date_created_gmt']),
-        dateOnSaleFrom = DateTime.parse(json['date_on_sale_from']),
-        dateOnSaleFromGmt = DateTime.parse(json['date_on_sale_from_gmt']),
-        dateOnSaleTo = DateTime.parse(json['date_on_sale_to']),
-        dateOnSaleToGmt = DateTime.parse(json['date_on_sale_to_gmt']),
+        dateCreated = json['date_created'] != null
+            ? DateTime.parse(json['date_created'])
+            : null,
+        dateCreatedGmt = json['date_created_gmt'] != null
+            ? DateTime.parse(json['date_created_gmt'])
+            : null,
+        dateModified = json['date_modified'] != null
+            ? DateTime.parse(json['date_modified'])
+            : null,
+        dateModifiedGmt = json['date_modified_gmt'] != null
+            ? DateTime.parse(json['date_modified_gmt'])
+            : null,
+        dateOnSaleFrom = json['date_on_sale_from'] != null
+            ? DateTime.parse(json['date_on_sale_from'])
+            : null,
+        dateOnSaleFromGmt = json['date_on_sale_from_gmt'] != null
+            ? DateTime.parse(json['date_on_sale_from_gmt'])
+            : null,
+        dateOnSaleTo = json['date_on_sale_to'] != null
+            ? DateTime.parse(json['date_on_sale_to'])
+            : null,
+        dateOnSaleToGmt = json['date_on_sale_to_gmt'] != null
+            ? DateTime.parse(json['date_on_sale_to_gmt'])
+            : null,
         permalink = json['permalink'],
         type = WooProductType.fromString(json['type']),
         status = WooProductStatus.fromString(json['status']),
@@ -373,6 +449,155 @@ class WooProduct {
   @override
   int get hashCode {
     return id.hashCode;
+  }
+
+  /// Creates a copy of this [WooProduct] with the given fields replaced with new values.
+  ///
+  /// This method is useful for updating product data without modifying the original object.
+  ///
+  /// ## Example
+  ///
+  /// ```dart
+  /// final updatedProduct = product.copyWith(
+  ///   name: 'Updated Product Name',
+  ///   price: 39.99,
+  ///   onSale: true,
+  /// );
+  /// ```
+  WooProduct copyWith({
+    int? id,
+    String? name,
+    String? slug,
+    String? permalink,
+    DateTime? dateCreated,
+    DateTime? dateCreatedGmt,
+    DateTime? dateModified,
+    DateTime? dateModifiedGmt,
+    DateTime? dateOnSaleFrom,
+    DateTime? dateOnSaleFromGmt,
+    DateTime? dateOnSaleTo,
+    DateTime? dateOnSaleToGmt,
+    WooProductType? type,
+    WooProductStatus? status,
+    bool? featured,
+    WooProductCatalogVisibility? catalogVisibility,
+    String? description,
+    String? shortDescription,
+    String? sku,
+    double? price,
+    double? regularPrice,
+    double? salePrice,
+    String? priceHtml,
+    bool? onSale,
+    bool? purchasable,
+    int? totalSales,
+    bool? virtual,
+    bool? downloadable,
+    List<WooProductDownload>? downloads,
+    int? downloadLimit,
+    int? downloadExpiry,
+    String? externalUrl,
+    String? buttonText,
+    WooProductTaxStatus? taxStatus,
+    String? taxClass,
+    bool? manageStock,
+    int? stockQuantity,
+    WooProductStockStatus? stockStatus,
+    WooProductBackorder? backorders,
+    bool? backordersAllowed,
+    bool? backordered,
+    bool? soldIndividually,
+    String? weight,
+    WooProductDimension? dimensions,
+    bool? shippingRequired,
+    bool? shippingTaxable,
+    String? shippingClass,
+    int? shippingClassId,
+    bool? reviewsAllowed,
+    String? averageRating,
+    int? ratingCount,
+    List<int>? relatedIds,
+    List<int>? upsellIds,
+    List<int>? crossSellIds,
+    int? parentId,
+    String? purchaseNote,
+    List<WooProductCategory>? categories,
+    List<WooProductTag>? tags,
+    List<WooProductImage>? images,
+    List<WooProductItemAttribute>? attributes,
+    List<WooProductDefaultAttribute>? defaultAttributes,
+    List<int>? variations,
+    List<int>? groupedProducts,
+    int? menuOrder,
+    List<WooMetaData>? metaData,
+  }) {
+    return WooProduct(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      slug: slug ?? this.slug,
+      permalink: permalink ?? this.permalink,
+      dateCreated: dateCreated ?? this.dateCreated,
+      dateCreatedGmt: dateCreatedGmt ?? this.dateCreatedGmt,
+      dateModified: dateModified ?? this.dateModified,
+      dateModifiedGmt: dateModifiedGmt ?? this.dateModifiedGmt,
+      dateOnSaleFrom: dateOnSaleFrom ?? this.dateOnSaleFrom,
+      dateOnSaleFromGmt: dateOnSaleFromGmt ?? this.dateOnSaleFromGmt,
+      dateOnSaleTo: dateOnSaleTo ?? this.dateOnSaleTo,
+      dateOnSaleToGmt: dateOnSaleToGmt ?? this.dateOnSaleToGmt,
+      type: type ?? this.type,
+      status: status ?? this.status,
+      featured: featured ?? this.featured,
+      catalogVisibility: catalogVisibility ?? this.catalogVisibility,
+      description: description ?? this.description,
+      shortDescription: shortDescription ?? this.shortDescription,
+      sku: sku ?? this.sku,
+      price: price ?? this.price,
+      regularPrice: regularPrice ?? this.regularPrice,
+      salePrice: salePrice ?? this.salePrice,
+      priceHtml: priceHtml ?? this.priceHtml,
+      onSale: onSale ?? this.onSale,
+      purchasable: purchasable ?? this.purchasable,
+      totalSales: totalSales ?? this.totalSales,
+      virtual: virtual ?? this.virtual,
+      downloadable: downloadable ?? this.downloadable,
+      downloads: downloads ?? this.downloads,
+      downloadLimit: downloadLimit ?? this.downloadLimit,
+      downloadExpiry: downloadExpiry ?? this.downloadExpiry,
+      externalUrl: externalUrl ?? this.externalUrl,
+      buttonText: buttonText ?? this.buttonText,
+      taxStatus: taxStatus ?? this.taxStatus,
+      taxClass: taxClass ?? this.taxClass,
+      manageStock: manageStock ?? this.manageStock,
+      stockQuantity: stockQuantity ?? this.stockQuantity,
+      stockStatus: stockStatus ?? this.stockStatus,
+      backorders: backorders ?? this.backorders,
+      backordersAllowed: backordersAllowed ?? this.backordersAllowed,
+      backordered: backordered ?? this.backordered,
+      soldIndividually: soldIndividually ?? this.soldIndividually,
+      weight: weight ?? this.weight,
+      dimensions: dimensions ?? this.dimensions,
+      shippingRequired: shippingRequired ?? this.shippingRequired,
+      shippingTaxable: shippingTaxable ?? this.shippingTaxable,
+      shippingClass: shippingClass ?? this.shippingClass,
+      shippingClassId: shippingClassId ?? this.shippingClassId,
+      reviewsAllowed: reviewsAllowed ?? this.reviewsAllowed,
+      averageRating: averageRating ?? this.averageRating,
+      ratingCount: ratingCount ?? this.ratingCount,
+      relatedIds: relatedIds ?? this.relatedIds,
+      upsellIds: upsellIds ?? this.upsellIds,
+      crossSellIds: crossSellIds ?? this.crossSellIds,
+      parentId: parentId ?? this.parentId,
+      purchaseNote: purchaseNote ?? this.purchaseNote,
+      categories: categories ?? this.categories,
+      tags: tags ?? this.tags,
+      images: images ?? this.images,
+      attributes: attributes ?? this.attributes,
+      defaultAttributes: defaultAttributes ?? this.defaultAttributes,
+      variations: variations ?? this.variations,
+      groupedProducts: groupedProducts ?? this.groupedProducts,
+      menuOrder: menuOrder ?? this.menuOrder,
+      metaData: metaData ?? this.metaData,
+    );
   }
 
   factory WooProduct.fake() => WooProduct(

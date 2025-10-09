@@ -2,8 +2,6 @@ library;
 
 export 'src/woocommerce_flutter_api_base.dart';
 
-// TODO: Export any libraries intended for clients of this package.
-
 // products
 export 'src/product/api/product_api.dart';
 export 'src/product/api/product_tag_api.dart';

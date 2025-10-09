@@ -13,6 +13,67 @@ import 'order_fee_line.dart';
 import 'refund.dart';
 import 'shipping.dart';
 
+/// Represents a WooCommerce order with all its details and line items.
+///
+/// This class models a complete WooCommerce order including customer information,
+/// billing and shipping addresses, line items, taxes, fees, and order status.
+///
+/// ## Key Features
+///
+/// - **Order Information**: ID, number, key, status, currency
+/// - **Customer Data**: Customer ID, IP address, user agent
+/// - **Addresses**: Billing and shipping address information
+/// - **Financial**: Totals, taxes, discounts, payment information
+/// - **Line Items**: Products, quantities, prices in the order
+/// - **Timestamps**: Creation, modification, payment, completion dates
+/// - **Metadata**: Custom order metadata and notes
+///
+/// ## Usage Examples
+///
+/// ### Creating a New Order
+///
+/// ```dart
+/// final order = WooOrder(
+///   id: 0, // Will be assigned by WooCommerce
+///   status: WooOrderStatus.pending,
+///   currency: WooOrderCurrency.usd,
+///   customerId: 123,
+///   billing: WooBilling(
+///     firstName: 'John',
+///     lastName: 'Doe',
+///     email: 'john@example.com',
+///   ),
+/// );
+/// ```
+///
+/// ### Working with Order Data
+///
+/// ```dart
+/// // Check order status
+/// if (order.status == WooOrderStatus.completed) {
+///   print('Order is completed');
+/// }
+///
+/// // Get order total
+/// print('Order total: \$${order.total}');
+///
+/// // Access line items
+/// for (final item in order.lineItems ?? []) {
+///   print('Item: ${item.name}, Qty: ${item.quantity}');
+/// }
+/// ```
+///
+/// ## JSON Serialization
+///
+/// The class supports full JSON serialization for API communication:
+///
+/// ```dart
+/// // Convert to JSON for API requests
+/// final json = order.toJson();
+///
+/// // Create from JSON response
+/// final order = WooOrder.fromJson(jsonData);
+/// ```
 class WooOrder {
   /// Unique identifier for the resource.
   int? id;
@@ -277,10 +338,10 @@ class WooOrder {
     data['version'] = version;
     data['status'] = status?.name;
     data['currency'] = currency?.name;
-    data['date_created'] = dateCreated;
-    data['date_created_gmt'] = dateCreatedGmt;
-    data['date_modified'] = dateModified;
-    data['date_modified_gmt'] = dateModifiedGmt;
+    data['date_created'] = dateCreated?.toIso8601String();
+    data['date_created_gmt'] = dateCreatedGmt?.toIso8601String();
+    data['date_modified'] = dateModified?.toIso8601String();
+    data['date_modified_gmt'] = dateModifiedGmt?.toIso8601String();
     data['discount_total'] = discountTotal;
     data['discount_tax'] = discountTax;
     data['shipping_total'] = shippingTotal;
@@ -302,10 +363,10 @@ class WooOrder {
     data['payment_method'] = paymentMethod;
     data['payment_method_title'] = paymentMethodTitle;
     data['transaction_id'] = transactionId;
-    data['date_paid'] = datePaid;
-    data['date_paid_gmt'] = datePaidGmt;
-    data['date_completed'] = dateCompleted;
-    data['date_completed_gmt'] = dateCompletedGmt;
+    data['date_paid'] = datePaid?.toIso8601String();
+    data['date_paid_gmt'] = datePaidGmt?.toIso8601String();
+    data['date_completed'] = dateCompleted?.toIso8601String();
+    data['date_completed_gmt'] = dateCompletedGmt?.toIso8601String();
     data['cart_hash'] = cartHash;
     if (metaData != null) {
       data['meta_data'] = metaData!.map((v) => v.toJson()).toList();

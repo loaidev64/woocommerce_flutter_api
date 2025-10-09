@@ -5,70 +5,76 @@ import 'package:woocommerce_flutter_api/woocommerce_flutter_api.dart';
 
 part 'product_endpoints.dart';
 
+/// Extension providing product-related API methods for WooCommerce.
+///
+/// This extension adds methods to interact with WooCommerce products,
+/// including fetching, creating, updating, and deleting products.
 extension WooProductApi on WooCommerce {
-  /// [context] Scope under which the request is made; determines fields present in response. Options: view and edit. Default is view.
+  /// Retrieves a list of products from the WooCommerce store.
   ///
-  /// [page] Current page of the collection. Default is 1.
+  /// This method supports extensive filtering and pagination options to help you
+  /// find exactly the products you need.
   ///
-  /// [perPage] Maximum number of items to be returned in result set. Default is 10.
+  /// ## Parameters
   ///
-  /// [search] Limit results to those matching a string.
+  /// - [context]: Scope under which the request is made; determines fields present in response. Options: view and edit. Default is view.
+  /// - [page]: Current page of the collection. Default is 1.
+  /// - [perPage]: Maximum number of items to be returned in result set. Default is 10.
+  /// - [search]: Limit results to those matching a string.
+  /// - [after]: Limit response to resources published after a given ISO8601 compliant date.
+  /// - [before]: Limit response to resources published before a given ISO8601 compliant date.
+  /// - [modifiedAfter]: Limit response to resources modified after a given ISO8601 compliant date.
+  /// - [modifiedBefore]: Limit response to resources modified after a given ISO8601 compliant date.
+  /// - [datesAreGmt]: Whether to consider GMT post dates when limiting response by published or modified date.
+  /// - [exclude]: Ensure result set excludes specific IDs.
+  /// - [include]: Limit result set to specific ids.
+  /// - [offset]: Offset the result set by a specific number of items.
+  /// - [order]: Order sort attribute ascending or descending. Options: asc and desc. Default is desc.
+  /// - [orderBy]: Sort collection by object attribute. Options: date, id, include, title, slug, price, popularity and rating. Default is date.
+  /// - [parent]: Limit result set to those of particular parent IDs.
+  /// - [parentExclude]: Limit result set to all items except those of a particular parent ID.
+  /// - [slug]: Limit result set to products with a specific slug.
+  /// - [status]: Limit result set to products assigned a specific status. Options: any, draft, pending, private and publish. Default is any.
+  /// - [type]: Limit result set to products assigned a specific type. Options: simple, grouped, external and variable.
+  /// - [sku]: Limit result set to products with a specific SKU.
+  /// - [featured]: Limit result set to featured products.
+  /// - [category]: Limit result set to products assigned a specific category ID.
+  /// - [tag]: Limit result set to products assigned a specific tag ID.
+  /// - [shippingClass]: Limit result set to products assigned a specific shipping class ID.
+  /// - [attribute]: Limit result set to products with a specific attribute.
+  /// - [attributeTerm]: Limit result set to products with a specific attribute term ID (required an assigned attribute).
+  /// - [taxClass]: Limit result set to products with a specific tax class. Default options: standard, reduced-rate and zero-rate.
+  /// - [onSale]: Limit result set to products on sale.
+  /// - [minPrice]: Limit result set to products based on a minimum price.
+  /// - [maxPrice]: Limit result set to products based on a maximum price.
+  /// - [stockStatus]: Limit result set to products with specified stock status. Options: instock, outofstock and onbackorder.
+  /// - [useFaker]: Override the global useFaker setting for this request.
   ///
-  /// [after] Limit response to resources published after a given ISO8601 compliant date.
+  /// ## Returns
   ///
-  /// [before] Limit response to resources published before a given ISO8601 compliant date.
+  /// A [Future] that completes with a list of [WooProduct] objects.
   ///
-  /// [modifiedAfter] Limit response to resources modified after a given ISO8601 compliant date.
+  /// ## Example
   ///
-  /// [modifiedBefore] Limit response to resources modified after a given ISO8601 compliant date.
+  /// ```dart
+  /// // Get first 10 published products
+  /// final products = await woocommerce.getProducts(
+  ///   perPage: 10,
+  ///   status: WooFilterStatus.publish,
+  /// );
   ///
-  /// [datesAreGmt] Whether to consider GMT post dates when limiting response by published or modified date.
+  /// // Search for products
+  /// final searchResults = await woocommerce.getProducts(
+  ///   search: 'laptop',
+  ///   perPage: 20,
+  /// );
   ///
-  /// [exclude] Ensure result set excludes specific IDs.
-  ///
-  /// [include] Limit result set to specific ids.
-  ///
-  /// [offset] Offset the result set by a specific number of items.
-  ///
-  /// [order] Order sort attribute ascending or descending. Options: asc and desc. Default is desc.
-  ///
-  /// [orderBy] Sort collection by object attribute. Options: date, id, include, title, slug, price, popularity and rating. Default is date.
-  ///
-  /// [parent] Limit result set to those of particular parent IDs.
-  ///
-  /// [parentExclude] Limit result set to all items except those of a particular parent ID.
-  ///
-  /// [slug] Limit result set to products with a specific slug.
-  ///
-  /// [status] Limit result set to products assigned a specific status. Options: any, draft, pending, private and publish. Default is any.
-  ///
-  /// [type] Limit result set to products assigned a specific type. Options: simple, grouped, external and variable.
-  ///
-  /// [sku] Limit result set to products with a specific SKU.
-  ///
-  /// [featured] Limit result set to featured products.
-  ///
-  /// [category] Limit result set to products assigned a specific category ID.
-  ///
-  /// [tag] Limit result set to products assigned a specific tag ID.
-  ///
-  /// [shippingClass] Limit result set to products assigned a specific shipping class ID.
-  ///
-  /// [attribute] Limit result set to products with a specific attribute.
-  ///
-  /// [attributeTerm] Limit result set to products with a specific attribute term ID (required an assigned attribute).
-  ///
-  /// [taxClass] Limit result set to products with a specific tax class. Default options: standard, reduced-rate and zero-rate.
-  ///
-  /// [onSale] Limit result set to products on sale.
-  ///
-  /// [minPrice] Limit result set to products based on a minimum price.
-  ///
-  /// [maxPrice] Limit result set to products based on a maximum price.
-  ///
-  /// [stockStatus] Limit result set to products with specified stock status. Options: instock, outofstock and onbackorder.
-  ///
-  /// [useFaker], fakes the api request
+  /// // Get featured products on sale
+  /// final featuredOnSale = await woocommerce.getProducts(
+  ///   featured: true,
+  ///   onSale: true,
+  /// );
+  /// ```
   Future<List<WooProduct>> getProducts({
     WooContext context = WooContext.view,
     int page = 1,
@@ -296,6 +302,23 @@ extension WooProductApi on WooCommerce {
     return map;
   }
 
+  /// Retrieves a single product by its ID.
+  ///
+  /// ## Parameters
+  ///
+  /// - [id]: The unique identifier of the product to retrieve.
+  /// - [useFaker]: Override the global useFaker setting for this request.
+  ///
+  /// ## Returns
+  ///
+  /// A [Future] that completes with a [WooProduct] object.
+  ///
+  /// ## Example
+  ///
+  /// ```dart
+  /// final product = await woocommerce.getProduct(123);
+  /// print('Product: ${product.name}');
+  /// ```
   Future<WooProduct> getProduct(int id, {bool? useFaker}) async {
     final isUsingFaker = useFaker ?? this.useFaker;
 
@@ -310,11 +333,43 @@ extension WooProductApi on WooCommerce {
     return WooProduct.fromJson(response.data as Map<String, dynamic>);
   }
 
-  /// gets a product with related products
+  /// Retrieves a product along with its related products in a single optimized request.
   ///
-  /// [product] the product that you want to get it's related products
+  /// This method is particularly useful for product detail pages where you need
+  /// to display the main product along with its variations, upsells, cross-sells,
+  /// or related products without making multiple API calls.
   ///
-  /// [types] the types that you want to get for [product]
+  /// ## Parameters
+  ///
+  /// - [product]: The main product for which to fetch related data.
+  /// - [types]: List of related product types to fetch (variations, upsells, etc.).
+  /// - [useFaker]: Override the global useFaker setting for this request.
+  ///
+  /// ## Returns
+  ///
+  /// A [Future] that completes with a [WooProductWithChildrens] object containing
+  /// the main product and all requested related products.
+  ///
+  /// ## Example
+  ///
+  /// ```dart
+  /// final productWithDetails = await woocommerce.getProductWithOptions(
+  ///   selectedProduct,
+  ///   [
+  ///     WooProductFilterWithType.variations,
+  ///     WooProductFilterWithType.upsellIds,
+  ///     WooProductFilterWithType.relatedIds,
+  ///   ],
+  /// );
+  ///
+  /// // Access main product
+  /// print('Main: ${productWithDetails.mainProduct.name}');
+  ///
+  /// // Access variations
+  /// for (final variation in productWithDetails.variations ?? []) {
+  ///   print('Variation: ${variation.name}');
+  /// }
+  /// ```
   Future<WooProductWithChildrens> getProductWithOptions(
       WooProduct product, List<WooProductFilterWithType> types,
       {bool? useFaker}) async {
@@ -364,6 +419,30 @@ extension WooProductApi on WooCommerce {
     return map;
   }
 
+  /// Creates a new product in the WooCommerce store.
+  ///
+  /// ## Parameters
+  ///
+  /// - [product]: The product object to create.
+  /// - [useFaker]: Override the global useFaker setting for this request.
+  ///
+  /// ## Returns
+  ///
+  /// A [Future] that completes with the created [WooProduct] object (including the assigned ID).
+  ///
+  /// ## Example
+  ///
+  /// ```dart
+  /// final newProduct = WooProduct(
+  ///   name: 'New Product',
+  ///   type: WooProductType.simple,
+  ///   status: WooProductStatus.publish,
+  ///   price: 29.99,
+  /// );
+  ///
+  /// final createdProduct = await woocommerce.createProduct(newProduct);
+  /// print('Created product with ID: ${createdProduct.id}');
+  /// ```
   Future<WooProduct> createProduct(WooProduct product, {bool? useFaker}) async {
     final isUsingFaker = useFaker ?? this.useFaker;
 
@@ -379,7 +458,25 @@ extension WooProductApi on WooCommerce {
     return WooProduct.fromJson(response.data);
   }
 
-  /// Duplicates an existing product
+  /// Duplicates an existing product, creating a copy with a new ID.
+  ///
+  /// This is useful for creating product variants or templates based on existing products.
+  ///
+  /// ## Parameters
+  ///
+  /// - [productId]: The ID of the product to duplicate.
+  /// - [useFaker]: Override the global useFaker setting for this request.
+  ///
+  /// ## Returns
+  ///
+  /// A [Future] that completes with the duplicated [WooProduct] object.
+  ///
+  /// ## Example
+  ///
+  /// ```dart
+  /// final duplicatedProduct = await woocommerce.duplicateProduct(123);
+  /// print('Duplicated product: ${duplicatedProduct.name}');
+  /// ```
   Future<WooProduct> duplicateProduct(int productId, {bool? useFaker}) async {
     final isUsingFaker = useFaker ?? this.useFaker;
 
@@ -394,6 +491,29 @@ extension WooProductApi on WooCommerce {
     return WooProduct.fromJson(response.data);
   }
 
+  /// Updates an existing product in the WooCommerce store.
+  ///
+  /// ## Parameters
+  ///
+  /// - [id]: The ID of the product to update.
+  /// - [product]: The updated product data.
+  /// - [useFaker]: Override the global useFaker setting for this request.
+  ///
+  /// ## Returns
+  ///
+  /// A [Future] that completes with the updated [WooProduct] object.
+  ///
+  /// ## Example
+  ///
+  /// ```dart
+  /// final updatedProduct = product.copyWith(
+  ///   name: 'Updated Product Name',
+  ///   price: 39.99,
+  /// );
+  ///
+  /// final result = await woocommerce.updateProduct(123, updatedProduct);
+  /// print('Updated: ${result.name}');
+  /// ```
   Future<WooProduct> updateProduct(int id, WooProduct product,
       {bool? useFaker}) async {
     final isUsingFaker = useFaker ?? this.useFaker;
@@ -410,7 +530,27 @@ extension WooProductApi on WooCommerce {
     return WooProduct.fromJson(response.data);
   }
 
-  /// [force] Whether to permanently delete the product (defaults to false - move to trash)
+  /// Deletes a product from the WooCommerce store.
+  ///
+  /// ## Parameters
+  ///
+  /// - [id]: The ID of the product to delete.
+  /// - [force]: Whether to permanently delete the product (defaults to false - move to trash).
+  /// - [useFaker]: Override the global useFaker setting for this request.
+  ///
+  /// ## Returns
+  ///
+  /// A [Future] that completes with the deleted [WooProduct] object.
+  ///
+  /// ## Example
+  ///
+  /// ```dart
+  /// // Move to trash (default)
+  /// final deletedProduct = await woocommerce.deleteProduct(123);
+  ///
+  /// // Permanently delete
+  /// final permanentlyDeleted = await woocommerce.deleteProduct(123, force: true);
+  /// ```
   Future<WooProduct> deleteProduct(int id,
       {bool force = false, bool? useFaker}) async {
     final isUsingFaker = useFaker ?? this.useFaker;
