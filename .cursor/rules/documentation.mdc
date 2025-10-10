@@ -53,6 +53,7 @@
 
 #### Required Sections
 - **Purpose**: Clear description of what the method does
+- **Official Documentation**: Direct link to WooCommerce REST API documentation
 - **Parameters**: Detailed parameter descriptions with types and defaults
 - **Returns**: Clear return type documentation
 - **Throws**: Exception handling documentation
@@ -63,6 +64,7 @@
 /// [Method Name] - Brief Description
 /// 
 /// [Detailed description of method functionality and purpose]
+/// https://woocommerce.github.io/woocommerce-rest-api-docs/#[endpoint-name]
 /// 
 /// ## Parameters
 /// 
@@ -227,6 +229,17 @@
 - Explain WooCommerce concepts and workflows
 - Provide WooCommerce-specific examples
 
+#### Official Documentation Links
+- **Required**: Include direct links to official WooCommerce REST API documentation
+- **Format**: Use the pattern `https://woocommerce.github.io/woocommerce-rest-api-docs/#[endpoint-name]`
+- **Placement**: Add links immediately after the method description, before the Parameters section
+- **Examples**:
+  - `https://woocommerce.github.io/woocommerce-rest-api-docs/#list-all-webhooks`
+  - `https://woocommerce.github.io/woocommerce-rest-api-docs/#retrieve-a-webhook`
+  - `https://woocommerce.github.io/woocommerce-rest-api-docs/#create-a-webhook`
+  - `https://woocommerce.github.io/woocommerce-rest-api-docs/#update-a-webhook`
+  - `https://woocommerce.github.io/woocommerce-rest-api-docs/#delete-a-webhook`
+
 #### Webhook Documentation
 - Include webhook lifecycle explanations
 - Document webhook delivery headers
@@ -250,6 +263,8 @@
 - [ ] Code examples follow best practices
 - [ ] Links to related documentation are included
 - [ ] WooCommerce concepts are properly explained
+- [ ] Official WooCommerce REST API documentation links are included
+- [ ] Documentation links are valid and accessible
 
 #### Consistency Checks
 - [ ] Documentation follows the same format across all files
@@ -329,6 +344,7 @@
 /// 
 /// This method allows you to fetch webhooks with various filtering and sorting options.
 /// It's particularly useful for managing multiple webhooks or monitoring webhook status.
+/// https://woocommerce.github.io/woocommerce-rest-api-docs/#list-all-webhooks
 /// 
 /// ## Parameters
 /// 

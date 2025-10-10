@@ -7,7 +7,6 @@ import '../enums/webhook_topic.dart';
 /// Represents a webhook configuration in WooCommerce. Webhooks are HTTP callbacks
 /// that are triggered by specific events in your store, allowing you to receive
 /// real-time notifications about store activities.
-/// https://woocommerce.github.io/woocommerce-rest-api-docs/#webhook-properties 
 ///
 /// ## Webhook Structure
 ///
