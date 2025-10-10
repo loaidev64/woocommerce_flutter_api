@@ -1,0 +1,405 @@
+# WooCommerce Flutter API Documentation Rules
+
+## Documentation Standards
+
+### General Documentation Principles
+
+1. **Comprehensive Coverage**: Every public class, method, property, and enum must be fully documented
+2. **Practical Examples**: Include real-world code examples for all functionality
+3. **Clear Structure**: Use consistent formatting with proper markdown structure
+4. **Developer-Focused**: Write documentation from the perspective of developers using the API
+5. **WooCommerce Integration**: Align with official WooCommerce REST API documentation
+
+### Class-Level Documentation
+
+#### Required Sections
+- **Overview**: Brief description of the class purpose and functionality
+- **Key Features**: Bullet points highlighting main capabilities
+- **Usage Examples**: Complete code examples showing typical usage
+- **Related Documentation**: Links to related classes and methods
+
+#### Format Template
+```dart
+/// [Class Name] - Brief Description
+/// 
+/// [Detailed overview paragraph explaining the class purpose and functionality]
+/// 
+/// ## Key Features
+/// 
+/// - **Feature 1**: Description of feature
+/// - **Feature 2**: Description of feature
+/// - **Feature 3**: Description of feature
+/// 
+/// ## Usage Examples
+/// 
+/// ```dart
+/// // Example 1: Basic usage
+/// final instance = ClassName();
+/// 
+/// // Example 2: Advanced usage
+/// final advanced = ClassName(
+///   param1: 'value',
+///   param2: true,
+/// );
+/// ```
+/// 
+/// ## Related Documentation
+/// 
+/// - [RelatedClass] - Description of relationship
+/// - [RelatedMethod] - Description of relationship
+```
+
+### Method Documentation
+
+#### Required Sections
+- **Purpose**: Clear description of what the method does
+- **Parameters**: Detailed parameter descriptions with types and defaults
+- **Returns**: Clear return type documentation
+- **Throws**: Exception handling documentation
+- **Example Usage**: Practical code examples
+
+#### Format Template
+```dart
+/// [Method Name] - Brief Description
+/// 
+/// [Detailed description of method functionality and purpose]
+/// 
+/// ## Parameters
+/// 
+/// * [param1] - Description of parameter (type, default, constraints)
+/// * [param2] - Description of parameter (type, default, constraints)
+/// 
+/// ## Returns
+/// 
+/// A [ReturnType] containing [description of return value]
+/// 
+/// ## Throws
+/// 
+/// * [ExceptionType] if [condition that triggers exception]
+/// 
+/// ## Example Usage
+/// 
+/// ```dart
+/// // Example 1: Basic usage
+/// final result = methodName(param1, param2);
+/// 
+/// // Example 2: Advanced usage
+/// final result = methodName(
+///   param1: 'value',
+///   param2: true,
+/// );
+/// ```
+```
+
+### Property Documentation
+
+#### Required Sections
+- **Purpose**: Clear description of the property's purpose
+- **Characteristics**: What the property represents and how it's used
+- **Constraints**: Any limitations or requirements
+- **Example Usage**: How the property is typically used
+
+#### Format Template
+```dart
+/// [Property Name] - Brief Description
+/// 
+/// [Detailed description of property purpose and functionality]
+/// 
+/// ## Characteristics
+/// 
+/// - [Characteristic 1]: Description
+/// - [Characteristic 2]: Description
+/// 
+/// ## Example Usage
+/// 
+/// ```dart
+/// // Example usage
+/// final value = instance.propertyName;
+/// ```
+```
+
+### Enum Documentation
+
+#### Required Sections
+- **Overview**: Description of the enum's purpose
+- **Values**: Documentation for each enum value
+- **Usage Examples**: Code examples showing how to use the enum
+- **Related Documentation**: Links to related classes
+
+#### Format Template
+```dart
+/// [Enum Name] - Brief Description
+/// 
+/// [Detailed description of enum purpose and functionality]
+/// 
+/// ## Values
+/// 
+/// ### [Value 1]
+/// - **Purpose**: Description of when to use this value
+/// - **Characteristics**: What this value represents
+/// 
+/// ### [Value 2]
+/// - **Purpose**: Description of when to use this value
+/// - **Characteristics**: What this value represents
+/// 
+/// ## Usage Examples
+/// 
+/// ```dart
+/// // Example 1: Basic usage
+/// final value = EnumName.value1;
+/// 
+/// // Example 2: Advanced usage
+/// if (enumValue == EnumName.value1) {
+///   // Handle value1
+/// }
+/// ```
+```
+
+### API Extension Documentation
+
+#### Required Sections
+- **Overview**: Description of the API extension functionality
+- **Key Features**: Main capabilities provided by the extension
+- **Usage Examples**: Complete code examples
+- **Method Documentation**: Individual method documentation
+
+#### Format Template
+```dart
+/// [Extension Name] - Brief Description
+/// 
+/// [Detailed description of extension functionality]
+/// 
+/// ## Key Features
+/// 
+/// - **Feature 1**: Description
+/// - **Feature 2**: Description
+/// 
+/// ## Usage Examples
+/// 
+/// ```dart
+/// // Example 1: Basic usage
+/// final result = wooCommerce.methodName();
+/// 
+/// // Example 2: Advanced usage
+/// final result = await wooCommerce.methodName(
+///   param1: 'value',
+///   param2: true,
+/// );
+/// ```
+```
+
+### Documentation Formatting Rules
+
+#### Markdown Structure
+- Use `##` for main sections (Parameters, Returns, Example Usage)
+- Use `###` for subsections
+- Use `*` for bullet points
+- Use `**bold**` for emphasis
+- Use `[Link]` for internal documentation links
+
+#### Code Examples
+- Always include complete, runnable code examples
+- Use descriptive variable names
+- Include both basic and advanced usage examples
+- Show error handling where appropriate
+
+#### Parameter Documentation
+- Include parameter type in description
+- Mention default values
+- Explain constraints or limitations
+- Provide examples of valid values
+
+#### Return Value Documentation
+- Clearly state the return type
+- Describe what the return value contains
+- Mention any special conditions or null cases
+
+#### Exception Documentation
+- List all possible exceptions
+- Explain what conditions trigger each exception
+- Provide guidance on how to handle exceptions
+
+### WooCommerce-Specific Documentation
+
+#### API Integration
+- Reference official WooCommerce REST API documentation
+- Include WooCommerce-specific terminology
+- Explain WooCommerce concepts and workflows
+- Provide WooCommerce-specific examples
+
+#### Webhook Documentation
+- Include webhook lifecycle explanations
+- Document webhook delivery headers
+- Explain security features (HMAC-SHA256)
+- Provide webhook troubleshooting guidance
+
+#### Status and State Documentation
+- Document status transitions
+- Explain state management
+- Provide status checking examples
+- Include troubleshooting for common issues
+
+### Quality Assurance
+
+#### Documentation Review Checklist
+- [ ] All public APIs are documented
+- [ ] Examples are complete and runnable
+- [ ] Parameter types and defaults are specified
+- [ ] Return types are clearly documented
+- [ ] Exception conditions are explained
+- [ ] Code examples follow best practices
+- [ ] Links to related documentation are included
+- [ ] WooCommerce concepts are properly explained
+
+#### Consistency Checks
+- [ ] Documentation follows the same format across all files
+- [ ] Code examples use consistent naming conventions
+- [ ] Markdown formatting is consistent
+- [ ] Parameter documentation follows the same structure
+- [ ] Example usage patterns are consistent
+
+### File Organization
+
+#### Documentation Files
+- Keep documentation close to the code it describes
+- Use consistent file naming conventions
+- Group related documentation together
+- Maintain clear separation between different types of documentation
+
+#### Import Documentation
+- Document all public exports
+- Explain the purpose of each export
+- Provide usage examples for each export
+- Include related documentation links
+
+### Best Practices
+
+#### Writing Style
+- Use clear, concise language
+- Avoid technical jargon when possible
+- Write from the perspective of the API user
+- Include practical, real-world examples
+- Explain the "why" behind design decisions
+
+#### Code Examples
+- Use realistic, practical examples
+- Show both simple and complex usage
+- Include error handling examples
+- Demonstrate best practices
+- Use consistent naming conventions
+
+#### Maintenance
+- Keep documentation up-to-date with code changes
+- Review documentation during code reviews
+- Update examples when APIs change
+- Remove outdated information
+- Add new examples for new features
+
+### Examples of Good Documentation
+
+#### Class Documentation
+```dart
+/// WooCommerce Webhook Model
+/// 
+/// Represents a webhook configuration in WooCommerce. Webhooks are HTTP callbacks
+/// that are triggered by specific events in your store, allowing you to receive
+/// real-time notifications about store activities.
+/// 
+/// ## Key Features
+/// 
+/// - **Event-driven notifications**: Get notified instantly when important events occur
+/// - **Flexible delivery**: Configure custom URLs to receive webhook payloads
+/// - **Security**: Optional secret keys for HMAC-SHA256 signature verification
+/// 
+/// ## Usage Examples
+/// 
+/// ```dart
+/// // Create a new webhook
+/// final webhook = WooWebhook(
+///   name: 'Order Updates',
+///   topic: WooWebhookTopic.orderUpdated,
+///   deliveryUrl: 'https://your-app.com/webhooks/orders',
+/// );
+/// ```
+```
+
+#### Method Documentation
+```dart
+/// Retrieves a paginated list of webhooks from the WooCommerce store.
+/// 
+/// This method allows you to fetch webhooks with various filtering and sorting options.
+/// It's particularly useful for managing multiple webhooks or monitoring webhook status.
+/// 
+/// ## Parameters
+/// 
+/// * [context] - Scope under which the request is made (default: view)
+/// * [page] - Current page of the collection (default: 1)
+/// * [perPage] - Maximum number of items to return (default: 10, max: 100)
+/// 
+/// ## Returns
+/// 
+/// A `Future<List<WooWebhook>>` containing the webhook objects.
+/// 
+/// ## Example Usage
+/// 
+/// ```dart
+/// // Get all active webhooks
+/// final webhooks = await wooCommerce.getWebhooks(
+///   status: WooWebhookStatus.active,
+///   perPage: 50,
+/// );
+/// ```
+```
+
+#### Enum Documentation
+```dart
+/// WooCommerce Webhook Status Enumeration
+/// 
+/// Defines the possible states for a webhook in WooCommerce. The status determines
+/// whether a webhook is actively delivering payloads, temporarily paused, or disabled
+/// due to failures or administrative action.
+/// 
+/// ## Status Descriptions
+/// 
+/// ### Active Status
+/// - Webhook is actively monitoring for events
+/// - Payloads are delivered to the configured URL
+/// - All webhook functionality is operational
+/// 
+/// ### Paused Status
+/// - Webhook is temporarily disabled by administrator
+/// - No payloads are delivered while paused
+/// - Can be reactivated by changing status back to active
+/// 
+/// ## Usage Examples
+/// 
+/// ```dart
+/// // Check webhook status
+/// if (webhook.status == WooWebhookStatus.active) {
+///   print('Webhook is delivering payloads');
+/// }
+/// ```
+```
+
+### Enforcement
+
+#### Code Review Requirements
+- All new public APIs must include complete documentation
+- Documentation must follow the established format
+- Examples must be tested and verified
+- Links to related documentation must be valid
+
+#### Automated Checks
+- Documentation coverage should be 100% for public APIs
+- All code examples should be syntactically correct
+- Parameter documentation should include types and defaults
+- Return value documentation should be complete
+
+#### Maintenance Schedule
+- Review documentation quarterly for accuracy
+- Update examples when APIs change
+- Remove outdated information
+- Add new examples for new features
+- Verify all links are still valid
+
+This documentation standard ensures that all code in the WooCommerce Flutter API package is well-documented, consistent, and helpful for developers using the API.
