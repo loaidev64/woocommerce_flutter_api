@@ -3,6 +3,61 @@ import 'package:woocommerce_flutter_api/src/helpers/fake_helper.dart';
 import 'package:woocommerce_flutter_api/src/product/enums/enums.dart';
 import 'package:woocommerce_flutter_api/src/product/models/models.dart';
 
+/// WooCommerce Product Variation Model
+///
+/// Represents a product variation in WooCommerce, which is a specific version of a variable product
+/// with its own attributes, pricing, inventory, and other properties. Variations allow customers
+/// to choose different options like size, color, material, etc., for the same base product.
+///
+/// ## Key Features
+///
+/// - **Attribute Management**: Store and manage variation-specific attributes
+/// - **Pricing Control**: Set individual prices, sale prices, and sale periods
+/// - **Inventory Management**: Track stock levels, backorders, and stock status
+/// - **Download Support**: Handle downloadable products with download limits and expiry
+/// - **Shipping Configuration**: Set weight, dimensions, and shipping class
+/// - **Tax Configuration**: Configure tax status and tax class per variation
+///
+/// ## Usage Examples
+///
+/// ### Creating a Product Variation
+///
+/// ```dart
+/// final variation = WooProductVariation(
+///   sku: 'T-SHIRT-RED-L',
+///   price: 25.99,
+///   regularPrice: 29.99,
+///   salePrice: 25.99,
+///   stockQuantity: 50,
+///   stockStatus: WooProductStockStatus.instock,
+/// );
+/// ```
+///
+/// ### Working with Variation Data
+///
+/// ```dart
+/// // Check if variation is on sale
+/// if (variation.onSale == true) {
+///   print('Sale price: ${variation.salePrice}');
+/// }
+///
+/// // Check stock availability
+/// if (variation.stockStatus == WooProductStockStatus.instock) {
+///   print('Available quantity: ${variation.stockQuantity}');
+/// }
+/// ```
+///
+/// ## JSON Serialization
+///
+/// The class supports full JSON serialization for API communication:
+///
+/// ```dart
+/// // Convert to JSON for API requests
+/// final json = variation.toJson();
+///
+/// // Create from JSON response
+/// final variation = WooProductVariation.fromJson(jsonData);
+/// ```
 class WooProductVariation {
   /// Unique identifier for the resource.
   int? id;
@@ -121,6 +176,39 @@ class WooProductVariation {
   /// Meta data.
   List<WooMetaData> metaData;
 
+  /// Creates a new WooProductVariation instance
+  ///
+  /// ## Required Parameters
+  ///
+  /// None - all parameters are optional for flexibility in creating variations.
+  ///
+  /// ## Optional Parameters
+  ///
+  /// * [id] - Unique identifier for the variation
+  /// * [sku] - Stock Keeping Unit identifier
+  /// * [price] - Current variation price
+  /// * [regularPrice] - Regular price before any discounts
+  /// * [salePrice] - Sale price when on sale
+  /// * [stockQuantity] - Available stock quantity
+  /// * [stockStatus] - Current stock status (instock, outofstock, onbackorder)
+  /// * [status] - Variation status (draft, pending, private, publish)
+  /// * [description] - Variation description
+  /// * [attributes] - List of variation attributes
+  /// * [image] - Variation image
+  /// * [dimensions] - Product dimensions (weight, length, width, height)
+  /// * [metaData] - Additional metadata
+  ///
+  /// ## Example Usage
+  ///
+  /// ```dart
+  /// final variation = WooProductVariation(
+  ///   sku: 'T-SHIRT-RED-L',
+  ///   price: 25.99,
+  ///   regularPrice: 29.99,
+  ///   stockQuantity: 50,
+  ///   stockStatus: WooProductStockStatus.instock,
+  /// );
+  /// ```
   WooProductVariation(
       {this.id,
       this.dateCreated,
@@ -162,6 +250,24 @@ class WooProductVariation {
       this.metaData = const [],
       this.image});
 
+  /// Creates a WooProductVariation instance from JSON data
+  ///
+  /// This factory constructor is used to deserialize variation data received
+  /// from the WooCommerce REST API.
+  ///
+  /// ## Parameters
+  ///
+  /// * [json] - A Map containing the variation data in JSON format
+  ///
+  /// ## Returns
+  ///
+  /// A `WooProductVariation` instance populated with data from the JSON.
+  ///
+  /// ## Example Usage
+  ///
+  /// ```dart
+  /// final variation = WooProductVariation.fromJson(jsonData);
+  /// ```
   WooProductVariation.fromJson(Map<String, dynamic> json)
       : id = json['id'],
         permalink = json['permalink'],
@@ -212,6 +318,20 @@ class WooProductVariation {
             .map((i) => WooMetaData.fromJson(i))
             .toList();
 
+  /// Creates a fake WooProductVariation instance for testing purposes
+  ///
+  /// This factory constructor generates a variation with random but realistic
+  /// data, making it useful for testing and development.
+  ///
+  /// ## Returns
+  ///
+  /// A `WooProductVariation` instance with randomly generated fake data.
+  ///
+  /// ## Example Usage
+  ///
+  /// ```dart
+  /// final fakeVariation = WooProductVariation.fake();
+  /// ```
   factory WooProductVariation.fake() => WooProductVariation(
         id: FakeHelper.integer(),
         permalink: FakeHelper.url(),
@@ -253,4 +373,83 @@ class WooProductVariation {
         dateOnSaleTo: FakeHelper.datetime(),
         dateOnSaleToGmt: FakeHelper.datetime(),
       );
+
+  /// Converts the WooProductVariation instance to JSON format
+  ///
+  /// This method serializes the variation data into a Map that can be sent
+  /// to the WooCommerce REST API.
+  ///
+  /// ## Returns
+  ///
+  /// A `Map<String, dynamic>` containing the variation data in JSON format.
+  ///
+  /// ## Example Usage
+  ///
+  /// ```dart
+  /// final jsonData = variation.toJson();
+  /// ```
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'date_created': dateCreated?.toIso8601String(),
+      'date_created_gmt': dateCreatedGmt?.toIso8601String(),
+      'date_modified': dateModified?.toIso8601String(),
+      'date_modified_gmt': dateModifiedGmt?.toIso8601String(),
+      'description': description,
+      'permalink': permalink,
+      'sku': sku,
+      'price': price?.toString(),
+      'regular_price': regularPrice?.toString(),
+      'sale_price': salePrice?.toString(),
+      'date_on_sale_from': dateOnSaleFrom?.toIso8601String(),
+      'date_on_sale_from_gmt': dateOnSaleFromGmt?.toIso8601String(),
+      'date_on_sale_to': dateOnSaleTo?.toIso8601String(),
+      'date_on_sale_to_gmt': dateOnSaleToGmt?.toIso8601String(),
+      'on_sale': onSale,
+      'status': status?.name,
+      'purchasable': purchasable,
+      'virtual': virtual,
+      'downloadable': downloadable,
+      'downloads': downloads.map((download) => download.toJson()).toList(),
+      'download_limit': downloadLimit,
+      'download_expiry': downloadExpiry,
+      'tax_status': taxStatus?.name,
+      'tax_class': taxClass,
+      'manage_stock': manageStock,
+      'stock_quantity': stockQuantity,
+      'stock_status': stockStatus?.name,
+      'backorders': backorders?.name,
+      'backorders_allowed': backordersAllowed,
+      'backordered': backordered,
+      'weight': weight,
+      'dimensions': dimensions.toJson(),
+      'shipping_class': shippingClass,
+      'shipping_class_id': shippingClassId,
+      'image': image?.toJson(),
+      'attributes': attributes.map((attr) => attr.toJson()).toList(),
+      'menu_order': menuOrder,
+      'meta_data': metaData.map((meta) => meta.toJson()).toList(),
+    };
+  }
+
+  /// Returns a string representation of the WooProductVariation instance
+  ///
+  /// This method provides a human-readable representation of the variation,
+  /// displaying all main fields for debugging and logging purposes.
+  ///
+  /// ## Returns
+  ///
+  /// A `String` containing the variation's main field values in a readable format.
+  ///
+  /// ## Example Usage
+  ///
+  /// ```dart
+  /// final variation = WooProductVariation(sku: 'T-SHIRT-RED-L', price: 25.99);
+  /// print(variation.toString());
+  /// // Output: WooProductVariation(id: 1, sku: T-SHIRT-RED-L, price: 25.99, status: publish, stockStatus: instock)
+  /// ```
+  @override
+  String toString() {
+    return 'WooProductVariation(id: $id, sku: $sku, price: $price, status: $status, stockStatus: $stockStatus)';
+  }
 }

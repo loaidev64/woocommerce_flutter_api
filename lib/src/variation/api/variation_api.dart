@@ -2,50 +2,103 @@ import 'package:woocommerce_flutter_api/woocommerce_flutter_api.dart';
 
 part 'endpoints.dart';
 
+/// WooCommerce Product Variation API Extension
+///
+/// This extension provides comprehensive product variation management capabilities for WooCommerce stores.
+/// Product variations are different versions of a variable product, each with their own attributes,
+/// pricing, inventory, and other properties.
+///
+/// ## Key Features
+///
+/// - **Variation Retrieval**: Get all variations for a product or a specific variation
+/// - **Advanced Filtering**: Filter variations by price, stock status, SKU, and more
+/// - **Pagination Support**: Handle large product catalogs with efficient pagination
+/// - **Search Capabilities**: Find variations using search terms and filters
+/// - **Fake Data Support**: Generate fake variation data for testing and development
+///
+/// ## Example Usage
+///
+/// ```dart
+/// // Get all variations for a product
+/// final variations = await wooCommerce.getProductVaritaions(productId: 123);
+///
+/// // Get a specific variation
+/// final variation = await wooCommerce.getProductVariation(productId: 123, id: 456);
+///
+/// // Search variations with filters
+/// final filteredVariations = await wooCommerce.getProductVaritaions(
+///   productId: 123,
+///   search: 'red',
+///   stockStatus: WooProductStockStatus.instock,
+///   minPrice: 10.0,
+///   maxPrice: 100.0,
+/// );
+/// ```
 extension WooVariationApi on WooCommerce {
-  /// [context] Scope under which the request is made; determines fields present in response. Options: view and edit. Default is view.
+  /// Retrieves a list of product variations from the WooCommerce store.
   ///
-  /// [page] Current page of the collection. Default is 1.
+  /// This method supports extensive filtering and pagination options to help you
+  /// find exactly the variations you need for a specific product.
+  /// https://woocommerce.github.io/woocommerce-rest-api-docs/#list-all-product-variations
   ///
-  /// [perPage] Maximum number of items to be returned in result set. Default is 10.
+  /// ## Parameters
   ///
-  /// [search] Limit results to those matching a string.
+  /// * [productId] - The ID of the parent product to get variations for
+  /// * [context] - Scope under which the request is made; determines fields present in response.
+  ///   - `WooContext.view`: Returns basic variation information (default)
+  ///   - `WooContext.edit`: Returns full variation details including sensitive data
+  /// * [page] - Current page of the collection (default: 1)
+  /// * [perPage] - Maximum number of items to return (default: 10, max: 100)
+  /// * [search] - Limit results to variations matching a search string
+  /// * [after] - Limit response to variations published after a given ISO8601 compliant date
+  /// * [before] - Limit response to variations published before a given ISO8601 compliant date
+  /// * [exclude] - Ensure result set excludes specific variation IDs
+  /// * [include] - Limit result set to specific variation IDs
+  /// * [offset] - Offset the result set by a specific number of items
+  /// * [order] - Order sort attribute ascending or descending (default: desc)
+  /// * [orderBy] - Sort collection by object attribute (default: date)
+  /// * [parent] - Limit result set to variations of particular parent IDs
+  /// * [parentExclude] - Limit result set to all items except those of a particular parent ID
+  /// * [slug] - Limit result set to variations with a specific slug
+  /// * [status] - Limit result set to variations assigned a specific status (default: any)
+  /// * [sku] - Limit result set to variations with a specific SKU
+  /// * [taxClass] - Limit result set to variations with a specific tax class
+  /// * [onSale] - Limit result set to variations on sale
+  /// * [minPrice] - Limit result set to variations based on a minimum price
+  /// * [maxPrice] - Limit result set to variations based on a maximum price
+  /// * [stockStatus] - Limit result set to variations with specified stock status
+  /// * [useFaker] - When true, returns fake data for testing purposes
   ///
-  /// [after] Limit response to resources published after a given ISO8601 compliant date.
+  /// ## Returns
   ///
-  /// [before] Limit response to resources published before a given ISO8601 compliant date.
+  /// A `Future<List<WooProductVariation>>` containing the variation objects.
   ///
-  /// [exclude] Ensure result set excludes specific IDs.
+  /// ## Throws
   ///
-  /// [include] Limit result set to specific ids.
+  /// * `WooCommerceException` if the request fails or access is denied
   ///
-  /// [offset] Offset the result set by a specific number of items.
+  /// ## Example Usage
   ///
-  /// [order] Order sort attribute ascending or descending. Options: asc and desc. Default is desc.
+  /// ```dart
+  /// // Get all variations for a product
+  /// final variations = await wooCommerce.getProductVaritaions(productId: 123);
   ///
-  /// [orderBy] Sort collection by object attribute. Options: date, id, include, title, slug, price, popularity and rating. Default is date.
+  /// // Search for variations with filters
+  /// final searchResults = await wooCommerce.getProductVaritaions(
+  ///   productId: 123,
+  ///   search: 'red',
+  ///   stockStatus: WooProductStockStatus.instock,
+  ///   perPage: 20,
+  /// );
   ///
-  /// [parent] Limit result set to those of particular parent IDs.
-  ///
-  /// [parentExclude] Limit result set to all items except those of a particular parent ID.
-  ///
-  /// [slug] Limit result set to products with a specific slug.
-  ///
-  /// [status] Limit result set to products assigned a specific status. Options: any, draft, pending, private and publish. Default is any.
-  ///
-  /// [sku] Limit result set to products with a specific SKU.
-  ///
-  /// [taxClass] Limit result set to products with a specific tax class. Default options: standard, reduced-rate and zero-rate.
-  ///
-  /// [onSale] Limit result set to products on sale.
-  ///
-  /// [minPrice] Limit result set to products based on a minimum price.
-  ///
-  /// [maxPrice] Limit result set to products based on a maximum price.
-  ///
-  /// [stockStatus] Limit result set to products with specified stock status. Options: instock, outofstock and onbackorder.
-  ///
-  /// [useFaker], fakes the api request
+  /// // Get variations on sale
+  /// final saleVariations = await wooCommerce.getProductVaritaions(
+  ///   productId: 123,
+  ///   onSale: true,
+  ///   minPrice: 10.0,
+  ///   maxPrice: 100.0,
+  /// );
+  /// ```
   Future<List<WooProductVariation>> getProductVaritaions(
     int productId, {
     WooContext context = WooContext.view,
@@ -203,6 +256,41 @@ extension WooVariationApi on WooCommerce {
     return map;
   }
 
+  /// Retrieves a specific product variation by ID.
+  ///
+  /// This method fetches detailed information about a single product variation,
+  /// including all its attributes, pricing, inventory, and metadata.
+  /// https://woocommerce.github.io/woocommerce-rest-api-docs/#retrieve-a-product-variation
+  ///
+  /// ## Parameters
+  ///
+  /// * [productId] - The ID of the parent product
+  /// * [id] - The ID of the specific variation to retrieve
+  /// * [useFaker] - When true, returns fake data for testing purposes
+  ///
+  /// ## Returns
+  ///
+  /// A `Future<WooProductVariation>` containing the variation object.
+  ///
+  /// ## Throws
+  ///
+  /// * `WooCommerceException` if the request fails or access is denied
+  /// * `WooCommerceException` if the variation or parent product is not found
+  ///
+  /// ## Example Usage
+  ///
+  /// ```dart
+  /// // Get a specific variation
+  /// final variation = await wooCommerce.getProductVariation(
+  ///   productId: 123,
+  ///   id: 456,
+  /// );
+  ///
+  /// // Check variation properties
+  /// if (variation.onSale == true) {
+  ///   print('Variation is on sale: ${variation.salePrice}');
+  /// }
+  /// ```
   Future<WooProductVariation> getProductVariation(int productId, int id,
       {bool? useFaker}) async {
     final isUsingFaker = useFaker ?? this.useFaker;

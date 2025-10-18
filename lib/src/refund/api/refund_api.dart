@@ -2,36 +2,100 @@ import 'package:woocommerce_flutter_api/woocommerce_flutter_api.dart';
 
 part 'endpoints.dart';
 
+/// WooCommerce Refund API Extension
+///
+/// This extension provides comprehensive refund management capabilities for WooCommerce stores.
+/// It enables retrieval of refund information with extensive filtering and pagination options
+/// to help store owners track and manage order refunds effectively.
+///
+/// ## Key Features
+///
+/// - **Refund Retrieval**: Get detailed refund information with comprehensive filtering
+/// - **Advanced Filtering**: Filter by date ranges, parent orders, and specific criteria
+/// - **Pagination Support**: Handle large datasets with page-based navigation
+/// - **Search Capabilities**: Find refunds by specific search terms
+/// - **Sorting Options**: Sort refunds by various attributes (date, amount, etc.)
+///
+/// ## Example Usage
+///
+/// ```dart
+/// // Get all refunds
+/// final refunds = await wooCommerce.getRefunds();
+///
+/// // Get refunds for a specific order
+/// final orderRefunds = await wooCommerce.getRefunds(
+///   parent: [123],
+///   perPage: 50,
+/// );
+///
+/// // Search for refunds by reason
+/// final searchResults = await wooCommerce.getRefunds(
+///   search: 'defective product',
+///   orderBy: WooSortOrderBy.date,
+/// );
+/// ```
 extension WooRefundApi on WooCommerce {
-  /// [context] Scope under which the request is made; determines fields present in response. Options: view and edit. Default is view.
+  /// Retrieves a list of refunds from the WooCommerce store.
   ///
-  /// [page] Current page of the collection. Default is 1.
+  /// This method supports extensive filtering and pagination options to help you
+  /// find exactly the refunds you need. You can filter by date ranges, parent orders,
+  /// search terms, and more.
+  /// https://woocommerce.github.io/woocommerce-rest-api-docs/#list-all-refunds
   ///
-  /// [perPage] Maximum number of items to be returned in result set. Default is 10.
+  /// ## Parameters
   ///
-  /// [search] Limit results to those matching a string.
+  /// * [context] - Scope under which the request is made; determines fields present in response.
+  ///   - `WooContext.view`: Returns basic refund information (default)
+  ///   - `WooContext.edit`: Returns full refund details including sensitive data
   ///
-  /// [after] Limit response to resources published after a given ISO8601 compliant date.
+  /// * [page] - Current page of the collection (default: 1)
+  /// * [perPage] - Maximum number of items to return (default: 10, max: 100)
+  /// * [search] - Limit results to refunds matching a search string
+  /// * [after] - Limit response to refunds created after a given ISO8601 compliant date
+  /// * [before] - Limit response to refunds created before a given ISO8601 compliant date
+  /// * [exclude] - Ensure result set excludes specific refund IDs
+  /// * [include] - Limit result set to specific refund IDs
+  /// * [offset] - Offset the result set by a specific number of items
+  /// * [order] - Order sort attribute ascending or descending (default: desc)
+  /// * [orderBy] - Sort collection by object attribute (default: date)
+  /// * [parent] - Limit result set to refunds of particular parent order IDs
+  /// * [parentExclude] - Limit result set to all refunds except those of particular parent order IDs
+  /// * [dp] - Number of decimal points to use in each resource (default: 2)
+  /// * [useFaker] - When true, returns fake data for testing purposes
   ///
-  /// [before] Limit response to resources published before a given ISO8601 compliant date.
+  /// ## Returns
   ///
-  /// [exclude] Ensure result set excludes specific IDs.
+  /// A `Future<List<WooRefund>>` containing the refund objects.
   ///
-  /// [include] Limit result set to specific ids.
+  /// ## Throws
   ///
-  /// [offset] Offset the result set by a specific number of items.
+  /// * `WooCommerceException` if the request fails or access is denied
   ///
-  /// [order] Order sort attribute ascending or descending. Options: asc and desc. Default is desc.
+  /// ## Example Usage
   ///
-  /// [orderBy] Sort collection by object attribute. Options: date, id, include, title, slug, price, popularity and rating. Default is date.
+  /// ```dart
+  /// // Get all refunds
+  /// final refunds = await wooCommerce.getRefunds();
   ///
-  /// [parent] Limit result set to those of particular parent IDs.
+  /// // Get refunds for a specific order
+  /// final orderRefunds = await wooCommerce.getRefunds(
+  ///   parent: [123],
+  ///   perPage: 50,
+  /// );
   ///
-  /// [parentExclude] Limit result set to all items except those of a particular parent ID.
+  /// // Search for refunds by reason
+  /// final searchResults = await wooCommerce.getRefunds(
+  ///   search: 'defective product',
+  ///   orderBy: WooSortOrderBy.date,
+  /// );
   ///
-  /// [dp] Number of decimal points to use in each resource. Default is 2.
-  ///
-  /// [useFaker], fakes the api request
+  /// // Get refunds within date range
+  /// final recentRefunds = await wooCommerce.getRefunds(
+  ///   after: DateTime(2024, 1, 1),
+  ///   before: DateTime(2024, 12, 31),
+  ///   order: WooSortOrder.asc,
+  /// );
+  /// ```
   Future<List<WooRefund>> getRefunds({
     WooContext context = WooContext.view,
     int page = 1,

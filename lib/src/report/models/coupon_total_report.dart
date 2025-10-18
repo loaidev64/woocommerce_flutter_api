@@ -1,5 +1,8 @@
 import 'package:woocommerce_flutter_api/woocommerce_flutter_api.dart';
 
+/// Represents a coupon total report with basic information.
+///
+/// Brief description of the model's purpose and usage.
 class WooCouponTotalReport {
   /// An alphanumeric identifier for the resource.
   String? slug;
@@ -10,12 +13,14 @@ class WooCouponTotalReport {
   /// Amount of coupons.
   String? total;
 
+  /// Creates a new WooCouponTotalReport instance.
   WooCouponTotalReport({
     this.slug,
     this.name,
     this.total,
   });
 
+  /// Creates a WooCouponTotalReport instance from JSON data.
   WooCouponTotalReport.fromJson(Map<String, dynamic> json)
       : slug = json['slug'],
         name = json['name'],
@@ -27,6 +32,9 @@ class WooCouponTotalReport {
         'total': total,
       };
 
+  /// Returns a string representation of the WooCouponTotalReport instance.
+  ///
+  /// Displays all main fields for debugging and logging purposes.
   @override
   String toString() => _toJson().toString();
 

@@ -1,5 +1,8 @@
 import 'package:woocommerce_flutter_api/woocommerce_flutter_api.dart';
 
+/// Represents a tax class with basic information.
+///
+/// Brief description of the model's purpose and usage.
 class WooTaxClass {
   /// Unique identifier for the resource.
   String? slug;
@@ -7,11 +10,13 @@ class WooTaxClass {
   /// Tax class name.
   String? name;
 
+  /// Creates a new WooTaxClass instance.
   WooTaxClass({
     this.slug,
     this.name,
   });
 
+  /// Creates a WooTaxClass instance from JSON data.
   WooTaxClass.fromJson(Map<String, dynamic> json)
       : slug = json['slug'],
         name = json['name'];
@@ -21,6 +26,9 @@ class WooTaxClass {
         'name': name,
       };
 
+  /// Returns a string representation of the WooTaxClass instance.
+  ///
+  /// Displays all main fields for debugging and logging purposes.
   @override
   String toString() => toJson().toString();
 
