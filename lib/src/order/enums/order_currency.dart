@@ -2,6 +2,33 @@
 
 import 'package:faker/faker.dart';
 
+/// WooCommerce Order Currency Enumeration
+///
+/// Defines the supported currencies for WooCommerce orders.
+/// Supports all major world currencies including USD, EUR, GBP, and many others.
+///
+/// ## Usage Examples
+///
+/// ```dart
+/// // Create an order with specific currency
+/// final order = WooOrder(
+///   id: 123,
+///   currency: WooOrderCurrency.USD,
+///   total: 99.99,
+/// );
+///
+/// // Create an order in Euros
+/// final euroOrder = WooOrder(
+///   id: 124,
+///   currency: WooOrderCurrency.EUR,
+///   total: 89.99,
+/// );
+///
+/// // Check order currency
+/// if (order.currency == WooOrderCurrency.USD) {
+///   print('Order is in US Dollars');
+/// }
+/// ```
 enum WooOrderCurrency {
   AED,
   AFN,
@@ -165,10 +192,44 @@ enum WooOrderCurrency {
   ZAR,
   ZMW;
 
+  /// Creates a fake WooOrderCurrency instance for testing purposes
+  ///
+  /// This method generates a random currency from the available options,
+  /// making it useful for testing and development.
+  ///
+  /// ## Returns
+  ///
+  /// A `WooOrderCurrency` instance with randomly selected currency.
+  ///
+  /// ## Example Usage
+  ///
+  /// ```dart
+  /// final fakeCurrency = WooOrderCurrency.fake();
+  /// ```
   static WooOrderCurrency fake() {
     return values[Faker().randomGenerator.integer(values.length - 1)];
   }
 
+  /// Creates a WooOrderCurrency instance from a string value
+  ///
+  /// This method converts string currency codes from API responses into
+  /// the appropriate enum value.
+  ///
+  /// ## Parameters
+  ///
+  /// * [type] - String value representing the currency code (e.g., 'USD', 'EUR')
+  ///
+  /// ## Returns
+  ///
+  /// A `WooOrderCurrency` instance corresponding to the string value.
+  /// Returns `USD` if the string doesn't match any known currencies.
+  ///
+  /// ## Example Usage
+  ///
+  /// ```dart
+  /// final currency = WooOrderCurrency.fromString('EUR');
+  /// final usdCurrency = WooOrderCurrency.fromString('USD');
+  /// ```
   static WooOrderCurrency fromString(String type) {
     if (type == 'AED') {
       return WooOrderCurrency.AED;

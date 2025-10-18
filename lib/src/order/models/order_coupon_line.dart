@@ -1,22 +1,27 @@
 import 'package:woocommerce_flutter_api/src/base/models/metadata.dart';
 import 'package:woocommerce_flutter_api/src/helpers/fake_helper.dart';
 
+/// Represents a coupon line in a WooCommerce order.
+///
+/// Contains coupon information, discount amounts, and tax details for coupons
+/// applied to an order. Used for discount tracking and order processing.
 class WooOrderCouponLine {
-  /// Item ID.
+  /// Unique identifier for the coupon line.
   int? id;
 
-  /// Coupon code.
+  /// Coupon code applied.
   String? code;
 
-  /// Discount total.
+  /// Total discount amount.
   double? discount;
 
-  /// Discount total tax.
+  /// Total discount tax amount.
   double? discountTax;
 
-  /// Meta data.
+  /// Custom metadata for the coupon line.
   List<WooMetaData> metaData;
 
+  /// Creates a new WooOrderCouponLine instance.
   WooOrderCouponLine({
     this.id,
     this.code,
@@ -25,6 +30,7 @@ class WooOrderCouponLine {
     this.metaData = const [],
   });
 
+  /// Creates a WooOrderCouponLine instance from JSON data.
   WooOrderCouponLine.fromJson(Map<String, dynamic> json)
       : id = json['id'],
         code = json['code'],
@@ -51,4 +57,12 @@ class WooOrderCouponLine {
         discountTax: FakeHelper.decimal(),
         metaData: FakeHelper.list(() => WooMetaData.fake()),
       );
+
+  /// Returns a string representation of the WooOrderCouponLine instance.
+  ///
+  /// Displays all main fields for debugging and logging purposes.
+  @override
+  String toString() {
+    return 'WooOrderCouponLine(id: $id, code: $code, discount: $discount, discountTax: $discountTax)';
+  }
 }

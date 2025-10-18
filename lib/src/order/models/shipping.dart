@@ -1,33 +1,38 @@
 import 'package:woocommerce_flutter_api/woocommerce_flutter_api.dart';
 
+/// Represents shipping address information for a WooCommerce order.
+///
+/// Contains customer shipping details including name, address, and company information.
+/// Used for order fulfillment and delivery purposes.
 class WooShipping {
-  /// First name.
+  /// Recipient's first name.
   String? firstName;
 
-  /// Last name.
+  /// Recipient's last name.
   String? lastName;
 
-  /// Company name.
+  /// Company name (optional).
   String? company;
 
-  /// Address line 1
+  /// Primary address line.
   String? address1;
 
-  /// Address line 2
+  /// Secondary address line (apartment, suite, etc.).
   String? address2;
 
   /// City name.
   String? city;
 
-  /// ISO code or name of the state, province or district.
+  /// State, province, or district code/name.
   String? state;
 
-  /// Postal code.
+  /// Postal or ZIP code.
   String? postcode;
 
   /// Country code in ISO 3166-1 alpha-2 format.
   String? country;
 
+  /// Creates a new WooShipping instance.
   WooShipping(
       {this.firstName,
       this.lastName,
@@ -39,6 +44,7 @@ class WooShipping {
       this.postcode,
       this.country});
 
+  /// Creates a WooShipping instance from JSON data.
   WooShipping.fromJson(Map<String, dynamic> json) {
     firstName = json['first_name'];
     lastName = json['last_name'];
@@ -76,4 +82,12 @@ class WooShipping {
         company: FakeHelper.company(),
         postcode: FakeHelper.zipCode(),
       );
+
+  /// Returns a string representation of the WooShipping instance.
+  ///
+  /// Displays all main fields for debugging and logging purposes.
+  @override
+  String toString() {
+    return 'WooShipping(firstName: $firstName, lastName: $lastName, city: $city, country: $country)';
+  }
 }

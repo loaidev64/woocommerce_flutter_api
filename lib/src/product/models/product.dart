@@ -14,10 +14,33 @@ import 'product_image.dart';
 import 'product_item_attribute.dart';
 import 'product_tag.dart';
 
-/// Represents a WooCommerce product with all its attributes and metadata.
+/// WooCommerce Product Model
 ///
-/// This class models a complete WooCommerce product including basic information,
-/// pricing, inventory, shipping, categories, tags, images, and more.
+/// Represents a complete WooCommerce product with all its attributes, pricing,
+/// inventory, shipping, and metadata. This is the core model for managing products
+/// in your WooCommerce store, supporting all product types and configurations.
+///
+/// ## Product Structure
+///
+/// A WooCommerce product consists of several key components:
+///
+/// - **Basic Information**: Name, description, SKU, type, and status
+/// - **Pricing & Sales**: Regular price, sale price, and promotional settings
+/// - **Inventory Management**: Stock tracking, backorder handling, and stock status
+/// - **Shipping & Physical**: Weight, dimensions, and shipping class configuration
+/// - **Organization**: Categories, tags, and product relationships
+/// - **Media**: Product images, galleries, and featured image settings
+/// - **Attributes**: Custom product attributes and variation configurations
+/// - **SEO & URLs**: Slug, permalink, and search engine optimization
+///
+/// ## Product Types
+///
+/// WooCommerce supports different product types with varying capabilities:
+///
+/// - **Simple**: Basic products with fixed pricing and inventory
+/// - **Variable**: Products with multiple variations (size, color, etc.)
+/// - **Grouped**: Collections of related products sold together
+/// - **External**: Products sold on external websites
 ///
 /// ## Key Features
 ///
@@ -61,6 +84,31 @@ import 'product_tag.dart';
 /// if (product.stockStatus == WooProductStockStatus.instock) {
 ///   print('Product is in stock');
 /// }
+///
+/// // Access product categories
+/// for (final category in product.categories) {
+///   print('Category: ${category.name}');
+/// }
+/// ```
+///
+/// ### Creating Variable Products
+///
+/// ```dart
+/// final variableProduct = WooProduct(
+///   name: 'T-Shirt',
+///   type: WooProductType.variable,
+///   status: WooProductStatus.publish,
+///   attributes: [
+///     WooProductItemAttribute(
+///       name: 'Size',
+///       options: ['Small', 'Medium', 'Large'],
+///     ),
+///     WooProductItemAttribute(
+///       name: 'Color',
+///       options: ['Red', 'Blue', 'Green'],
+///     ),
+///   ],
+/// );
 /// ```
 ///
 /// ## JSON Serialization
@@ -75,58 +123,117 @@ import 'product_tag.dart';
 /// final product = WooProduct.fromJson(jsonData);
 /// ```
 class WooProduct {
-  /// Unique identifier for the resource.
+  /// Unique identifier for the product
+  ///
+  /// This ID is automatically assigned by WooCommerce when the product is created.
+  /// It's used to identify the product in API calls and is required for updates.
   final int? id;
 
-  /// Product name.
+  /// Product name
+  ///
+  /// The display name of the product as it appears to customers.
+  /// This is the primary identifier for the product in the store.
   final String? name;
 
-  /// Product slug.
+  /// Product slug
+  ///
+  /// A URL-friendly version of the product name, used in product URLs.
+  /// Automatically generated from the name but can be customized.
   final String? slug;
 
-  /// Product URL.
+  /// Product permalink URL
+  ///
+  /// The full URL where the product can be viewed on the website.
+  /// This is automatically generated based on the slug and store settings.
   final String? permalink;
 
-  /// The date the variation was created, in the site's timezone.
+  /// Date and time when the product was created (local time)
+  ///
+  /// This timestamp reflects when the product was first created in the store's local timezone.
   DateTime? dateCreated;
 
-  /// The date the variation was created, as GMT.
+  /// Date and time when the product was created (GMT)
+  ///
+  /// This timestamp reflects when the product was first created in GMT/UTC timezone.
   DateTime? dateCreatedGmt;
 
-  /// The date the variation was last modified, in the site's timezone.
+  /// Date and time when the product was last modified (local time)
+  ///
+  /// This timestamp reflects when the product was last updated in the store's local timezone.
   DateTime? dateModified;
 
-  /// The date the variation was last modified, as GMT.
+  /// Date and time when the product was last modified (GMT)
+  ///
+  /// This timestamp reflects when the product was last updated in GMT/UTC timezone.
   DateTime? dateModifiedGmt;
 
-  /// Product type. Options: simple, grouped, external and variable. Default is simple.
+  /// Product type
+  ///
+  /// Determines the behavior and capabilities of the product:
+  /// - `WooProductType.simple`: Basic products with fixed pricing
+  /// - `WooProductType.variable`: Products with multiple variations
+  /// - `WooProductType.grouped`: Collections of related products
+  /// - `WooProductType.external`: Products sold on external websites
   final WooProductType? type;
 
-  /// Product status (post status). Options: draft, pending, private and publish. Default is publish.
+  /// Product status
+  ///
+  /// Controls the visibility and availability of the product:
+  /// - `WooProductStatus.publish`: Product is live and visible to customers
+  /// - `WooProductStatus.draft`: Product is saved but not visible
+  /// - `WooProductStatus.pending`: Product is pending review
+  /// - `WooProductStatus.private`: Product is visible only to specific users
   final WooProductStatus? status;
 
-  /// Featured product. Default is false.
+  /// Whether the product is featured
+  ///
+  /// Featured products can be highlighted in special sections of the store
+  /// and are often used for promotional purposes.
   final bool? featured;
 
-  /// Catalog visibility. Options: visible, catalog, search and hidden. Default is visible.
+  /// Catalog visibility setting
+  ///
+  /// Controls where the product appears in the store:
+  /// - `WooProductCatalogVisibility.visible`: Visible in catalog and search
+  /// - `WooProductCatalogVisibility.catalog`: Visible only in catalog
+  /// - `WooProductCatalogVisibility.search`: Visible only in search results
+  /// - `WooProductCatalogVisibility.hidden`: Hidden from catalog and search
   final WooProductCatalogVisibility? catalogVisibility;
 
-  /// Product description.
+  /// Product description
+  ///
+  /// The full description of the product, displayed on the product page.
+  /// Supports HTML formatting and can include detailed information about the product.
   final String? description;
 
-  /// Product short description.
+  /// Product short description
+  ///
+  /// A brief summary of the product, often displayed in product listings
+  /// and search results. Should be concise and compelling.
   final String? shortDescription;
 
-  /// Unique identifier.
+  /// Product SKU (Stock Keeping Unit)
+  ///
+  /// A unique identifier for the product used for inventory management.
+  /// Must be unique across all products in the store.
   final String? sku;
 
-  /// Current product price.
+  /// Current product price
+  ///
+  /// The active price of the product. If the product is on sale,
+  /// this will be the sale price; otherwise, it will be the regular price.
   final double? price;
 
-  /// Product regular price.
+  /// Product regular price
+  ///
+  /// The standard price of the product before any discounts or sales.
+  /// This is the price that will be shown when the product is not on sale.
   final double? regularPrice;
 
-  /// Product sale price.
+  /// Product sale price
+  ///
+  /// The discounted price of the product when it's on sale.
+  /// This price is only active during the sale period.
   final double? salePrice;
 
   /// Start date of sale price, in the site's timezone.
@@ -270,6 +377,59 @@ class WooProduct {
   /// Meta data
   final List<WooMetaData> metaData;
 
+  /// Creates a new WooProduct instance
+  ///
+  /// ## Required Parameters
+  ///
+  /// * [name] - The display name of the product
+  ///
+  /// ## Optional Parameters
+  ///
+  /// * [id] - Unique identifier (assigned by WooCommerce)
+  /// * [type] - Product type (default: simple)
+  /// * [status] - Product status (default: publish)
+  /// * [price] - Current product price
+  /// * [regularPrice] - Standard price before discounts
+  /// * [salePrice] - Discounted price during sales
+  /// * [description] - Full product description
+  /// * [shortDescription] - Brief product summary
+  /// * [sku] - Stock Keeping Unit identifier
+  /// * [featured] - Whether product is featured
+  /// * [catalogVisibility] - Where product appears in store
+  /// * [manageStock] - Whether to track inventory
+  /// * [stockQuantity] - Available stock amount
+  /// * [stockStatus] - Current stock status
+  /// * [weight] - Product weight for shipping
+  /// * [dimensions] - Product dimensions
+  /// * [categories] - Product categories
+  /// * [tags] - Product tags
+  /// * [images] - Product images
+  /// * [attributes] - Custom product attributes
+  /// * [metaData] - Additional metadata
+  ///
+  /// ## Example Usage
+  ///
+  /// ```dart
+  /// // Create a basic product
+  /// final product = WooProduct(
+  ///   name: 'Sample Product',
+  ///   type: WooProductType.simple,
+  ///   price: 29.99,
+  ///   description: 'A great product',
+  /// );
+  ///
+  /// // Create a variable product with attributes
+  /// final variableProduct = WooProduct(
+  ///   name: 'T-Shirt',
+  ///   type: WooProductType.variable,
+  ///   attributes: [
+  ///     WooProductItemAttribute(
+  ///       name: 'Size',
+  ///       options: ['S', 'M', 'L'],
+  ///     ),
+  ///   ],
+  /// );
+  /// ```
   WooProduct({
     this.id,
     this.name,
@@ -338,6 +498,62 @@ class WooProduct {
     this.metaData = const [],
   });
 
+  /// Creates a WooProduct instance from JSON data
+  ///
+  /// This factory constructor is used to deserialize product data received
+  /// from the WooCommerce REST API. It handles the conversion of JSON fields
+  /// to the appropriate Dart types and provides fallback values where needed.
+  ///
+  /// ## Parameters
+  ///
+  /// * [json] - A Map containing the product data in JSON format
+  ///
+  /// ## Returns
+  ///
+  /// A `WooProduct` instance populated with data from the JSON.
+  ///
+  /// ## JSON Structure
+  ///
+  /// The expected JSON structure includes:
+  /// ```json
+  /// {
+  ///   "id": 123,
+  ///   "name": "Sample Product",
+  ///   "type": "simple",
+  ///   "status": "publish",
+  ///   "price": "29.99",
+  ///   "regular_price": "39.99",
+  ///   "sale_price": "29.99",
+  ///   "description": "Product description",
+  ///   "short_description": "Short description",
+  ///   "sku": "PROD-123",
+  ///   "featured": false,
+  ///   "catalog_visibility": "visible",
+  ///   "manage_stock": true,
+  ///   "stock_quantity": 100,
+  ///   "stock_status": "instock",
+  ///   "categories": [...],
+  ///   "tags": [...],
+  ///   "images": [...],
+  ///   "attributes": [...],
+  ///   "meta_data": [...]
+  /// }
+  /// ```
+  ///
+  /// ## Example Usage
+  ///
+  /// ```dart
+  /// // Parse product from API response
+  /// final jsonData = {
+  ///   'id': 123,
+  ///   'name': 'Sample Product',
+  ///   'type': 'simple',
+  ///   'price': '29.99',
+  /// };
+  ///
+  /// final product = WooProduct.fromJson(jsonData);
+  /// print('Product: ${product.name}');
+  /// ```
   WooProduct.fromJson(Map<String, dynamic> json)
       : id = json['id'],
         name = json['name'],
@@ -600,6 +816,44 @@ class WooProduct {
     );
   }
 
+  /// Creates a fake WooProduct instance for testing purposes
+  ///
+  /// This factory constructor generates a product with random but realistic
+  /// data, making it useful for testing, development, and demonstration purposes.
+  /// The generated product will have valid data for all fields.
+  ///
+  /// ## Generated Data
+  ///
+  /// The fake product includes:
+  /// - Random name and description
+  /// - Random product type from available types
+  /// - Random status from available statuses
+  /// - Random pricing information
+  /// - Random stock and inventory data
+  /// - Random categories, tags, and images
+  /// - Random attributes and metadata
+  ///
+  /// ## Returns
+  ///
+  /// A `WooProduct` instance with randomly generated fake data.
+  ///
+  /// ## Example Usage
+  ///
+  /// ```dart
+  /// // Generate a fake product for testing
+  /// final fakeProduct = WooProduct.fake();
+  /// print('Fake product: ${fakeProduct.name}');
+  /// print('Type: ${fakeProduct.type}');
+  /// print('Price: ${fakeProduct.price}');
+  ///
+  /// // Use in tests
+  /// test('product creation', () {
+  ///   final product = WooProduct.fake();
+  ///   expect(product.name, isNotNull);
+  ///   expect(product.type, isNotNull);
+  ///   expect(product.price, isNotNull);
+  /// });
+  /// ```
   factory WooProduct.fake() => WooProduct(
         id: FakeHelper.integer(),
         name: FakeHelper.word(),
@@ -669,6 +923,60 @@ class WooProduct {
         dateOnSaleToGmt: FakeHelper.datetime(),
       );
 
+  /// Converts the WooProduct instance to JSON format
+  ///
+  /// This method serializes the product data into a Map that can be sent
+  /// to the WooCommerce REST API. It handles the conversion of Dart types
+  /// to JSON-compatible formats and includes all necessary fields.
+  ///
+  /// ## Returns
+  ///
+  /// A `Map<String, dynamic>` containing the product data in JSON format.
+  ///
+  /// ## JSON Structure
+  ///
+  /// The returned JSON structure includes:
+  /// ```json
+  /// {
+  ///   "id": 123,
+  ///   "name": "Sample Product",
+  ///   "type": "simple",
+  ///   "status": "publish",
+  ///   "price": "29.99",
+  ///   "regular_price": "39.99",
+  ///   "sale_price": "29.99",
+  ///   "description": "Product description",
+  ///   "short_description": "Short description",
+  ///   "sku": "PROD-123",
+  ///   "featured": false,
+  ///   "catalog_visibility": "visible",
+  ///   "manage_stock": true,
+  ///   "stock_quantity": 100,
+  ///   "stock_status": "instock",
+  ///   "categories": [...],
+  ///   "tags": [...],
+  ///   "images": [...],
+  ///   "attributes": [...],
+  ///   "meta_data": [...]
+  /// }
+  /// ```
+  ///
+  /// ## Example Usage
+  ///
+  /// ```dart
+  /// // Convert product to JSON for API calls
+  /// final product = WooProduct(
+  ///   name: 'Sample Product',
+  ///   type: WooProductType.simple,
+  ///   price: 29.99,
+  /// );
+  ///
+  /// final jsonData = product.toJson();
+  /// print('JSON: $jsonData');
+  ///
+  /// // Send to API
+  /// await dio.post('/products', data: product.toJson());
+  /// ```
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
 

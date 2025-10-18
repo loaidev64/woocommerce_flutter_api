@@ -1,6 +1,8 @@
 import 'package:woocommerce_flutter_api/woocommerce_flutter_api.dart';
 
-/// Model that have a product with it related products
+/// Represents a product with its related products and relationships.
+///
+/// Brief description of the model's purpose and usage for products with children.
 class WooProductWithChildrens {
   /// Main Product
   final WooProduct mainProduct;
@@ -22,6 +24,7 @@ class WooProductWithChildrens {
 
   //TODO:: add varitations if it can be added
 
+  /// Creates a new WooProductWithChildrens instance.
   WooProductWithChildrens({
     required this.mainProduct,
     this.relatedProducts,
@@ -31,6 +34,7 @@ class WooProductWithChildrens {
     this.groupedProducts,
   });
 
+  /// Creates a WooProductWithChildrens instance from data and main product.
   factory WooProductWithChildrens.fromData(
       List<Map<String, dynamic>> data, WooProduct product) {
     final List<WooProduct> relatedProducts = [];
@@ -76,6 +80,7 @@ class WooProductWithChildrens {
     );
   }
 
+  /// Creates a fake WooProductWithChildrens instance for testing purposes.
   factory WooProductWithChildrens.fake() => WooProductWithChildrens(
         mainProduct: WooProduct.fake(),
         parentProduct: WooProduct.fake(),
@@ -85,6 +90,7 @@ class WooProductWithChildrens {
         upsellProducts: FakeHelper.list(() => WooProduct.fake()),
       );
 
+  /// Creates a copy of this WooProductWithChildrens with the given fields replaced.
   WooProductWithChildrens copyWith({
     WooProduct? mainProduct,
     List<WooProduct>? relatedProducts,
@@ -101,5 +107,13 @@ class WooProductWithChildrens {
       parentProduct: parentProduct ?? this.parentProduct,
       groupedProducts: groupedProducts ?? this.groupedProducts,
     );
+  }
+
+  /// Returns a string representation of the WooProductWithChildrens instance.
+  ///
+  /// Displays all main fields for debugging and logging purposes.
+  @override
+  String toString() {
+    return 'WooProductWithChildrens(mainProduct: $mainProduct, relatedProducts: $relatedProducts, upsellProducts: $upsellProducts, crossSellProducts: $crossSellProducts, parentProduct: $parentProduct, groupedProducts: $groupedProducts)';
   }
 }
