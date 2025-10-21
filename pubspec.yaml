@@ -1,6 +1,6 @@
 name: woocommerce_flutter_api
 description: A Flutter package for WooCommerce integration. Manage products, orders, and customers with updated dependencies for seamless e-commerce.
-version: 1.4.0
+version: 1.5.0
 repository: https://github.com/loaidev64/woocommerce_flutter_api.git
 platforms:
   android:

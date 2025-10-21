@@ -1,7 +1,3 @@
-## 1.4.0
-
-- Updated dependencies to the latest versions.
-
 ## 1.0.0
 
 - Initial version.
@@ -41,3 +37,12 @@
 - Fixes issue in getOrders orderby queryParameter.
 - Added create, update, delete product category apis.
 - Added create, update, delete, duplicate product apis.
+
+## 1.4.0
+
+- Updated dependencies to the latest versions.
+
+# 1.5.0
+
+- Enhanced documentation for WooCommerce API, adding detailed descriptions, usage examples, and JSON serialization for refund, report, tax, and variation models.
+- Added comprehensive API documentation with examples for all apis.

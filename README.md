@@ -6,10 +6,10 @@ A comprehensive Flutter package for seamless WooCommerce integration. Easily man
 
 This package leverages the following dependencies:
 
-- [dio](https://pub.dev/packages/dio) (^5.4.1) for HTTP requests
-- [faker](https://pub.dev/packages/faker) (^2.1.0) for generating fake data during development
-- [flutter_secure_storage](https://pub.dev/packages/flutter_secure_storage) (^9.0.0) for secure data storage
-- [pretty_dio_logger](https://pub.dev/packages/pretty_dio_logger) (^1.3.1) for logging HTTP requests in a readable format
+- [dio](https://pub.dev/packages/dio) (^5.9.0) for HTTP requests
+- [faker](https://pub.dev/packages/faker) (^2.2.0) for generating fake data during development
+- [flutter_secure_storage](https://pub.dev/packages/flutter_secure_storage) (^9.2.4) for secure data storage
+- [pretty_dio_logger](https://pub.dev/packages/pretty_dio_logger) (^1.4.0) for logging HTTP requests in a readable format
 
 ## Installation
 
@@ -219,6 +219,38 @@ try {
 ```
 
 This approach significantly reduces the number of network requests compared to fetching each piece of related data separately.
+
+#### Product Variations API
+
+Retrieve and manage product variations:
+
+```dart
+try {
+  // Get all variations for a product
+  final variations = await woocommerce.getProductVaritaions(productId: 123);
+  
+  // Get a specific variation
+  final variation = await woocommerce.getProductVariation(
+    productId: 123,
+    id: 456,
+  );
+  
+  // Search variations with filters
+  final filteredVariations = await woocommerce.getProductVaritaions(
+    productId: 123,
+    search: 'red',
+    stockStatus: WooProductStockStatus.instock,
+    minPrice: 10.0,
+    maxPrice: 100.0,
+  );
+  
+  variations.forEach((variation) {
+    print('Variation: ${variation.name} - Price: ${variation.price}');
+  });
+} catch (e) {
+  print('Error fetching variations: $e');
+}
+```
 
 #### Making Custom API Calls
 
