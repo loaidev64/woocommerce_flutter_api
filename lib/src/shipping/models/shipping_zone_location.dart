@@ -43,21 +43,6 @@ import 'package:woocommerce_flutter_api/src/helpers/fake_helper.dart';
 /// final json = location.toJson();
 /// ```
 class WooShippingZoneLocation {
-  /// Geographical location code
-  ///
-  /// The specific identifier for the geographical area. The format depends on
-  /// the location type:
-  /// - Country: ISO 3166-1 alpha-2 country codes (e.g., 'US', 'CA')
-  /// - State: State/province codes (e.g., 'CA', 'NY')
-  /// - Postcode: Postal codes or ranges (e.g., '90210', '10000-20000')
-  /// - Continent: Continent codes (e.g., 'NA', 'EU')
-  final String? code;
-
-  /// Type of geographical location
-  ///
-  /// Specifies the type of geographical area this location represents.
-  /// Common values include 'country', 'state', 'postcode', and 'continent'.
-  final String? type;
 
   /// Creates a new WooShippingZoneLocation instance
   ///
@@ -115,27 +100,6 @@ class WooShippingZoneLocation {
         type: json['type'],
       );
 
-  /// Converts the location to JSON format
-  ///
-  /// This method serializes the WooShippingZoneLocation object into a JSON-compatible
-  /// map that can be sent to the WooCommerce API or stored in a database.
-  ///
-  /// ## Returns
-  ///
-  /// A `Map<String, dynamic>` containing the location data in JSON format
-  ///
-  /// ## Example Usage
-  ///
-  /// ```dart
-  /// // Convert to JSON
-  /// final jsonData = location.toJson();
-  /// print(jsonData); // {'code': 'US', 'type': 'country'}
-  /// ```
-  Map<String, dynamic> toJson() => {
-        'code': code,
-        'type': type,
-      };
-
   /// Creates a fake shipping zone location for testing and development
   ///
   /// This factory constructor generates a WooShippingZoneLocation instance with
@@ -158,4 +122,40 @@ class WooShippingZoneLocation {
         type: FakeHelper.randomItem(
             const ['postcode', 'state', 'country', 'continent']),
       );
+  /// Geographical location code
+  ///
+  /// The specific identifier for the geographical area. The format depends on
+  /// the location type:
+  /// - Country: ISO 3166-1 alpha-2 country codes (e.g., 'US', 'CA')
+  /// - State: State/province codes (e.g., 'CA', 'NY')
+  /// - Postcode: Postal codes or ranges (e.g., '90210', '10000-20000')
+  /// - Continent: Continent codes (e.g., 'NA', 'EU')
+  final String? code;
+
+  /// Type of geographical location
+  ///
+  /// Specifies the type of geographical area this location represents.
+  /// Common values include 'country', 'state', 'postcode', and 'continent'.
+  final String? type;
+
+  /// Converts the location to JSON format
+  ///
+  /// This method serializes the WooShippingZoneLocation object into a JSON-compatible
+  /// map that can be sent to the WooCommerce API or stored in a database.
+  ///
+  /// ## Returns
+  ///
+  /// A `Map<String, dynamic>` containing the location data in JSON format
+  ///
+  /// ## Example Usage
+  ///
+  /// ```dart
+  /// // Convert to JSON
+  /// final jsonData = location.toJson();
+  /// print(jsonData); // {'code': 'US', 'type': 'country'}
+  /// ```
+  Map<String, dynamic> toJson() => {
+        'code': code,
+        'type': type,
+      };
 }

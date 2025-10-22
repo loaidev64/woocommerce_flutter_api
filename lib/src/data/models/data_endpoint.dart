@@ -38,17 +38,6 @@ import 'package:woocommerce_flutter_api/src/helpers/fake_helper.dart';
 /// final json = endpoint.toJson();
 /// ```
 class WooDataEndpoint {
-  /// Unique slug identifier for the data endpoint
-  ///
-  /// This identifier is used to access specific data endpoints in the WooCommerce API.
-  /// Common values include 'continents', 'countries', 'currencies', and 'system_status'.
-  final String? slug;
-
-  /// Human-readable description of the data endpoint
-  ///
-  /// Provides a description of what data is available through this endpoint
-  /// and how it can be used in e-commerce applications.
-  final String? description;
 
   /// Creates a new WooDataEndpoint instance
   ///
@@ -97,27 +86,6 @@ class WooDataEndpoint {
         description: json['description'],
       );
 
-  /// Converts the data endpoint to JSON format
-  ///
-  /// This method serializes the WooDataEndpoint object into a JSON-compatible
-  /// map that can be sent to the WooCommerce API or stored in a database.
-  ///
-  /// ## Returns
-  ///
-  /// A `Map<String, dynamic>` containing the data endpoint information in JSON format
-  ///
-  /// ## Example Usage
-  ///
-  /// ```dart
-  /// // Convert to JSON
-  /// final jsonData = endpoint.toJson();
-  /// print(jsonData); // {'slug': 'continents', 'description': 'List of continents'}
-  /// ```
-  Map<String, dynamic> toJson() => {
-        'slug': slug,
-        'description': description,
-      };
-
   /// Creates a fake data endpoint for testing and development
   ///
   /// This factory constructor generates a WooDataEndpoint instance with
@@ -139,4 +107,36 @@ class WooDataEndpoint {
         slug: FakeHelper.word(),
         description: FakeHelper.sentence(),
       );
+  /// Unique slug identifier for the data endpoint
+  ///
+  /// This identifier is used to access specific data endpoints in the WooCommerce API.
+  /// Common values include 'continents', 'countries', 'currencies', and 'system_status'.
+  final String? slug;
+
+  /// Human-readable description of the data endpoint
+  ///
+  /// Provides a description of what data is available through this endpoint
+  /// and how it can be used in e-commerce applications.
+  final String? description;
+
+  /// Converts the data endpoint to JSON format
+  ///
+  /// This method serializes the WooDataEndpoint object into a JSON-compatible
+  /// map that can be sent to the WooCommerce API or stored in a database.
+  ///
+  /// ## Returns
+  ///
+  /// A `Map<String, dynamic>` containing the data endpoint information in JSON format
+  ///
+  /// ## Example Usage
+  ///
+  /// ```dart
+  /// // Convert to JSON
+  /// final jsonData = endpoint.toJson();
+  /// print(jsonData); // {'slug': 'continents', 'description': 'List of continents'}
+  /// ```
+  Map<String, dynamic> toJson() => {
+        'slug': slug,
+        'description': description,
+      };
 }

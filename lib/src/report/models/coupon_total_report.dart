@@ -4,14 +4,6 @@ import 'package:woocommerce_flutter_api/woocommerce_flutter_api.dart';
 ///
 /// Brief description of the model's purpose and usage.
 class WooCouponTotalReport {
-  /// An alphanumeric identifier for the resource.
-  String? slug;
-
-  /// Coupon type name.
-  String? name;
-
-  /// Amount of coupons.
-  String? total;
 
   /// Creates a new WooCouponTotalReport instance.
   WooCouponTotalReport({
@@ -25,6 +17,20 @@ class WooCouponTotalReport {
       : slug = json['slug'],
         name = json['name'],
         total = json['total']?.toString();
+
+  factory WooCouponTotalReport.fake() => WooCouponTotalReport(
+        slug: FakeHelper.word(),
+        name: FakeHelper.word(),
+        total: FakeHelper.integer().toString(),
+      );
+  /// An alphanumeric identifier for the resource.
+  String? slug;
+
+  /// Coupon type name.
+  String? name;
+
+  /// Amount of coupons.
+  String? total;
 
   Map<String, dynamic> _toJson() => {
         'slug': slug,
@@ -50,10 +56,4 @@ class WooCouponTotalReport {
 
   @override
   int get hashCode => slug.hashCode ^ name.hashCode ^ total.hashCode;
-
-  factory WooCouponTotalReport.fake() => WooCouponTotalReport(
-        slug: FakeHelper.word(),
-        name: FakeHelper.word(),
-        total: FakeHelper.integer().toString(),
-      );
 }

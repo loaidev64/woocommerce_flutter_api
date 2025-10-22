@@ -6,29 +6,6 @@ import 'package:woocommerce_flutter_api/src/helpers/fake_helper.dart';
 /// Contains tax rate details, calculations, and amounts for taxes applied
 /// to fee lines. Used for tax tracking and order processing.
 class WooFeeLineTax {
-  /// Unique identifier for the fee line tax item.
-  final int? id;
-
-  /// Tax rate code.
-  final String? rateCode;
-
-  /// Tax rate identifier.
-  final String? rateId;
-
-  /// Tax rate display label.
-  final String? label;
-
-  /// Whether this is a compound tax rate.
-  final bool? compound;
-
-  /// Tax total excluding shipping taxes.
-  final double? taxTotal;
-
-  /// Shipping tax total.
-  final double? shippingTaxTotal;
-
-  /// Custom metadata for the fee line tax item.
-  final List<WooMetaData>? metaData;
 
   /// Creates a new WooFeeLineTax instance.
   WooFeeLineTax({
@@ -56,6 +33,40 @@ class WooFeeLineTax {
             .toList(),
       );
 
+  factory WooFeeLineTax.fake() => WooFeeLineTax(
+        id: FakeHelper.integer(),
+        rateCode: FakeHelper.word(),
+        rateId: FakeHelper.integer().toString(),
+        label: FakeHelper.word(),
+        compound: FakeHelper.boolean(),
+        taxTotal: FakeHelper.decimal(),
+        shippingTaxTotal: FakeHelper.decimal(),
+        metaData: FakeHelper.list(() => WooMetaData.fake()),
+      );
+  /// Unique identifier for the fee line tax item.
+  final int? id;
+
+  /// Tax rate code.
+  final String? rateCode;
+
+  /// Tax rate identifier.
+  final String? rateId;
+
+  /// Tax rate display label.
+  final String? label;
+
+  /// Whether this is a compound tax rate.
+  final bool? compound;
+
+  /// Tax total excluding shipping taxes.
+  final double? taxTotal;
+
+  /// Shipping tax total.
+  final double? shippingTaxTotal;
+
+  /// Custom metadata for the fee line tax item.
+  final List<WooMetaData>? metaData;
+
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['id'] = id;
@@ -70,17 +81,6 @@ class WooFeeLineTax {
     }
     return data;
   }
-
-  factory WooFeeLineTax.fake() => WooFeeLineTax(
-        id: FakeHelper.integer(),
-        rateCode: FakeHelper.word(),
-        rateId: FakeHelper.integer().toString(),
-        label: FakeHelper.word(),
-        compound: FakeHelper.boolean(),
-        taxTotal: FakeHelper.decimal(),
-        shippingTaxTotal: FakeHelper.decimal(),
-        metaData: FakeHelper.list(() => WooMetaData.fake()),
-      );
 
   /// Returns a string representation of the WooFeeLineTax instance.
   ///

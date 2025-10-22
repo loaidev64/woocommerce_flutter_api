@@ -5,6 +5,29 @@ import 'package:woocommerce_flutter_api/src/helpers/fake_helper.dart';
 ///
 /// Brief description of the model's purpose and usage for product attributes.
 class WooProductItemAttribute {
+
+  /// Creates a new WooProductItemAttribute instance.
+  WooProductItemAttribute(this.id, this.name, this.position, this.visible,
+      this.variation, this.options);
+
+  /// Creates a WooProductItemAttribute instance from JSON data.
+  WooProductItemAttribute.fromJson(Map<String, dynamic> json)
+      : id = json['id'],
+        name = json['name'],
+        position = json['position'],
+        visible = json['visible'],
+        variation = json['variation'],
+        options = json['options'].cast<String>();
+
+  /// Creates a fake WooProductItemAttribute instance for testing purposes.
+  factory WooProductItemAttribute.fake() => WooProductItemAttribute(
+        FakeHelper.integer(),
+        FakeHelper.word(),
+        FakeHelper.integer(),
+        FakeHelper.boolean(),
+        FakeHelper.boolean(),
+        List.filled(Faker().randomGenerator.integer(10), FakeHelper.word()),
+      );
   /// Attribute ID.
   final int? id;
 
@@ -23,19 +46,6 @@ class WooProductItemAttribute {
   /// List of available term names of the attribute.
   final List<String>? options;
 
-  /// Creates a new WooProductItemAttribute instance.
-  WooProductItemAttribute(this.id, this.name, this.position, this.visible,
-      this.variation, this.options);
-
-  /// Creates a WooProductItemAttribute instance from JSON data.
-  WooProductItemAttribute.fromJson(Map<String, dynamic> json)
-      : id = json['id'],
-        name = json['name'],
-        position = json['position'],
-        visible = json['visible'],
-        variation = json['variation'],
-        options = json['options'].cast<String>();
-
   /// Converts the WooProductItemAttribute instance to JSON format.
   Map<String, dynamic> toJson() => {
         'id': id,
@@ -45,16 +55,6 @@ class WooProductItemAttribute {
         'variation': variation,
         'options': options,
       };
-
-  /// Creates a fake WooProductItemAttribute instance for testing purposes.
-  factory WooProductItemAttribute.fake() => WooProductItemAttribute(
-        FakeHelper.integer(),
-        FakeHelper.word(),
-        FakeHelper.integer(),
-        FakeHelper.boolean(),
-        FakeHelper.boolean(),
-        List.filled(Faker().randomGenerator.integer(10), FakeHelper.word()),
-      );
 
   /// Returns a string representation of the WooProductItemAttribute instance.
   ///
@@ -69,14 +69,6 @@ class WooProductItemAttribute {
 ///
 /// Brief description of the model's purpose and usage for default product attributes.
 class WooProductDefaultAttribute {
-  /// Attribute ID.
-  final int? id;
-
-  /// Attribute name.
-  final String? name;
-
-  /// Selected attribute term name.
-  final String? option;
 
   /// Creates a new WooProductDefaultAttribute instance.
   WooProductDefaultAttribute(this.id, this.name, this.option);
@@ -87,15 +79,23 @@ class WooProductDefaultAttribute {
         name = json['name'],
         option = json['option'];
 
-  /// Converts the WooProductDefaultAttribute instance to JSON format.
-  Map<String, dynamic> toJson() => {'id': id, 'name': name, 'option': option};
-
   /// Creates a fake WooProductDefaultAttribute instance for testing purposes.
   factory WooProductDefaultAttribute.fake() => WooProductDefaultAttribute(
         FakeHelper.integer(),
         FakeHelper.word(),
         FakeHelper.word(),
       );
+  /// Attribute ID.
+  final int? id;
+
+  /// Attribute name.
+  final String? name;
+
+  /// Selected attribute term name.
+  final String? option;
+
+  /// Converts the WooProductDefaultAttribute instance to JSON format.
+  Map<String, dynamic> toJson() => {'id': id, 'name': name, 'option': option};
 
   /// Returns a string representation of the WooProductDefaultAttribute instance.
   ///

@@ -1,36 +1,6 @@
 import 'package:woocommerce_flutter_api/src/helpers/fake_helper.dart';
 
 class WooSystemStatusEnvironment {
-  final String? homeUrl;
-  final String? siteUrl;
-  final String? version;
-  final String? logDirectory;
-  final bool? logDirectoryWritable;
-  final String? wpVersion;
-  final bool? wpMultisite;
-  final int? wpMemoryLimit;
-  final bool? wpDebugMode;
-  final bool? wpCron;
-  final String? language;
-  final String? serverInfo;
-  final String? phpVersion;
-  final int? phpPostMaxSize;
-  final int? phpMaxExecutionTime;
-  final int? phpMaxInputVars;
-  final String? curlVersion;
-  final bool? suhosinInstalled;
-  final int? maxUploadSize;
-  final String? mysqlVersion;
-  final String? defaultTimezone;
-  final bool? fsockOpenOrCurlEnabled;
-  final bool? soapClientEnabled;
-  final bool? domDocumentEnabled;
-  final bool? gzipEnabled;
-  final bool? mbstringEnabled;
-  final bool? remotePostSuccessful;
-  final String? remotePostResponse;
-  final bool? remoteGetSuccessful;
-  final String? remoteGetResponse;
 
   WooSystemStatusEnvironment({
     this.homeUrl,
@@ -98,39 +68,6 @@ class WooSystemStatusEnvironment {
     remoteGetResponse: json['remote_get_response'],
   );
 
-  Map<String, dynamic> toJson() => {
-    'home_url': homeUrl,
-    'site_url': siteUrl,
-    'version': version,
-    'log_directory': logDirectory,
-    'log_directory_writable': logDirectoryWritable,
-    'wp_version': wpVersion,
-    'wp_multisite': wpMultisite,
-    'wp_memory_limit': wpMemoryLimit,
-    'wp_debug_mode': wpDebugMode,
-    'wp_cron': wpCron,
-    'language': language,
-    'server_info': serverInfo,
-    'php_version': phpVersion,
-    'php_post_max_size': phpPostMaxSize,
-    'php_max_execution_time': phpMaxExecutionTime,
-    'php_max_input_vars': phpMaxInputVars,
-    'curl_version': curlVersion,
-    'suhosin_installed': suhosinInstalled,
-    'max_upload_size': maxUploadSize,
-    'mysql_version': mysqlVersion,
-    'default_timezone': defaultTimezone,
-    'fsockopen_or_curl_enabled': fsockOpenOrCurlEnabled,
-    'soapclient_enabled': soapClientEnabled,
-    'domdocument_enabled': domDocumentEnabled,
-    'gzip_enabled': gzipEnabled,
-    'mbstring_enabled': mbstringEnabled,
-    'remote_post_successful': remotePostSuccessful,
-    'remote_post_response': remotePostResponse,
-    'remote_get_successful': remoteGetSuccessful,
-    'remote_get_response': remoteGetResponse,
-  };
-
   factory WooSystemStatusEnvironment.fake() => WooSystemStatusEnvironment(
     homeUrl: FakeHelper.url(),
     siteUrl: FakeHelper.url(),
@@ -163,4 +100,67 @@ class WooSystemStatusEnvironment {
     remoteGetSuccessful: FakeHelper.boolean(),
     remoteGetResponse: FakeHelper.sentence(),
   );
+  final String? homeUrl;
+  final String? siteUrl;
+  final String? version;
+  final String? logDirectory;
+  final bool? logDirectoryWritable;
+  final String? wpVersion;
+  final bool? wpMultisite;
+  final int? wpMemoryLimit;
+  final bool? wpDebugMode;
+  final bool? wpCron;
+  final String? language;
+  final String? serverInfo;
+  final String? phpVersion;
+  final int? phpPostMaxSize;
+  final int? phpMaxExecutionTime;
+  final int? phpMaxInputVars;
+  final String? curlVersion;
+  final bool? suhosinInstalled;
+  final int? maxUploadSize;
+  final String? mysqlVersion;
+  final String? defaultTimezone;
+  final bool? fsockOpenOrCurlEnabled;
+  final bool? soapClientEnabled;
+  final bool? domDocumentEnabled;
+  final bool? gzipEnabled;
+  final bool? mbstringEnabled;
+  final bool? remotePostSuccessful;
+  final String? remotePostResponse;
+  final bool? remoteGetSuccessful;
+  final String? remoteGetResponse;
+
+  Map<String, dynamic> toJson() => {
+    'home_url': homeUrl,
+    'site_url': siteUrl,
+    'version': version,
+    'log_directory': logDirectory,
+    'log_directory_writable': logDirectoryWritable,
+    'wp_version': wpVersion,
+    'wp_multisite': wpMultisite,
+    'wp_memory_limit': wpMemoryLimit,
+    'wp_debug_mode': wpDebugMode,
+    'wp_cron': wpCron,
+    'language': language,
+    'server_info': serverInfo,
+    'php_version': phpVersion,
+    'php_post_max_size': phpPostMaxSize,
+    'php_max_execution_time': phpMaxExecutionTime,
+    'php_max_input_vars': phpMaxInputVars,
+    'curl_version': curlVersion,
+    'suhosin_installed': suhosinInstalled,
+    'max_upload_size': maxUploadSize,
+    'mysql_version': mysqlVersion,
+    'default_timezone': defaultTimezone,
+    'fsockopen_or_curl_enabled': fsockOpenOrCurlEnabled,
+    'soapclient_enabled': soapClientEnabled,
+    'domdocument_enabled': domDocumentEnabled,
+    'gzip_enabled': gzipEnabled,
+    'mbstring_enabled': mbstringEnabled,
+    'remote_post_successful': remotePostSuccessful,
+    'remote_post_response': remotePostResponse,
+    'remote_get_successful': remoteGetSuccessful,
+    'remote_get_response': remoteGetResponse,
+  };
 }

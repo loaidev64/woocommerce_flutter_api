@@ -1,3 +1,5 @@
+import 'package:woocommerce_flutter_api/woocommerce_flutter_api.dart' show WooWebhook, WooWebhookApi, WooWebhookTopic;
+
 /// WooCommerce Webhook Status Enumeration
 ///
 /// Defines the possible states for a webhook in WooCommerce. The status determines

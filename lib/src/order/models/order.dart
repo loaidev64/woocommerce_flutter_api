@@ -123,195 +123,6 @@ import 'shipping.dart';
 /// final order = WooOrder.fromJson(jsonData);
 /// ```
 class WooOrder {
-  /// Unique identifier for the order
-  ///
-  /// This ID is automatically assigned by WooCommerce when the order is created.
-  /// It's used to identify the order in API calls and is required for updates.
-  int? id;
-
-  /// Parent order ID
-  ///
-  /// For child orders (like refunds or partial orders), this references
-  /// the parent order. For main orders, this is typically null.
-  int? parentId;
-
-  /// Order number
-  ///
-  /// A human-readable order number displayed to customers.
-  /// This is different from the order ID and is often formatted as a sequence.
-  String? number;
-
-  /// Order key
-  ///
-  /// A unique key used for order identification in URLs and API calls.
-  /// This key is used for guest order lookups and order tracking.
-  String? orderKey;
-
-  /// Source where the order was created
-  ///
-  /// Indicates how the order was created (e.g., 'rest-api', 'checkout', 'admin').
-  /// Useful for tracking order origins and analytics.
-  String? createdVia;
-
-  /// WooCommerce version that last updated the order
-  ///
-  /// Tracks which version of WooCommerce last modified the order.
-  /// Useful for compatibility and debugging purposes.
-  String? version;
-
-  /// Order status
-  ///
-  /// Current status of the order in the fulfillment process:
-  /// - `WooOrderStatus.pending`: Payment is pending
-  /// - `WooOrderStatus.processing`: Payment confirmed, being prepared
-  /// - `WooOrderStatus.onHold`: Temporarily paused
-  /// - `WooOrderStatus.completed`: Order fulfilled and delivered
-  /// - `WooOrderStatus.cancelled`: Order cancelled
-  /// - `WooOrderStatus.refunded`: Order refunded
-  /// - `WooOrderStatus.failed`: Payment failed
-  /// - `WooOrderStatus.trash`: Order deleted
-  WooOrderStatus? status;
-
-  /// Currency used for the order
-  ///
-  /// The currency in which the order was placed. Supports all major
-  /// currencies including USD, EUR, GBP, and many others.
-  /// Default is USD if not specified.
-  WooOrderCurrency? currency;
-
-  /// Date and time when the order was created (local time)
-  ///
-  /// This timestamp reflects when the order was first created in the store's local timezone.
-  DateTime? dateCreated;
-
-  /// Date and time when the order was created (GMT)
-  ///
-  /// This timestamp reflects when the order was first created in GMT/UTC timezone.
-  DateTime? dateCreatedGmt;
-
-  /// Date and time when the order was last modified (local time)
-  ///
-  /// This timestamp reflects when the order was last updated in the store's local timezone.
-  DateTime? dateModified;
-
-  /// Date and time when the order was last modified (GMT)
-  ///
-  /// This timestamp reflects when the order was last updated in GMT/UTC timezone.
-  DateTime? dateModifiedGmt;
-
-  /// Total discount amount for the order
-  ///
-  /// The total amount of discounts applied to the order, including
-  /// coupon discounts and other promotional reductions.
-  double? discountTotal;
-
-  /// Total discount tax amount for the order
-  ///
-  /// The tax amount associated with the discounts applied to the order.
-  /// This is relevant when taxes are calculated on discounted amounts.
-  double? discountTax;
-
-  /// Total shipping amount for the order
-  ///
-  /// The total cost of shipping for the order, including all shipping
-  /// methods and any shipping-related fees.
-  double? shippingTotal;
-
-  /// Total shipping tax amount for the order
-  ///
-  /// The tax amount applied to shipping costs, if shipping is taxable
-  /// in the customer's location.
-  double? shippingTax;
-
-  /// Sum of line item taxes only
-  ///
-  /// The total tax amount calculated on product line items,
-  /// excluding shipping taxes and other fees.
-  double? cartTax;
-
-  /// Grand total of the order
-  ///
-  /// The final amount the customer pays, including all products,
-  /// taxes, shipping, and fees, minus any discounts.
-  double? total;
-
-  /// Sum of all taxes applied to the order
-  ///
-  /// The total amount of all taxes, including product taxes,
-  /// shipping taxes, and any other applicable taxes.
-  double? totalTax;
-
-  /// Whether prices included tax during checkout
-  ///
-  /// If true, the displayed prices already include tax.
-  /// If false, tax is calculated and added at checkout.
-  bool? pricesIncludeTax;
-
-  /// User ID who owns the order. 0 for guests. Default is 0.
-  int? customerId;
-
-  /// Customer's IP address.
-  String? customerIpAddress;
-
-  /// User agent of the customer.
-  String? customerUserAgent;
-
-  /// Note left by customer during checkout.
-  String? customerNote;
-
-  /// Billing address.
-  WooBilling? billing;
-
-  /// Shipping address.
-  WooShipping? shipping;
-
-  /// Payment method ID.
-  String? paymentMethod;
-
-  /// Payment method title.
-  String? paymentMethodTitle;
-
-  /// Unique transaction ID.
-  String? transactionId;
-
-  /// The date the order was paid, in the site's timezone.
-  DateTime? datePaid;
-
-  /// The date the order was paid, as GMT.
-  DateTime? datePaidGmt;
-
-  /// The date the order was completed, in the site's timezone.
-  DateTime? dateCompleted;
-
-  /// The date the order was completed, as GMT.
-  DateTime? dateCompletedGmt;
-
-  /// MD5 hash of cart items to ensure orders are not modified.
-  String? cartHash;
-
-  /// Custom order metadata.
-  List<WooMetaData>? metaData;
-
-  /// Line items in the order.
-  List<WooLineItem>? lineItems;
-
-  /// Tax lines for the order.
-  List<WooTaxLine>? taxLines;
-
-  /// Shipping lines for the order.
-  List<WooShippingLine>? shippingLines;
-
-  /// Fee lines for the order.
-  List<WooOrderFeeLine>? feeLines;
-
-  /// Coupon lines for the order.
-  List<WooOrderCouponLine>? couponLines;
-
-  /// List of refunds for the order.
-  List<WooRefunds>? refunds;
-
-  /// Define if the order is paid. It will set the status to processing and reduce stock items. Default is false.
-  bool? setPaid;
 
   /// Creates a new WooOrder instance
   ///
@@ -513,6 +324,279 @@ class WooOrder {
     }
   }
 
+  /// Creates a fake WooOrder instance for testing purposes
+  ///
+  /// This factory constructor generates an order with random but realistic
+  /// data, making it useful for testing, development, and demonstration purposes.
+  /// The generated order will have valid data for all fields.
+  ///
+  /// ## Generated Data
+  ///
+  /// The fake order includes:
+  /// - Random order ID and number
+  /// - Random status from available statuses
+  /// - Random currency from available currencies
+  /// - Random customer information
+  /// - Random billing and shipping addresses
+  /// - Random line items with products
+  /// - Random financial totals
+  /// - Random timestamps
+  ///
+  /// ## Returns
+  ///
+  /// A `WooOrder` instance with randomly generated fake data.
+  ///
+  /// ## Example Usage
+  ///
+  /// ```dart
+  /// // Generate a fake order for testing
+  /// final fakeOrder = WooOrder.fake();
+  /// print('Fake order: ${fakeOrder.number}');
+  /// print('Status: ${fakeOrder.status}');
+  /// print('Total: ${fakeOrder.total}');
+  ///
+  /// // Use in tests
+  /// test('order creation', () {
+  ///   final order = WooOrder.fake();
+  ///   expect(order.id, isNotNull);
+  ///   expect(order.status, isNotNull);
+  ///   expect(order.total, isNotNull);
+  /// });
+  /// ```
+  factory WooOrder.fake() => WooOrder(
+        id: FakeHelper.integer(),
+        parentId: FakeHelper.integer(),
+        number: FakeHelper.integer().toString(),
+        orderKey: FakeHelper.word(),
+        createdVia: 'rest-api',
+        version: FakeHelper.integer().toString(),
+        status: WooOrderStatus.fake(),
+        currency: WooOrderCurrency.fake(),
+        dateCreated: FakeHelper.datetime(),
+        dateCreatedGmt: FakeHelper.datetime(),
+        dateModified: FakeHelper.datetime(),
+        dateModifiedGmt: FakeHelper.datetime(),
+        discountTotal: FakeHelper.decimal(),
+        discountTax: FakeHelper.decimal(),
+        shippingTotal: FakeHelper.decimal(),
+        shippingTax: FakeHelper.decimal(),
+        cartTax: FakeHelper.decimal(),
+        total: FakeHelper.decimal(),
+        totalTax: FakeHelper.decimal(),
+        pricesIncludeTax: FakeHelper.boolean(),
+        customerId: FakeHelper.integer(),
+        customerIpAddress: Faker().internet.ipv4Address(),
+        customerUserAgent: Faker().internet.userAgent(),
+        customerNote: FakeHelper.sentence(),
+        billing: WooBilling.fake(),
+        shipping: WooShipping.fake(),
+        paymentMethod: FakeHelper.word(),
+        paymentMethodTitle: FakeHelper.word(),
+        transactionId: FakeHelper.integer().toString(),
+        datePaid: FakeHelper.datetime(),
+        datePaidGmt: FakeHelper.datetime(),
+        dateCompleted: FakeHelper.datetime(),
+        dateCompletedGmt: FakeHelper.datetime(),
+        cartHash: Faker().guid.guid(),
+        metaData: FakeHelper.list(() => WooMetaData.fake()),
+        lineItems: FakeHelper.list(() => WooLineItem.fake()),
+        taxLines: FakeHelper.list(() => WooTaxLine.fake()),
+        shippingLines: FakeHelper.list(() => WooShippingLine.fake()),
+        feeLines: FakeHelper.list(() => WooOrderFeeLine.fake()),
+        couponLines: FakeHelper.list(() => WooOrderCouponLine.fake()),
+        refunds: FakeHelper.list(() => WooRefunds.fake()),
+        setPaid: FakeHelper.boolean(),
+      );
+  /// Unique identifier for the order
+  ///
+  /// This ID is automatically assigned by WooCommerce when the order is created.
+  /// It's used to identify the order in API calls and is required for updates.
+  int? id;
+
+  /// Parent order ID
+  ///
+  /// For child orders (like refunds or partial orders), this references
+  /// the parent order. For main orders, this is typically null.
+  int? parentId;
+
+  /// Order number
+  ///
+  /// A human-readable order number displayed to customers.
+  /// This is different from the order ID and is often formatted as a sequence.
+  String? number;
+
+  /// Order key
+  ///
+  /// A unique key used for order identification in URLs and API calls.
+  /// This key is used for guest order lookups and order tracking.
+  String? orderKey;
+
+  /// Source where the order was created
+  ///
+  /// Indicates how the order was created (e.g., 'rest-api', 'checkout', 'admin').
+  /// Useful for tracking order origins and analytics.
+  String? createdVia;
+
+  /// WooCommerce version that last updated the order
+  ///
+  /// Tracks which version of WooCommerce last modified the order.
+  /// Useful for compatibility and debugging purposes.
+  String? version;
+
+  /// Order status
+  ///
+  /// Current status of the order in the fulfillment process:
+  /// - `WooOrderStatus.pending`: Payment is pending
+  /// - `WooOrderStatus.processing`: Payment confirmed, being prepared
+  /// - `WooOrderStatus.onHold`: Temporarily paused
+  /// - `WooOrderStatus.completed`: Order fulfilled and delivered
+  /// - `WooOrderStatus.cancelled`: Order cancelled
+  /// - `WooOrderStatus.refunded`: Order refunded
+  /// - `WooOrderStatus.failed`: Payment failed
+  /// - `WooOrderStatus.trash`: Order deleted
+  WooOrderStatus? status;
+
+  /// Currency used for the order
+  ///
+  /// The currency in which the order was placed. Supports all major
+  /// currencies including USD, EUR, GBP, and many others.
+  /// Default is USD if not specified.
+  WooOrderCurrency? currency;
+
+  /// Date and time when the order was created (local time)
+  ///
+  /// This timestamp reflects when the order was first created in the store's local timezone.
+  DateTime? dateCreated;
+
+  /// Date and time when the order was created (GMT)
+  ///
+  /// This timestamp reflects when the order was first created in GMT/UTC timezone.
+  DateTime? dateCreatedGmt;
+
+  /// Date and time when the order was last modified (local time)
+  ///
+  /// This timestamp reflects when the order was last updated in the store's local timezone.
+  DateTime? dateModified;
+
+  /// Date and time when the order was last modified (GMT)
+  ///
+  /// This timestamp reflects when the order was last updated in GMT/UTC timezone.
+  DateTime? dateModifiedGmt;
+
+  /// Total discount amount for the order
+  ///
+  /// The total amount of discounts applied to the order, including
+  /// coupon discounts and other promotional reductions.
+  double? discountTotal;
+
+  /// Total discount tax amount for the order
+  ///
+  /// The tax amount associated with the discounts applied to the order.
+  /// This is relevant when taxes are calculated on discounted amounts.
+  double? discountTax;
+
+  /// Total shipping amount for the order
+  ///
+  /// The total cost of shipping for the order, including all shipping
+  /// methods and any shipping-related fees.
+  double? shippingTotal;
+
+  /// Total shipping tax amount for the order
+  ///
+  /// The tax amount applied to shipping costs, if shipping is taxable
+  /// in the customer's location.
+  double? shippingTax;
+
+  /// Sum of line item taxes only
+  ///
+  /// The total tax amount calculated on product line items,
+  /// excluding shipping taxes and other fees.
+  double? cartTax;
+
+  /// Grand total of the order
+  ///
+  /// The final amount the customer pays, including all products,
+  /// taxes, shipping, and fees, minus any discounts.
+  double? total;
+
+  /// Sum of all taxes applied to the order
+  ///
+  /// The total amount of all taxes, including product taxes,
+  /// shipping taxes, and any other applicable taxes.
+  double? totalTax;
+
+  /// Whether prices included tax during checkout
+  ///
+  /// If true, the displayed prices already include tax.
+  /// If false, tax is calculated and added at checkout.
+  bool? pricesIncludeTax;
+
+  /// User ID who owns the order. 0 for guests. Default is 0.
+  int? customerId;
+
+  /// Customer's IP address.
+  String? customerIpAddress;
+
+  /// User agent of the customer.
+  String? customerUserAgent;
+
+  /// Note left by customer during checkout.
+  String? customerNote;
+
+  /// Billing address.
+  WooBilling? billing;
+
+  /// Shipping address.
+  WooShipping? shipping;
+
+  /// Payment method ID.
+  String? paymentMethod;
+
+  /// Payment method title.
+  String? paymentMethodTitle;
+
+  /// Unique transaction ID.
+  String? transactionId;
+
+  /// The date the order was paid, in the site's timezone.
+  DateTime? datePaid;
+
+  /// The date the order was paid, as GMT.
+  DateTime? datePaidGmt;
+
+  /// The date the order was completed, in the site's timezone.
+  DateTime? dateCompleted;
+
+  /// The date the order was completed, as GMT.
+  DateTime? dateCompletedGmt;
+
+  /// MD5 hash of cart items to ensure orders are not modified.
+  String? cartHash;
+
+  /// Custom order metadata.
+  List<WooMetaData>? metaData;
+
+  /// Line items in the order.
+  List<WooLineItem>? lineItems;
+
+  /// Tax lines for the order.
+  List<WooTaxLine>? taxLines;
+
+  /// Shipping lines for the order.
+  List<WooShippingLine>? shippingLines;
+
+  /// Fee lines for the order.
+  List<WooOrderFeeLine>? feeLines;
+
+  /// Coupon lines for the order.
+  List<WooOrderCouponLine>? couponLines;
+
+  /// List of refunds for the order.
+  List<WooRefunds>? refunds;
+
+  /// Define if the order is paid. It will set the status to processing and reduce stock items. Default is false.
+  bool? setPaid;
+
   /// Converts the WooOrder instance to JSON format
   ///
   /// This method serializes the order data into a Map that can be sent
@@ -621,88 +705,4 @@ class WooOrder {
   String toString() {
     return 'WooOrder(id: $id, number: $number, status: $status, total: $total, customerId: $customerId)';
   }
-
-  /// Creates a fake WooOrder instance for testing purposes
-  ///
-  /// This factory constructor generates an order with random but realistic
-  /// data, making it useful for testing, development, and demonstration purposes.
-  /// The generated order will have valid data for all fields.
-  ///
-  /// ## Generated Data
-  ///
-  /// The fake order includes:
-  /// - Random order ID and number
-  /// - Random status from available statuses
-  /// - Random currency from available currencies
-  /// - Random customer information
-  /// - Random billing and shipping addresses
-  /// - Random line items with products
-  /// - Random financial totals
-  /// - Random timestamps
-  ///
-  /// ## Returns
-  ///
-  /// A `WooOrder` instance with randomly generated fake data.
-  ///
-  /// ## Example Usage
-  ///
-  /// ```dart
-  /// // Generate a fake order for testing
-  /// final fakeOrder = WooOrder.fake();
-  /// print('Fake order: ${fakeOrder.number}');
-  /// print('Status: ${fakeOrder.status}');
-  /// print('Total: ${fakeOrder.total}');
-  ///
-  /// // Use in tests
-  /// test('order creation', () {
-  ///   final order = WooOrder.fake();
-  ///   expect(order.id, isNotNull);
-  ///   expect(order.status, isNotNull);
-  ///   expect(order.total, isNotNull);
-  /// });
-  /// ```
-  factory WooOrder.fake() => WooOrder(
-        id: FakeHelper.integer(),
-        parentId: FakeHelper.integer(),
-        number: FakeHelper.integer().toString(),
-        orderKey: FakeHelper.word(),
-        createdVia: 'rest-api',
-        version: FakeHelper.integer().toString(),
-        status: WooOrderStatus.fake(),
-        currency: WooOrderCurrency.fake(),
-        dateCreated: FakeHelper.datetime(),
-        dateCreatedGmt: FakeHelper.datetime(),
-        dateModified: FakeHelper.datetime(),
-        dateModifiedGmt: FakeHelper.datetime(),
-        discountTotal: FakeHelper.decimal(),
-        discountTax: FakeHelper.decimal(),
-        shippingTotal: FakeHelper.decimal(),
-        shippingTax: FakeHelper.decimal(),
-        cartTax: FakeHelper.decimal(),
-        total: FakeHelper.decimal(),
-        totalTax: FakeHelper.decimal(),
-        pricesIncludeTax: FakeHelper.boolean(),
-        customerId: FakeHelper.integer(),
-        customerIpAddress: Faker().internet.ipv4Address(),
-        customerUserAgent: Faker().internet.userAgent(),
-        customerNote: FakeHelper.sentence(),
-        billing: WooBilling.fake(),
-        shipping: WooShipping.fake(),
-        paymentMethod: FakeHelper.word(),
-        paymentMethodTitle: FakeHelper.word(),
-        transactionId: FakeHelper.integer().toString(),
-        datePaid: FakeHelper.datetime(),
-        datePaidGmt: FakeHelper.datetime(),
-        dateCompleted: FakeHelper.datetime(),
-        dateCompletedGmt: FakeHelper.datetime(),
-        cartHash: Faker().guid.guid(),
-        metaData: FakeHelper.list(() => WooMetaData.fake()),
-        lineItems: FakeHelper.list(() => WooLineItem.fake()),
-        taxLines: FakeHelper.list(() => WooTaxLine.fake()),
-        shippingLines: FakeHelper.list(() => WooShippingLine.fake()),
-        feeLines: FakeHelper.list(() => WooOrderFeeLine.fake()),
-        couponLines: FakeHelper.list(() => WooOrderCouponLine.fake()),
-        refunds: FakeHelper.list(() => WooRefunds.fake()),
-        setPaid: FakeHelper.boolean(),
-      );
 }

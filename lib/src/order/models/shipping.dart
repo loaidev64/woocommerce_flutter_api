@@ -5,6 +5,43 @@ import 'package:woocommerce_flutter_api/woocommerce_flutter_api.dart';
 /// Contains customer shipping details including name, address, and company information.
 /// Used for order fulfillment and delivery purposes.
 class WooShipping {
+
+  /// Creates a new WooShipping instance.
+  WooShipping(
+      {this.firstName,
+      this.lastName,
+      this.company,
+      this.address1,
+      this.address2,
+      this.city,
+      this.state,
+      this.postcode,
+      this.country});
+
+  /// Creates a WooShipping instance from JSON data.
+  WooShipping.fromJson(Map<String, dynamic> json) {
+    firstName = json['first_name'];
+    lastName = json['last_name'];
+    company = json['company'];
+    address1 = json['address_1'];
+    address2 = json['address_2'];
+    city = json['city'];
+    state = json['state'];
+    postcode = json['postcode'];
+    country = json['country'];
+  }
+
+  factory WooShipping.fake() => WooShipping(
+        firstName: FakeHelper.firstName(),
+        lastName: FakeHelper.lastName(),
+        address1: FakeHelper.address(),
+        address2: FakeHelper.address(),
+        city: FakeHelper.city(),
+        country: FakeHelper.country(),
+        state: FakeHelper.state(),
+        company: FakeHelper.company(),
+        postcode: FakeHelper.zipCode(),
+      );
   /// Recipient's first name.
   String? firstName;
 
@@ -32,31 +69,6 @@ class WooShipping {
   /// Country code in ISO 3166-1 alpha-2 format.
   String? country;
 
-  /// Creates a new WooShipping instance.
-  WooShipping(
-      {this.firstName,
-      this.lastName,
-      this.company,
-      this.address1,
-      this.address2,
-      this.city,
-      this.state,
-      this.postcode,
-      this.country});
-
-  /// Creates a WooShipping instance from JSON data.
-  WooShipping.fromJson(Map<String, dynamic> json) {
-    firstName = json['first_name'];
-    lastName = json['last_name'];
-    company = json['company'];
-    address1 = json['address_1'];
-    address2 = json['address_2'];
-    city = json['city'];
-    state = json['state'];
-    postcode = json['postcode'];
-    country = json['country'];
-  }
-
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['first_name'] = firstName;
@@ -70,18 +82,6 @@ class WooShipping {
     data['country'] = country;
     return data;
   }
-
-  factory WooShipping.fake() => WooShipping(
-        firstName: FakeHelper.firstName(),
-        lastName: FakeHelper.lastName(),
-        address1: FakeHelper.address(),
-        address2: FakeHelper.address(),
-        city: FakeHelper.city(),
-        country: FakeHelper.country(),
-        state: FakeHelper.state(),
-        company: FakeHelper.company(),
-        postcode: FakeHelper.zipCode(),
-      );
 
   /// Returns a string representation of the WooShipping instance.
   ///

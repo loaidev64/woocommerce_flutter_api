@@ -44,25 +44,6 @@ import 'package:woocommerce_flutter_api/src/helpers/fake_helper.dart';
 /// final json = zone.toJson();
 /// ```
 class WooShippingZone {
-  /// Unique identifier for the shipping zone
-  ///
-  /// This ID is automatically assigned by WooCommerce when the zone is created.
-  /// It's used to identify the zone in API calls and is required for updates and deletions.
-  final int? id;
-
-  /// Human-readable name for the shipping zone
-  ///
-  /// This name helps you identify the shipping zone in the WooCommerce admin panel
-  /// and in your application. It should be descriptive of the geographical area
-  /// or customer segment the zone serves.
-  final String? name;
-
-  /// Priority order for zone evaluation
-  ///
-  /// Controls the order in which shipping zones are evaluated. Lower numbers
-  /// are evaluated first. This allows you to create priority-based shipping
-  /// configurations where more specific zones are checked before general ones.
-  final int? order;
 
   /// Creates a new WooShippingZone instance
   ///
@@ -90,8 +71,7 @@ class WooShippingZone {
   /// );
   /// ```
   WooShippingZone({
-    this.id,
-    required this.name,
+    required this.name, this.id,
     this.order,
   });
 
@@ -126,28 +106,6 @@ class WooShippingZone {
         order: json['order'],
       );
 
-  /// Converts the shipping zone to JSON format
-  ///
-  /// This method serializes the WooShippingZone object into a JSON-compatible
-  /// map that can be sent to the WooCommerce API or stored in a database.
-  ///
-  /// ## Returns
-  ///
-  /// A `Map<String, dynamic>` containing the shipping zone data in JSON format
-  ///
-  /// ## Example Usage
-  ///
-  /// ```dart
-  /// // Convert to JSON
-  /// final jsonData = zone.toJson();
-  /// print(jsonData); // {'id': 1, 'name': 'North America', 'order': 1}
-  /// ```
-  Map<String, dynamic> toJson() => {
-        'id': id,
-        'name': name,
-        'order': order,
-      };
-
   /// Creates a fake shipping zone for testing and development
   ///
   /// This factory constructor generates a WooShippingZone instance with
@@ -170,4 +128,45 @@ class WooShippingZone {
         name: FakeHelper.sentence(),
         order: FakeHelper.integer(),
       );
+  /// Unique identifier for the shipping zone
+  ///
+  /// This ID is automatically assigned by WooCommerce when the zone is created.
+  /// It's used to identify the zone in API calls and is required for updates and deletions.
+  final int? id;
+
+  /// Human-readable name for the shipping zone
+  ///
+  /// This name helps you identify the shipping zone in the WooCommerce admin panel
+  /// and in your application. It should be descriptive of the geographical area
+  /// or customer segment the zone serves.
+  final String? name;
+
+  /// Priority order for zone evaluation
+  ///
+  /// Controls the order in which shipping zones are evaluated. Lower numbers
+  /// are evaluated first. This allows you to create priority-based shipping
+  /// configurations where more specific zones are checked before general ones.
+  final int? order;
+
+  /// Converts the shipping zone to JSON format
+  ///
+  /// This method serializes the WooShippingZone object into a JSON-compatible
+  /// map that can be sent to the WooCommerce API or stored in a database.
+  ///
+  /// ## Returns
+  ///
+  /// A `Map<String, dynamic>` containing the shipping zone data in JSON format
+  ///
+  /// ## Example Usage
+  ///
+  /// ```dart
+  /// // Convert to JSON
+  /// final jsonData = zone.toJson();
+  /// print(jsonData); // {'id': 1, 'name': 'North America', 'order': 1}
+  /// ```
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'name': name,
+        'order': order,
+      };
 }

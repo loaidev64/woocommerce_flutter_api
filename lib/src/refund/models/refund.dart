@@ -53,12 +53,6 @@ import 'package:woocommerce_flutter_api/woocommerce_flutter_api.dart';
 /// final refund = WooRefund.fromJson(jsonData);
 /// ```
 class WooRefund extends WooOrderRefund {
-  /// The ID of the order the refund is associated with.
-  ///
-  /// This field links the refund to its parent order, allowing you to track
-  /// which order the refund was issued for. This is essential for order
-  /// management and financial reporting.
-  int? parentId;
 
   /// Creates a new WooRefund instance
   ///
@@ -156,6 +150,44 @@ class WooRefund extends WooOrderRefund {
     apiRestock = json['api_restock'];
   }
 
+  /// Creates a fake WooRefund instance for testing purposes
+  ///
+  /// This factory constructor generates a refund with random but realistic
+  /// data, making it useful for testing and development.
+  ///
+  /// ## Returns
+  ///
+  /// A `WooRefund` instance with randomly generated fake data.
+  ///
+  /// ## Example Usage
+  ///
+  /// ```dart
+  /// final fakeRefund = WooRefund.fake();
+  /// ```
+  factory WooRefund.fake() => WooRefund(
+        id: FakeHelper.integer(),
+        dateCreated: FakeHelper.datetime(),
+        dateCreatedGmt: FakeHelper.datetime(),
+        amount: FakeHelper.decimal().toString(),
+        reason: FakeHelper.sentence(),
+        refundedBy: FakeHelper.integer(),
+        refundedPayment: FakeHelper.boolean(),
+        metaData: FakeHelper.list(() => WooMetaData.fake()),
+        lineItems: FakeHelper.list(() => WooLineItem.fake()),
+        taxLines: FakeHelper.list(() => WooTaxLine.fake()),
+        shippingLines: FakeHelper.list(() => WooShippingLine.fake()),
+        feeLines: FakeHelper.list(() => WooOrderFeeLine.fake()),
+        apiRefund: FakeHelper.boolean(),
+        apiRestock: FakeHelper.boolean(),
+        parentId: FakeHelper.integer(),
+      );
+  /// The ID of the order the refund is associated with.
+  ///
+  /// This field links the refund to its parent order, allowing you to track
+  /// which order the refund was issued for. This is essential for order
+  /// management and financial reporting.
+  int? parentId;
+
   /// Converts the WooRefund instance to JSON format
   ///
   /// This method serializes the refund data into a Map that can be sent
@@ -205,36 +237,4 @@ class WooRefund extends WooOrderRefund {
 
   @override
   int get hashCode => id.hashCode;
-
-  /// Creates a fake WooRefund instance for testing purposes
-  ///
-  /// This factory constructor generates a refund with random but realistic
-  /// data, making it useful for testing and development.
-  ///
-  /// ## Returns
-  ///
-  /// A `WooRefund` instance with randomly generated fake data.
-  ///
-  /// ## Example Usage
-  ///
-  /// ```dart
-  /// final fakeRefund = WooRefund.fake();
-  /// ```
-  factory WooRefund.fake() => WooRefund(
-        id: FakeHelper.integer(),
-        dateCreated: FakeHelper.datetime(),
-        dateCreatedGmt: FakeHelper.datetime(),
-        amount: FakeHelper.decimal().toString(),
-        reason: FakeHelper.sentence(),
-        refundedBy: FakeHelper.integer(),
-        refundedPayment: FakeHelper.boolean(),
-        metaData: FakeHelper.list(() => WooMetaData.fake()),
-        lineItems: FakeHelper.list(() => WooLineItem.fake()),
-        taxLines: FakeHelper.list(() => WooTaxLine.fake()),
-        shippingLines: FakeHelper.list(() => WooShippingLine.fake()),
-        feeLines: FakeHelper.list(() => WooOrderFeeLine.fake()),
-        apiRefund: FakeHelper.boolean(),
-        apiRestock: FakeHelper.boolean(),
-        parentId: FakeHelper.integer(),
-      );
 }

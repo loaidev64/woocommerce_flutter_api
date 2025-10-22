@@ -46,27 +46,6 @@ import 'package:woocommerce_flutter_api/src/helpers/fake_helper.dart';
 /// final json = method.toJson();
 /// ```
 class WooShippingMethod {
-  /// Unique identifier for the shipping method
-  ///
-  /// This identifier is used by WooCommerce to distinguish between different
-  /// shipping methods. Common values include 'flat_rate', 'free_shipping',
-  /// 'local_pickup', and custom method identifiers.
-  final String? id;
-
-  /// Display title for the shipping method
-  ///
-  /// The human-readable name that customers see during checkout.
-  /// This title is typically configured in the WooCommerce admin panel
-  /// and can be customized for different languages or regions.
-  final String? title;
-
-  /// Description of the shipping method
-  ///
-  /// Provides additional information about the shipping method, such as
-  /// delivery timeframes, special conditions, or service details. This
-  /// description helps customers understand what to expect from their
-  /// shipping selection.
-  final String? description;
 
   /// Creates a new WooShippingMethod instance
   ///
@@ -134,32 +113,6 @@ class WooShippingMethod {
         description: json['description'],
       );
 
-  /// Converts the shipping method to JSON format
-  ///
-  /// This method serializes the WooShippingMethod object into a JSON-compatible
-  /// map that can be sent to the WooCommerce API or stored in a database.
-  /// It includes all non-null properties in the resulting JSON structure.
-  ///
-  /// ## Returns
-  ///
-  /// A `Map<String, dynamic>` containing the shipping method data in JSON format
-  ///
-  /// ## Example Usage
-  ///
-  /// ```dart
-  /// // Convert to JSON for API requests
-  /// final jsonData = method.toJson();
-  /// print(jsonData); // {'id': 'flat_rate', 'title': 'Flat Rate', 'description': 'Fixed rate'}
-  ///
-  /// // Send to API
-  /// await dio.post('/shipping_methods', data: method.toJson());
-  /// ```
-  Map<String, dynamic> toJson() => {
-        'id': id,
-        'title': title,
-        'description': description,
-      };
-
   /// Creates a fake shipping method for testing and development
   ///
   /// This factory constructor generates a WooShippingMethod instance with
@@ -186,4 +139,51 @@ class WooShippingMethod {
         title: FakeHelper.sentence(),
         description: FakeHelper.sentence(),
       );
+  /// Unique identifier for the shipping method
+  ///
+  /// This identifier is used by WooCommerce to distinguish between different
+  /// shipping methods. Common values include 'flat_rate', 'free_shipping',
+  /// 'local_pickup', and custom method identifiers.
+  final String? id;
+
+  /// Display title for the shipping method
+  ///
+  /// The human-readable name that customers see during checkout.
+  /// This title is typically configured in the WooCommerce admin panel
+  /// and can be customized for different languages or regions.
+  final String? title;
+
+  /// Description of the shipping method
+  ///
+  /// Provides additional information about the shipping method, such as
+  /// delivery timeframes, special conditions, or service details. This
+  /// description helps customers understand what to expect from their
+  /// shipping selection.
+  final String? description;
+
+  /// Converts the shipping method to JSON format
+  ///
+  /// This method serializes the WooShippingMethod object into a JSON-compatible
+  /// map that can be sent to the WooCommerce API or stored in a database.
+  /// It includes all non-null properties in the resulting JSON structure.
+  ///
+  /// ## Returns
+  ///
+  /// A `Map<String, dynamic>` containing the shipping method data in JSON format
+  ///
+  /// ## Example Usage
+  ///
+  /// ```dart
+  /// // Convert to JSON for API requests
+  /// final jsonData = method.toJson();
+  /// print(jsonData); // {'id': 'flat_rate', 'title': 'Flat Rate', 'description': 'Fixed rate'}
+  ///
+  /// // Send to API
+  /// await dio.post('/shipping_methods', data: method.toJson());
+  /// ```
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'title': title,
+        'description': description,
+      };
 }

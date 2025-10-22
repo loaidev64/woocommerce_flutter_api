@@ -58,56 +58,6 @@ import 'category_links.dart';
 /// final category = WooProductCategory.fromJson(jsonData);
 /// ```
 class WooProductCategory {
-  /// Unique identifier for the category
-  ///
-  /// This ID is automatically assigned by WooCommerce when the category is created.
-  int? id;
-
-  /// Category name
-  ///
-  /// The display name of the category as it appears to customers.
-  String? name;
-
-  /// Category slug
-  ///
-  /// A URL-friendly version of the category name, used in category URLs.
-  String? slug;
-
-  /// Parent category ID
-  ///
-  /// For subcategories, this references the parent category.
-  /// For top-level categories, this is null.
-  int? parent;
-
-  /// Category description
-  ///
-  /// HTML description of the category, displayed on category pages.
-  String? description;
-
-  /// Category display type
-  ///
-  /// Controls how products and subcategories are displayed on the category page.
-  WooCategoryDisplay? display;
-
-  /// Category image
-  ///
-  /// The featured image for the category, displayed in category listings.
-  WooProductCategoryImage? image;
-
-  /// Menu order
-  ///
-  /// Used to custom sort categories in navigation menus.
-  int? menuOrder;
-
-  /// Product count
-  ///
-  /// Number of published products in this category.
-  int? count;
-
-  /// Category links
-  ///
-  /// API links for related resources and operations.
-  WooProductCategoryLinks? links;
 
   /// Creates a new WooProductCategory instance
   ///
@@ -185,6 +135,82 @@ class WooProductCategory {
         : null;
   }
 
+  /// Creates a fake WooProductCategory instance for testing purposes
+  ///
+  /// This factory constructor generates a category with random but realistic
+  /// data, making it useful for testing and development.
+  ///
+  /// ## Returns
+  ///
+  /// A `WooProductCategory` instance with randomly generated fake data.
+  ///
+  /// ## Example Usage
+  ///
+  /// ```dart
+  /// final fakeCategory = WooProductCategory.fake();
+  /// ```
+  factory WooProductCategory.fake() => WooProductCategory(
+        id: FakeHelper.integer(),
+        name: FakeHelper.word(),
+        slug: FakeHelper.word(),
+        parent: FakeHelper.integer(),
+        description: FakeHelper.sentence(),
+        display: WooCategoryDisplay.fake(),
+        image: WooProductCategoryImage.fake(),
+        menuOrder: FakeHelper.integer(),
+        count: FakeHelper.integer(),
+      );
+  /// Unique identifier for the category
+  ///
+  /// This ID is automatically assigned by WooCommerce when the category is created.
+  int? id;
+
+  /// Category name
+  ///
+  /// The display name of the category as it appears to customers.
+  String? name;
+
+  /// Category slug
+  ///
+  /// A URL-friendly version of the category name, used in category URLs.
+  String? slug;
+
+  /// Parent category ID
+  ///
+  /// For subcategories, this references the parent category.
+  /// For top-level categories, this is null.
+  int? parent;
+
+  /// Category description
+  ///
+  /// HTML description of the category, displayed on category pages.
+  String? description;
+
+  /// Category display type
+  ///
+  /// Controls how products and subcategories are displayed on the category page.
+  WooCategoryDisplay? display;
+
+  /// Category image
+  ///
+  /// The featured image for the category, displayed in category listings.
+  WooProductCategoryImage? image;
+
+  /// Menu order
+  ///
+  /// Used to custom sort categories in navigation menus.
+  int? menuOrder;
+
+  /// Product count
+  ///
+  /// Number of published products in this category.
+  int? count;
+
+  /// Category links
+  ///
+  /// API links for related resources and operations.
+  WooProductCategoryLinks? links;
+
   /// Converts the WooProductCategory instance to JSON format
   ///
   /// This method serializes the category data into a Map that can be sent
@@ -243,30 +269,4 @@ class WooProductCategory {
   String toString() {
     return 'WooProductCategory(id: $id, name: $name, slug: $slug, parent: $parent, count: $count)';
   }
-
-  /// Creates a fake WooProductCategory instance for testing purposes
-  ///
-  /// This factory constructor generates a category with random but realistic
-  /// data, making it useful for testing and development.
-  ///
-  /// ## Returns
-  ///
-  /// A `WooProductCategory` instance with randomly generated fake data.
-  ///
-  /// ## Example Usage
-  ///
-  /// ```dart
-  /// final fakeCategory = WooProductCategory.fake();
-  /// ```
-  factory WooProductCategory.fake() => WooProductCategory(
-        id: FakeHelper.integer(),
-        name: FakeHelper.word(),
-        slug: FakeHelper.word(),
-        parent: FakeHelper.integer(),
-        description: FakeHelper.sentence(),
-        display: WooCategoryDisplay.fake(),
-        image: WooProductCategoryImage.fake(),
-        menuOrder: FakeHelper.integer(),
-        count: FakeHelper.integer(),
-      );
 }

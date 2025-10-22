@@ -40,23 +40,6 @@ import 'package:woocommerce_flutter_api/src/helpers/fake_helper.dart';
 /// final json = continent.toJson();
 /// ```
 class WooContinent {
-  /// Continent code
-  ///
-  /// The two-letter continent code used for geographical reference.
-  /// Examples include 'NA' for North America, 'EU' for Europe, 'AS' for Asia.
-  final String? code;
-
-  /// Human-readable continent name
-  ///
-  /// The full name of the continent, such as 'North America', 'Europe', or 'Asia'.
-  /// This is typically used in user interfaces and documentation.
-  final String? name;
-
-  /// List of countries within the continent
-  ///
-  /// Contains all countries within the continent with their associated
-  /// geographical and currency information.
-  final List<CountryInContinent>? countries;
 
   /// Creates a new WooContinent instance
   ///
@@ -112,28 +95,6 @@ class WooContinent {
             : null,
       );
 
-  /// Converts the continent to JSON format
-  ///
-  /// This method serializes the WooContinent object into a JSON-compatible
-  /// map that can be sent to the WooCommerce API or stored in a database.
-  ///
-  /// ## Returns
-  ///
-  /// A `Map<String, dynamic>` containing the continent information in JSON format
-  ///
-  /// ## Example Usage
-  ///
-  /// ```dart
-  /// // Convert to JSON
-  /// final jsonData = continent.toJson();
-  /// print(jsonData); // {'code': 'NA', 'name': 'North America', 'countries': [...]}
-  /// ```
-  Map<String, dynamic> toJson() => {
-        'code': code,
-        'name': name,
-        'countries': countries?.map((e) => e.toJson()).toList(),
-      };
-
   /// Creates a fake continent for testing and development
   ///
   /// This factory constructor generates a WooContinent instance with
@@ -156,19 +117,48 @@ class WooContinent {
         name: FakeHelper.country(),
         countries: FakeHelper.list(() => CountryInContinent.fake()),
       );
+  /// Continent code
+  ///
+  /// The two-letter continent code used for geographical reference.
+  /// Examples include 'NA' for North America, 'EU' for Europe, 'AS' for Asia.
+  final String? code;
+
+  /// Human-readable continent name
+  ///
+  /// The full name of the continent, such as 'North America', 'Europe', or 'Asia'.
+  /// This is typically used in user interfaces and documentation.
+  final String? name;
+
+  /// List of countries within the continent
+  ///
+  /// Contains all countries within the continent with their associated
+  /// geographical and currency information.
+  final List<CountryInContinent>? countries;
+
+  /// Converts the continent to JSON format
+  ///
+  /// This method serializes the WooContinent object into a JSON-compatible
+  /// map that can be sent to the WooCommerce API or stored in a database.
+  ///
+  /// ## Returns
+  ///
+  /// A `Map<String, dynamic>` containing the continent information in JSON format
+  ///
+  /// ## Example Usage
+  ///
+  /// ```dart
+  /// // Convert to JSON
+  /// final jsonData = continent.toJson();
+  /// print(jsonData); // {'code': 'NA', 'name': 'North America', 'countries': [...]}
+  /// ```
+  Map<String, dynamic> toJson() => {
+        'code': code,
+        'name': name,
+        'countries': countries?.map((e) => e.toJson()).toList(),
+      };
 }
 
 class CountryInContinent {
-  final String? code;
-  final String? currencyCode;
-  final String? currencyPos;
-  final String? decimalSep;
-  final String? dimensionUnit;
-  final String? name;
-  final int? numDecimals;
-  final List<StateInCountry>? states;
-  final String? thousandSep;
-  final String? weightUnit;
 
   CountryInContinent({
     this.code,
@@ -213,6 +203,16 @@ class CountryInContinent {
         thousandSep: FakeHelper.word(),
         weightUnit: FakeHelper.word(),
       );
+  final String? code;
+  final String? currencyCode;
+  final String? currencyPos;
+  final String? decimalSep;
+  final String? dimensionUnit;
+  final String? name;
+  final int? numDecimals;
+  final List<StateInCountry>? states;
+  final String? thousandSep;
+  final String? weightUnit;
 
   /// Converts the country to JSON format
   Map<String, dynamic> toJson() => {
@@ -230,8 +230,6 @@ class CountryInContinent {
 }
 
 class StateInCountry {
-  final String? code;
-  final String? name;
 
   StateInCountry({this.code, this.name});
 
@@ -244,6 +242,8 @@ class StateInCountry {
         code: FakeHelper.word(),
         name: FakeHelper.state(),
       );
+  final String? code;
+  final String? name;
 
   /// Converts the state to JSON format
   Map<String, dynamic> toJson() => {

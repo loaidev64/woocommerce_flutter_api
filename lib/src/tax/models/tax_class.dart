@@ -4,11 +4,6 @@ import 'package:woocommerce_flutter_api/woocommerce_flutter_api.dart';
 ///
 /// Brief description of the model's purpose and usage.
 class WooTaxClass {
-  /// Unique identifier for the resource.
-  String? slug;
-
-  /// Tax class name.
-  String? name;
 
   /// Creates a new WooTaxClass instance.
   WooTaxClass({
@@ -20,6 +15,16 @@ class WooTaxClass {
   WooTaxClass.fromJson(Map<String, dynamic> json)
       : slug = json['slug'],
         name = json['name'];
+
+  factory WooTaxClass.fake([int? id]) => WooTaxClass(
+        slug: FakeHelper.word(),
+        name: FakeHelper.word(),
+      );
+  /// Unique identifier for the resource.
+  String? slug;
+
+  /// Tax class name.
+  String? name;
 
   Map<String, dynamic> toJson() => {
         'slug': slug,
@@ -41,9 +46,4 @@ class WooTaxClass {
 
   @override
   int get hashCode => slug.hashCode ^ name.hashCode;
-
-  factory WooTaxClass.fake([int? id]) => WooTaxClass(
-        slug: FakeHelper.word(),
-        name: FakeHelper.word(),
-      );
 }

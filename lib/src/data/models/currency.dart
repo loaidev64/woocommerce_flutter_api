@@ -38,23 +38,6 @@ import 'package:woocommerce_flutter_api/src/helpers/fake_helper.dart';
 /// final json = currency.toJson();
 /// ```
 class WooCurrency {
-  /// ISO 4217 currency code
-  ///
-  /// The three-letter currency code as defined by ISO 4217 standard.
-  /// Examples include 'USD' for US Dollar, 'EUR' for Euro, 'GBP' for British Pound.
-  final String? code;
-
-  /// Human-readable currency name
-  ///
-  /// The full name of the currency, such as 'US Dollar', 'Euro', or 'British Pound'.
-  /// This is typically used in user interfaces and documentation.
-  final String? name;
-
-  /// Currency symbol for display
-  ///
-  /// The symbol used to represent the currency in prices and monetary displays.
-  /// Examples include '$' for US Dollar, '€' for Euro, '£' for British Pound.
-  final String? symbol;
 
   /// Creates a new WooCurrency instance
   ///
@@ -106,28 +89,6 @@ class WooCurrency {
         symbol: json['symbol'],
       );
 
-  /// Converts the currency to JSON format
-  ///
-  /// This method serializes the WooCurrency object into a JSON-compatible
-  /// map that can be sent to the WooCommerce API or stored in a database.
-  ///
-  /// ## Returns
-  ///
-  /// A `Map<String, dynamic>` containing the currency information in JSON format
-  ///
-  /// ## Example Usage
-  ///
-  /// ```dart
-  /// // Convert to JSON
-  /// final jsonData = currency.toJson();
-  /// print(jsonData); // {'code': 'USD', 'name': 'US Dollar', 'symbol': '\$'}
-  /// ```
-  Map<String, dynamic> toJson() => {
-        'code': code,
-        'name': name,
-        'symbol': symbol,
-      };
-
   /// Creates a fake currency for testing and development
   ///
   /// This factory constructor generates a WooCurrency instance with
@@ -150,4 +111,43 @@ class WooCurrency {
         name: FakeHelper.word(),
         symbol: '\$',
       );
+  /// ISO 4217 currency code
+  ///
+  /// The three-letter currency code as defined by ISO 4217 standard.
+  /// Examples include 'USD' for US Dollar, 'EUR' for Euro, 'GBP' for British Pound.
+  final String? code;
+
+  /// Human-readable currency name
+  ///
+  /// The full name of the currency, such as 'US Dollar', 'Euro', or 'British Pound'.
+  /// This is typically used in user interfaces and documentation.
+  final String? name;
+
+  /// Currency symbol for display
+  ///
+  /// The symbol used to represent the currency in prices and monetary displays.
+  /// Examples include '$' for US Dollar, '€' for Euro, '£' for British Pound.
+  final String? symbol;
+
+  /// Converts the currency to JSON format
+  ///
+  /// This method serializes the WooCurrency object into a JSON-compatible
+  /// map that can be sent to the WooCommerce API or stored in a database.
+  ///
+  /// ## Returns
+  ///
+  /// A `Map<String, dynamic>` containing the currency information in JSON format
+  ///
+  /// ## Example Usage
+  ///
+  /// ```dart
+  /// // Convert to JSON
+  /// final jsonData = currency.toJson();
+  /// print(jsonData); // {'code': 'USD', 'name': 'US Dollar', 'symbol': '\$'}
+  /// ```
+  Map<String, dynamic> toJson() => {
+        'code': code,
+        'name': name,
+        'symbol': symbol,
+      };
 }

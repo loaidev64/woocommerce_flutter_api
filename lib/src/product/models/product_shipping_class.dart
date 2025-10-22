@@ -4,6 +4,27 @@ import 'package:woocommerce_flutter_api/src/helpers/fake_helper.dart';
 ///
 /// Brief description of the model's purpose and usage for product shipping classes.
 class WooProductShippingClass {
+
+  /// Creates a new WooProductShippingClass instance.
+  WooProductShippingClass(
+      this.id, this.name, this.slug, this.description, this.count);
+
+  /// Creates a WooProductShippingClass instance from JSON data.
+  WooProductShippingClass.fromJson(Map<String, dynamic> json)
+      : id = json['id'],
+        name = json['name'],
+        slug = json['slug'],
+        description = json['description'],
+        count = json['count'];
+
+  /// Creates a fake WooProductShippingClass instance for testing purposes.
+  factory WooProductShippingClass.fake([int? id]) => WooProductShippingClass(
+        id ?? FakeHelper.integer(),
+        FakeHelper.word(),
+        FakeHelper.word(),
+        FakeHelper.sentence(),
+        FakeHelper.integer(),
+      );
   /// Unique identifier for the resource.
   final int? id;
 
@@ -19,18 +40,6 @@ class WooProductShippingClass {
   ///	Number of published products for the resource.
   final int? count;
 
-  /// Creates a new WooProductShippingClass instance.
-  WooProductShippingClass(
-      this.id, this.name, this.slug, this.description, this.count);
-
-  /// Creates a WooProductShippingClass instance from JSON data.
-  WooProductShippingClass.fromJson(Map<String, dynamic> json)
-      : id = json['id'],
-        name = json['name'],
-        slug = json['slug'],
-        description = json['description'],
-        count = json['count'];
-
   /// Converts the WooProductShippingClass instance to JSON format.
   Map<String, dynamic> toJson() => {
         'id': id,
@@ -39,15 +48,6 @@ class WooProductShippingClass {
         'description': description,
         'count': count,
       };
-
-  /// Creates a fake WooProductShippingClass instance for testing purposes.
-  factory WooProductShippingClass.fake([int? id]) => WooProductShippingClass(
-        id ?? FakeHelper.integer(),
-        FakeHelper.word(),
-        FakeHelper.word(),
-        FakeHelper.sentence(),
-        FakeHelper.integer(),
-      );
 
   /// Returns a string representation of the WooProductShippingClass instance.
   ///

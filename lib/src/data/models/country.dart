@@ -38,23 +38,6 @@ import 'package:woocommerce_flutter_api/woocommerce_flutter_api.dart';
 /// final json = country.toJson();
 /// ```
 class WooCountry {
-  /// ISO 3166-1 alpha-2 country code
-  ///
-  /// The two-letter country code as defined by ISO 3166-1 standard.
-  /// Examples include 'US' for United States, 'CA' for Canada, 'GB' for United Kingdom.
-  final String? code;
-
-  /// Human-readable country name
-  ///
-  /// The full name of the country, such as 'United States', 'Canada', or 'United Kingdom'.
-  /// This is typically used in user interfaces and documentation.
-  final String? name;
-
-  /// List of states/provinces within the country
-  ///
-  /// Contains all states, provinces, or administrative divisions within the country.
-  /// Each state includes its code and name for geographical reference.
-  final List<StateInCountry>? states;
 
   /// Creates a new WooCountry instance
   ///
@@ -110,28 +93,6 @@ class WooCountry {
             : null,
       );
 
-  /// Converts the country to JSON format
-  ///
-  /// This method serializes the WooCountry object into a JSON-compatible
-  /// map that can be sent to the WooCommerce API or stored in a database.
-  ///
-  /// ## Returns
-  ///
-  /// A `Map<String, dynamic>` containing the country information in JSON format
-  ///
-  /// ## Example Usage
-  ///
-  /// ```dart
-  /// // Convert to JSON
-  /// final jsonData = country.toJson();
-  /// print(jsonData); // {'code': 'US', 'name': 'United States', 'states': [...]}
-  /// ```
-  Map<String, dynamic> toJson() => {
-        'code': code,
-        'name': name,
-        'states': states?.map((e) => e.toJson()).toList(),
-      };
-
   /// Creates a fake country for testing and development
   ///
   /// This factory constructor generates a WooCountry instance with
@@ -154,4 +115,43 @@ class WooCountry {
         name: FakeHelper.country(),
         states: FakeHelper.list(() => StateInCountry.fake()),
       );
+  /// ISO 3166-1 alpha-2 country code
+  ///
+  /// The two-letter country code as defined by ISO 3166-1 standard.
+  /// Examples include 'US' for United States, 'CA' for Canada, 'GB' for United Kingdom.
+  final String? code;
+
+  /// Human-readable country name
+  ///
+  /// The full name of the country, such as 'United States', 'Canada', or 'United Kingdom'.
+  /// This is typically used in user interfaces and documentation.
+  final String? name;
+
+  /// List of states/provinces within the country
+  ///
+  /// Contains all states, provinces, or administrative divisions within the country.
+  /// Each state includes its code and name for geographical reference.
+  final List<StateInCountry>? states;
+
+  /// Converts the country to JSON format
+  ///
+  /// This method serializes the WooCountry object into a JSON-compatible
+  /// map that can be sent to the WooCommerce API or stored in a database.
+  ///
+  /// ## Returns
+  ///
+  /// A `Map<String, dynamic>` containing the country information in JSON format
+  ///
+  /// ## Example Usage
+  ///
+  /// ```dart
+  /// // Convert to JSON
+  /// final jsonData = country.toJson();
+  /// print(jsonData); // {'code': 'US', 'name': 'United States', 'states': [...]}
+  /// ```
+  Map<String, dynamic> toJson() => {
+        'code': code,
+        'name': name,
+        'states': states?.map((e) => e.toJson()).toList(),
+      };
 }

@@ -1,6 +1,50 @@
 import 'package:woocommerce_flutter_api/woocommerce_flutter_api.dart';
 
 class WooCustomerDownload {
+
+  WooCustomerDownload({
+    this.downloadId,
+    this.downloadUrl,
+    this.productId,
+    this.productName,
+    this.downloadName,
+    this.orderId,
+    this.orderKey,
+    this.downloadsRemaining,
+    this.accessExpires,
+    this.accessExpiresGmt,
+    this.file,
+  });
+
+  WooCustomerDownload.fromJson(Map<String, dynamic> json) {
+    downloadId = json['download_id'];
+    downloadUrl = json['download_url'];
+    productId = json['product_id'];
+    productName = json['product_name'];
+    downloadName = json['download_name'];
+    orderId = json['order_id'];
+    orderKey = json['order_key'];
+    downloadsRemaining = json['downloads_remaining'];
+    accessExpires = DateTime.tryParse(json['access_expires']);
+    accessExpiresGmt = DateTime.tryParse(json['access_expires_gmt']);
+    file = json['file'] != null
+        ? WooCustomerDownloadFile.fromJson(json['file'])
+        : null;
+  }
+
+  factory WooCustomerDownload.fake() => WooCustomerDownload(
+        downloadId: FakeHelper.word(),
+        downloadUrl: FakeHelper.url(),
+        productId: FakeHelper.integer(),
+        productName: FakeHelper.word(),
+        downloadName: FakeHelper.word(),
+        orderId: FakeHelper.integer(),
+        orderKey: FakeHelper.word(),
+        downloadsRemaining: FakeHelper.word(),
+        accessExpires: FakeHelper.datetime(),
+        accessExpiresGmt: FakeHelper.datetime(),
+        file: WooCustomerDownloadFile.fake(),
+      );
   /// Download ID (MD5).
   String? downloadId;
 
@@ -34,36 +78,6 @@ class WooCustomerDownload {
   /// File details.
   WooCustomerDownloadFile? file;
 
-  WooCustomerDownload({
-    this.downloadId,
-    this.downloadUrl,
-    this.productId,
-    this.productName,
-    this.downloadName,
-    this.orderId,
-    this.orderKey,
-    this.downloadsRemaining,
-    this.accessExpires,
-    this.accessExpiresGmt,
-    this.file,
-  });
-
-  WooCustomerDownload.fromJson(Map<String, dynamic> json) {
-    downloadId = json['download_id'];
-    downloadUrl = json['download_url'];
-    productId = json['product_id'];
-    productName = json['product_name'];
-    downloadName = json['download_name'];
-    orderId = json['order_id'];
-    orderKey = json['order_key'];
-    downloadsRemaining = json['downloads_remaining'];
-    accessExpires = DateTime.tryParse(json['access_expires']);
-    accessExpiresGmt = DateTime.tryParse(json['access_expires_gmt']);
-    file = json['file'] != null
-        ? WooCustomerDownloadFile.fromJson(json['file'])
-        : null;
-  }
-
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['download_id'] = downloadId;
@@ -94,18 +108,4 @@ class WooCustomerDownload {
 
   @override
   int get hashCode => downloadId.hashCode;
-
-  factory WooCustomerDownload.fake() => WooCustomerDownload(
-        downloadId: FakeHelper.word(),
-        downloadUrl: FakeHelper.url(),
-        productId: FakeHelper.integer(),
-        productName: FakeHelper.word(),
-        downloadName: FakeHelper.word(),
-        orderId: FakeHelper.integer(),
-        orderKey: FakeHelper.word(),
-        downloadsRemaining: FakeHelper.word(),
-        accessExpires: FakeHelper.datetime(),
-        accessExpiresGmt: FakeHelper.datetime(),
-        file: WooCustomerDownloadFile.fake(),
-      );
 }

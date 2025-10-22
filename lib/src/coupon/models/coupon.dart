@@ -59,144 +59,6 @@ import '../../helpers/fake_helper.dart';
 /// final coupon = WooCoupon.fromJson(jsonData);
 /// ```
 class WooCoupon {
-  /// Unique identifier for the coupon
-  ///
-  /// This ID is automatically assigned by WooCommerce when the coupon is created.
-  final int? id;
-
-  /// Coupon code
-  ///
-  /// The code that customers enter to apply the discount.
-  /// Must be unique across all coupons.
-  final String? code;
-
-  /// Discount amount
-  ///
-  /// The amount of discount, either as a fixed value or percentage.
-  /// Should always be numeric, even for percentage discounts.
-  final String? amount;
-
-  /// Date and time when the coupon was created (local time)
-  ///
-  /// This timestamp reflects when the coupon was first created in the store's local timezone.
-  final DateTime? dateCreated;
-
-  /// Date and time when the coupon was created (GMT)
-  ///
-  /// This timestamp reflects when the coupon was first created in GMT/UTC timezone.
-  final DateTime? dateCreatedGmt;
-
-  /// Date and time when the coupon was last modified (local time)
-  ///
-  /// This timestamp reflects when the coupon was last updated in the store's local timezone.
-  final DateTime? dateModified;
-
-  /// Date and time when the coupon was last modified (GMT)
-  ///
-  /// This timestamp reflects when the coupon was last updated in GMT/UTC timezone.
-  final DateTime? dateModifiedGmt;
-
-  /// Type of discount
-  ///
-  /// - `percent`: Percentage discount
-  /// - `fixed_cart`: Fixed amount discount for entire cart
-  /// - `fixed_product`: Fixed amount discount per product
-  final String? discountType;
-
-  /// Coupon description
-  ///
-  /// Description of the coupon for administrative purposes.
-  final String? description;
-
-  /// Date and time when the coupon expires (local time)
-  ///
-  /// The coupon will no longer be valid after this date.
-  final DateTime? dateExpires;
-
-  /// Date and time when the coupon expires (GMT)
-  ///
-  /// The coupon will no longer be valid after this date in GMT/UTC timezone.
-  final DateTime? dateExpiresGmt;
-
-  /// Number of times the coupon has been used
-  ///
-  /// Tracks how many times this coupon has been applied to orders.
-  final int? usageCount;
-
-  /// Whether the coupon can only be used individually
-  ///
-  /// If true, the coupon cannot be combined with other coupons.
-  final bool? individualUse;
-
-  /// List of product IDs the coupon can be used on
-  ///
-  /// If specified, the coupon can only be applied to these specific products.
-  final List<int>? productIds;
-
-  /// List of product IDs the coupon cannot be used on
-  ///
-  /// If specified, the coupon cannot be applied to these products.
-  final List<int>? excludedProductIds;
-
-  /// Maximum number of times the coupon can be used in total
-  ///
-  /// Once this limit is reached, the coupon becomes invalid.
-  final int? usageLimit;
-
-  /// Maximum number of times the coupon can be used per customer
-  ///
-  /// Limits how many times each customer can use this coupon.
-  final int? usageLimitPerUser;
-
-  /// Maximum number of items the coupon can be applied to
-  ///
-  /// Limits the number of items in the cart that can use this coupon.
-  final int? limitUsageToXItems;
-
-  /// Whether this coupon enables free shipping
-  ///
-  /// If true, applying this coupon will make shipping free.
-  final bool? freeShipping;
-
-  /// List of category IDs the coupon applies to
-  ///
-  /// If specified, the coupon can only be applied to products in these categories.
-  final List<int>? productCategories;
-
-  /// List of category IDs the coupon does not apply to
-  ///
-  /// If specified, the coupon cannot be applied to products in these categories.
-  final List<int>? excludedProductCategories;
-
-  /// Whether the coupon excludes items on sale
-  ///
-  /// If true, the coupon will not be applied to items that are currently on sale.
-  final bool? excludeSaleItems;
-
-  /// Minimum order amount required to apply the coupon
-  ///
-  /// The cart total must be at least this amount for the coupon to be valid.
-  final String? minimumAmount;
-
-  /// Maximum order amount allowed when using the coupon
-  ///
-  /// The cart total cannot exceed this amount for the coupon to be valid.
-  final String? maximumAmount;
-
-  /// List of email addresses that can use this coupon
-  ///
-  /// If specified, only customers with these email addresses can use the coupon.
-  final List<String>? emailRestrictions;
-
-  /// List of users who have used this coupon
-  ///
-  /// Tracks which users or guest emails have applied this coupon.
-  final List<String>? usedBy;
-
-  /// Additional metadata related to the coupon
-  ///
-  /// Custom fields and additional data associated with the coupon.
-  final List<WooMetaData>? metaData;
 
   /// Creates a new WooCoupon instance
   ///
@@ -372,6 +234,144 @@ class WooCoupon {
         usedBy: FakeHelper.list(() => FakeHelper.word()),
         metaData: FakeHelper.list(() => WooMetaData.fake()),
       );
+  /// Unique identifier for the coupon
+  ///
+  /// This ID is automatically assigned by WooCommerce when the coupon is created.
+  final int? id;
+
+  /// Coupon code
+  ///
+  /// The code that customers enter to apply the discount.
+  /// Must be unique across all coupons.
+  final String? code;
+
+  /// Discount amount
+  ///
+  /// The amount of discount, either as a fixed value or percentage.
+  /// Should always be numeric, even for percentage discounts.
+  final String? amount;
+
+  /// Date and time when the coupon was created (local time)
+  ///
+  /// This timestamp reflects when the coupon was first created in the store's local timezone.
+  final DateTime? dateCreated;
+
+  /// Date and time when the coupon was created (GMT)
+  ///
+  /// This timestamp reflects when the coupon was first created in GMT/UTC timezone.
+  final DateTime? dateCreatedGmt;
+
+  /// Date and time when the coupon was last modified (local time)
+  ///
+  /// This timestamp reflects when the coupon was last updated in the store's local timezone.
+  final DateTime? dateModified;
+
+  /// Date and time when the coupon was last modified (GMT)
+  ///
+  /// This timestamp reflects when the coupon was last updated in GMT/UTC timezone.
+  final DateTime? dateModifiedGmt;
+
+  /// Type of discount
+  ///
+  /// - `percent`: Percentage discount
+  /// - `fixed_cart`: Fixed amount discount for entire cart
+  /// - `fixed_product`: Fixed amount discount per product
+  final String? discountType;
+
+  /// Coupon description
+  ///
+  /// Description of the coupon for administrative purposes.
+  final String? description;
+
+  /// Date and time when the coupon expires (local time)
+  ///
+  /// The coupon will no longer be valid after this date.
+  final DateTime? dateExpires;
+
+  /// Date and time when the coupon expires (GMT)
+  ///
+  /// The coupon will no longer be valid after this date in GMT/UTC timezone.
+  final DateTime? dateExpiresGmt;
+
+  /// Number of times the coupon has been used
+  ///
+  /// Tracks how many times this coupon has been applied to orders.
+  final int? usageCount;
+
+  /// Whether the coupon can only be used individually
+  ///
+  /// If true, the coupon cannot be combined with other coupons.
+  final bool? individualUse;
+
+  /// List of product IDs the coupon can be used on
+  ///
+  /// If specified, the coupon can only be applied to these specific products.
+  final List<int>? productIds;
+
+  /// List of product IDs the coupon cannot be used on
+  ///
+  /// If specified, the coupon cannot be applied to these products.
+  final List<int>? excludedProductIds;
+
+  /// Maximum number of times the coupon can be used in total
+  ///
+  /// Once this limit is reached, the coupon becomes invalid.
+  final int? usageLimit;
+
+  /// Maximum number of times the coupon can be used per customer
+  ///
+  /// Limits how many times each customer can use this coupon.
+  final int? usageLimitPerUser;
+
+  /// Maximum number of items the coupon can be applied to
+  ///
+  /// Limits the number of items in the cart that can use this coupon.
+  final int? limitUsageToXItems;
+
+  /// Whether this coupon enables free shipping
+  ///
+  /// If true, applying this coupon will make shipping free.
+  final bool? freeShipping;
+
+  /// List of category IDs the coupon applies to
+  ///
+  /// If specified, the coupon can only be applied to products in these categories.
+  final List<int>? productCategories;
+
+  /// List of category IDs the coupon does not apply to
+  ///
+  /// If specified, the coupon cannot be applied to products in these categories.
+  final List<int>? excludedProductCategories;
+
+  /// Whether the coupon excludes items on sale
+  ///
+  /// If true, the coupon will not be applied to items that are currently on sale.
+  final bool? excludeSaleItems;
+
+  /// Minimum order amount required to apply the coupon
+  ///
+  /// The cart total must be at least this amount for the coupon to be valid.
+  final String? minimumAmount;
+
+  /// Maximum order amount allowed when using the coupon
+  ///
+  /// The cart total cannot exceed this amount for the coupon to be valid.
+  final String? maximumAmount;
+
+  /// List of email addresses that can use this coupon
+  ///
+  /// If specified, only customers with these email addresses can use the coupon.
+  final List<String>? emailRestrictions;
+
+  /// List of users who have used this coupon
+  ///
+  /// Tracks which users or guest emails have applied this coupon.
+  final List<String>? usedBy;
+
+  /// Additional metadata related to the coupon
+  ///
+  /// Custom fields and additional data associated with the coupon.
+  final List<WooMetaData>? metaData;
 
   /// Converts the WooCoupon instance to JSON format
   ///

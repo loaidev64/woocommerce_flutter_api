@@ -1,11 +1,6 @@
 import 'package:woocommerce_flutter_api/woocommerce_flutter_api.dart';
 
 class WooCustomerDownloadFile {
-  /// File name.
-  String? name;
-
-  /// File URL.
-  String? file;
 
   WooCustomerDownloadFile({
     this.name,
@@ -16,6 +11,16 @@ class WooCustomerDownloadFile {
     name = json['name'];
     file = json['file'];
   }
+
+  factory WooCustomerDownloadFile.fake() => WooCustomerDownloadFile(
+        name: FakeHelper.word(),
+        file: FakeHelper.url(),
+      );
+  /// File name.
+  String? name;
+
+  /// File URL.
+  String? file;
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
@@ -36,9 +41,4 @@ class WooCustomerDownloadFile {
 
   @override
   int get hashCode => name.hashCode;
-
-  factory WooCustomerDownloadFile.fake() => WooCustomerDownloadFile(
-        name: FakeHelper.word(),
-        file: FakeHelper.url(),
-      );
 }

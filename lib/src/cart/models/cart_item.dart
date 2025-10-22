@@ -2,35 +2,6 @@ import 'package:faker/faker.dart';
 import 'package:woocommerce_flutter_api/woocommerce_flutter_api.dart';
 
 class WooCartItem {
-  /// Cart Item Key.
-  String? key;
-
-  /// Product ID.
-  int? id;
-
-  /// Cart Item quantity.
-  int? quantity;
-
-  /// Cart Item name.
-  String? name;
-
-  /// Unique identifier.
-  String? sku;
-
-  /// Product URL.
-  String? permalink;
-
-  /// Cart Item images.
-  List<WooProductImage>? images;
-
-  /// Cart Item price.
-  double? price;
-
-  /// Cart Item line price.
-  double? linePrice;
-
-  /// Cart Item variations.
-  List<int>? variations;
 
   WooCartItem({
     this.key,
@@ -68,6 +39,48 @@ class WooCartItem {
     }
   }
 
+  factory WooCartItem.fake() => WooCartItem(
+        id: FakeHelper.integer(),
+        key: Faker().guid.guid(),
+        name: FakeHelper.word(),
+        permalink: FakeHelper.url(),
+        price: FakeHelper.decimal(),
+        quantity: FakeHelper.integer(),
+        sku: Faker().guid.guid(),
+        linePrice: FakeHelper.decimal(),
+        images: FakeHelper.list(() => WooProductImage.fake()),
+        variations: FakeHelper.listOfIntegers(),
+      );
+  /// Cart Item Key.
+  String? key;
+
+  /// Product ID.
+  int? id;
+
+  /// Cart Item quantity.
+  int? quantity;
+
+  /// Cart Item name.
+  String? name;
+
+  /// Unique identifier.
+  String? sku;
+
+  /// Product URL.
+  String? permalink;
+
+  /// Cart Item images.
+  List<WooProductImage>? images;
+
+  /// Cart Item price.
+  double? price;
+
+  /// Cart Item line price.
+  double? linePrice;
+
+  /// Cart Item variations.
+  List<int>? variations;
+
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
 
@@ -83,17 +96,4 @@ class WooCartItem {
 
     return data;
   }
-
-  factory WooCartItem.fake() => WooCartItem(
-        id: FakeHelper.integer(),
-        key: Faker().guid.guid(),
-        name: FakeHelper.word(),
-        permalink: FakeHelper.url(),
-        price: FakeHelper.decimal(),
-        quantity: FakeHelper.integer(),
-        sku: Faker().guid.guid(),
-        linePrice: FakeHelper.decimal(),
-        images: FakeHelper.list(() => WooProductImage.fake()),
-        variations: FakeHelper.listOfIntegers(),
-      );
 }

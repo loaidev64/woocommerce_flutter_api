@@ -59,122 +59,6 @@ import 'package:woocommerce_flutter_api/src/product/models/models.dart';
 /// final variation = WooProductVariation.fromJson(jsonData);
 /// ```
 class WooProductVariation {
-  /// Unique identifier for the resource.
-  int? id;
-
-  /// The date the variation was created, in the site's timezone.
-  DateTime? dateCreated;
-
-  /// The date the variation was created, as GMT.
-  DateTime? dateCreatedGmt;
-
-  /// The date the variation was last modified, in the site's timezone.
-  DateTime? dateModified;
-
-  /// The date the variation was last modified, as GMT.
-  DateTime? dateModifiedGmt;
-
-  /// Variation description.
-  String? description;
-
-  /// Variation URL.
-  String? permalink;
-
-  /// Unique identifier.
-  String? sku;
-
-  /// Current variation price.
-  double? price;
-
-  /// Variation regular price.
-  double? regularPrice;
-
-  /// Variation sale price.
-  double? salePrice;
-
-  /// Start date of sale price, in the site's timezone.
-  DateTime? dateOnSaleFrom;
-
-  /// Start date of sale price, as GMT.
-  DateTime? dateOnSaleFromGmt;
-
-  /// End date of sale price, in the site's timezone.
-  DateTime? dateOnSaleTo;
-
-  /// End date of sale price, as GMT.
-  DateTime? dateOnSaleToGmt;
-
-  /// Shows if the variation is on sale.
-  bool? onSale;
-
-  /// Variation status. Options: draft, pending, private and publish. Default is publish.
-  WooProductStatus? status;
-
-  /// Shows if the variation can be bought.
-  bool? purchasable;
-
-  /// If the variation is virtual. Default is false.
-  bool? virtual;
-
-  /// If the variation is downloadable. Default is false.
-  bool? downloadable;
-
-  /// If the variation is downloadable. Default is false.
-  List<WooProductDownload> downloads;
-
-  /// Number of times downloadable files can be downloaded after purchase. Default is -1.
-  int? downloadLimit;
-
-  /// Number of days until access to downloadable files expires. Default is -1.
-  int? downloadExpiry;
-
-  /// Tax status. Options: taxable, shipping and none. Default is taxable.
-  WooProductTaxStatus? taxStatus;
-
-  /// Tax class.
-  String? taxClass;
-
-  /// Stock management at variation level. Default is false.
-  bool? manageStock;
-
-  /// Stock quantity.
-  int? stockQuantity;
-
-  /// Controls the stock status of the product. Options: instock, outofstock, onbackorder. Default is instock.
-  WooProductStockStatus? stockStatus;
-
-  /// If managing stock, this controls if backorders are allowed. Options: no, notify and yes. Default is no.
-  WooProductBackorder? backorders;
-
-  /// Shows if backorders are allowed.
-  bool? backordersAllowed;
-
-  /// Shows if the variation is on backordered.
-  bool? backordered;
-
-  /// Variation weight.
-  String? weight;
-
-  /// Variation dimensions.
-  WooProductDimension dimensions;
-
-  /// Shipping class slug.
-  String? shippingClass;
-
-  /// Shipping class ID.
-  int? shippingClassId;
-
-  /// Variation image data.
-  WooProductImage? image;
-
-  /// List of attributes.
-  List<WooProductItemAttribute> attributes;
-
-  /// Menu order, used to custom sort products.
-  int? menuOrder;
-
-  /// Meta data.
-  List<WooMetaData> metaData;
 
   /// Creates a new WooProductVariation instance
   ///
@@ -373,6 +257,122 @@ class WooProductVariation {
         dateOnSaleTo: FakeHelper.datetime(),
         dateOnSaleToGmt: FakeHelper.datetime(),
       );
+  /// Unique identifier for the resource.
+  int? id;
+
+  /// The date the variation was created, in the site's timezone.
+  DateTime? dateCreated;
+
+  /// The date the variation was created, as GMT.
+  DateTime? dateCreatedGmt;
+
+  /// The date the variation was last modified, in the site's timezone.
+  DateTime? dateModified;
+
+  /// The date the variation was last modified, as GMT.
+  DateTime? dateModifiedGmt;
+
+  /// Variation description.
+  String? description;
+
+  /// Variation URL.
+  String? permalink;
+
+  /// Unique identifier.
+  String? sku;
+
+  /// Current variation price.
+  double? price;
+
+  /// Variation regular price.
+  double? regularPrice;
+
+  /// Variation sale price.
+  double? salePrice;
+
+  /// Start date of sale price, in the site's timezone.
+  DateTime? dateOnSaleFrom;
+
+  /// Start date of sale price, as GMT.
+  DateTime? dateOnSaleFromGmt;
+
+  /// End date of sale price, in the site's timezone.
+  DateTime? dateOnSaleTo;
+
+  /// End date of sale price, as GMT.
+  DateTime? dateOnSaleToGmt;
+
+  /// Shows if the variation is on sale.
+  bool? onSale;
+
+  /// Variation status. Options: draft, pending, private and publish. Default is publish.
+  WooProductStatus? status;
+
+  /// Shows if the variation can be bought.
+  bool? purchasable;
+
+  /// If the variation is virtual. Default is false.
+  bool? virtual;
+
+  /// If the variation is downloadable. Default is false.
+  bool? downloadable;
+
+  /// If the variation is downloadable. Default is false.
+  List<WooProductDownload> downloads;
+
+  /// Number of times downloadable files can be downloaded after purchase. Default is -1.
+  int? downloadLimit;
+
+  /// Number of days until access to downloadable files expires. Default is -1.
+  int? downloadExpiry;
+
+  /// Tax status. Options: taxable, shipping and none. Default is taxable.
+  WooProductTaxStatus? taxStatus;
+
+  /// Tax class.
+  String? taxClass;
+
+  /// Stock management at variation level. Default is false.
+  bool? manageStock;
+
+  /// Stock quantity.
+  int? stockQuantity;
+
+  /// Controls the stock status of the product. Options: instock, outofstock, onbackorder. Default is instock.
+  WooProductStockStatus? stockStatus;
+
+  /// If managing stock, this controls if backorders are allowed. Options: no, notify and yes. Default is no.
+  WooProductBackorder? backorders;
+
+  /// Shows if backorders are allowed.
+  bool? backordersAllowed;
+
+  /// Shows if the variation is on backordered.
+  bool? backordered;
+
+  /// Variation weight.
+  String? weight;
+
+  /// Variation dimensions.
+  WooProductDimension dimensions;
+
+  /// Shipping class slug.
+  String? shippingClass;
+
+  /// Shipping class ID.
+  int? shippingClassId;
+
+  /// Variation image data.
+  WooProductImage? image;
+
+  /// List of attributes.
+  List<WooProductItemAttribute> attributes;
+
+  /// Menu order, used to custom sort products.
+  int? menuOrder;
+
+  /// Meta data.
+  List<WooMetaData> metaData;
 
   /// Converts the WooProductVariation instance to JSON format
   ///

@@ -5,29 +5,6 @@ import 'package:woocommerce_flutter_api/src/helpers/fake_helper.dart';
 /// This class models the featured image for a product category with its metadata,
 /// URLs, and timestamps for creation and modification.
 class WooProductCategoryImage {
-  /// Image ID.
-  int? id;
-
-  /// The date the image was created, in the site's timezone.
-  DateTime? dateCreated;
-
-  /// The date the image was created, as GMT
-  DateTime? dateCreatedGmt;
-
-  /// The date the image was last modified, in the site's timezone.
-  DateTime? dateModified;
-
-  /// The date the image was last modified, as GMT.
-  DateTime? dateModifiedGmt;
-
-  /// Image URL.
-  String? src;
-
-  /// Image name.
-  String? name;
-
-  /// Image alternative text.
-  String? alt;
 
   /// Creates a new WooProductCategoryImage instance.
   ///
@@ -75,10 +52,58 @@ class WooProductCategoryImage {
     dateCreatedGmt = json['date_created_gmt'];
     dateModified = json['date_modified'];
     dateModifiedGmt = json['date_modified_gmt'];
-    src = (json['src'] != null && json['src'] is String) ? json['src'] : "";
+    src = (json['src'] != null && json['src'] is String) ? json['src'] : '';
     name = json['name'];
     alt = json['alt'];
   }
+
+  /// Creates a fake WooProductCategoryImage instance for testing purposes
+  ///
+  /// This factory constructor generates an image with random but realistic
+  /// data, making it useful for testing and development.
+  ///
+  /// ## Returns
+  ///
+  /// A `WooProductCategoryImage` instance with randomly generated fake data.
+  ///
+  /// ## Example Usage
+  ///
+  /// ```dart
+  /// final fakeImage = WooProductCategoryImage.fake();
+  /// ```
+  factory WooProductCategoryImage.fake() => WooProductCategoryImage(
+        id: FakeHelper.integer(),
+        dateCreated: FakeHelper.datetime(),
+        dateCreatedGmt: FakeHelper.datetime(),
+        dateModified: FakeHelper.datetime(),
+        dateModifiedGmt: FakeHelper.datetime(),
+        src: FakeHelper.image(),
+        name: FakeHelper.word(),
+        alt: FakeHelper.word(),
+      );
+  /// Image ID.
+  int? id;
+
+  /// The date the image was created, in the site's timezone.
+  DateTime? dateCreated;
+
+  /// The date the image was created, as GMT
+  DateTime? dateCreatedGmt;
+
+  /// The date the image was last modified, in the site's timezone.
+  DateTime? dateModified;
+
+  /// The date the image was last modified, as GMT.
+  DateTime? dateModifiedGmt;
+
+  /// Image URL.
+  String? src;
+
+  /// Image name.
+  String? name;
+
+  /// Image alternative text.
+  String? alt;
 
   /// Converts the WooProductCategoryImage instance to JSON format
   ///
@@ -131,29 +156,4 @@ class WooProductCategoryImage {
   String toString() {
     return 'WooProductCategoryImage(id: $id, name: $name, src: $src)';
   }
-
-  /// Creates a fake WooProductCategoryImage instance for testing purposes
-  ///
-  /// This factory constructor generates an image with random but realistic
-  /// data, making it useful for testing and development.
-  ///
-  /// ## Returns
-  ///
-  /// A `WooProductCategoryImage` instance with randomly generated fake data.
-  ///
-  /// ## Example Usage
-  ///
-  /// ```dart
-  /// final fakeImage = WooProductCategoryImage.fake();
-  /// ```
-  factory WooProductCategoryImage.fake() => WooProductCategoryImage(
-        id: FakeHelper.integer(),
-        dateCreated: FakeHelper.datetime(),
-        dateCreatedGmt: FakeHelper.datetime(),
-        dateModified: FakeHelper.datetime(),
-        dateModifiedGmt: FakeHelper.datetime(),
-        src: FakeHelper.image(),
-        name: FakeHelper.word(),
-        alt: FakeHelper.word(),
-      );
 }
