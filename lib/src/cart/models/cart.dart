@@ -3,20 +3,6 @@ import 'package:woocommerce_flutter_api/src/helpers/fake_helper.dart';
 
 //TODO:: is not compatable with plugin yet
 class WooCart {
-  /// Count of items in cart.
-  int? itemsCount;
-
-  /// Cart Items.
-  List<WooCartItem>? items;
-
-  /// If the cart needs shipping.
-  bool? needsShipping;
-
-  /// If the cart needs payment.
-  bool? needsPayment;
-
-  /// If the cart needs payment.
-  double? totalPrice;
 
   WooCart({
     this.itemsCount,
@@ -39,6 +25,28 @@ class WooCart {
     totalPrice = double.tryParse(json['total_price']);
   }
 
+  factory WooCart.fake() => WooCart(
+        itemsCount: FakeHelper.integer(),
+        needsPayment: FakeHelper.boolean(),
+        needsShipping: FakeHelper.boolean(),
+        totalPrice: FakeHelper.decimal(),
+        items: FakeHelper.list(() => WooCartItem.fake()),
+      );
+  /// Count of items in cart.
+  int? itemsCount;
+
+  /// Cart Items.
+  List<WooCartItem>? items;
+
+  /// If the cart needs shipping.
+  bool? needsShipping;
+
+  /// If the cart needs payment.
+  bool? needsPayment;
+
+  /// If the cart needs payment.
+  double? totalPrice;
+
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['item_count'] = itemsCount;
@@ -52,13 +60,5 @@ class WooCart {
   }
 
   @override
-  toString() => toJson().toString();
-
-  factory WooCart.fake() => WooCart(
-        itemsCount: FakeHelper.integer(),
-        needsPayment: FakeHelper.boolean(),
-        needsShipping: FakeHelper.boolean(),
-        totalPrice: FakeHelper.decimal(),
-        items: FakeHelper.list(() => WooCartItem.fake()),
-      );
+  String toString() => toJson().toString();
 }

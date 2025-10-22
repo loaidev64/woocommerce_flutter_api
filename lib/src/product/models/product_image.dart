@@ -4,6 +4,34 @@ import 'package:woocommerce_flutter_api/src/helpers/fake_helper.dart';
 ///
 /// Brief description of the model's purpose and usage for product images.
 class WooProductImage {
+
+  /// Creates a new WooProductImage instance.
+  WooProductImage(this.id, this.src, this.name, this.alt, this.dateCreated,
+      this.dateCreatedGMT, this.dateModified, this.dateModifiedGMT);
+
+  /// Creates a WooProductImage instance from JSON data.
+  WooProductImage.fromJson(Map<String, dynamic> json)
+      : id = json['id'],
+        // Note: Consider adding type checks or defaults if API might return null for non-nullable DateTime fields
+        dateCreated = DateTime.parse(json['date_created']),
+        dateCreatedGMT = DateTime.parse(json['date_created_gmt']),
+        dateModified = DateTime.parse(json['date_modified']),
+        dateModifiedGMT = DateTime.parse(json['date_modified_gmt']),
+        src = json['src'],
+        name = json['name'],
+        alt = json['alt'];
+
+  /// Creates a fake WooProductImage instance for testing purposes.
+  factory WooProductImage.fake() => WooProductImage(
+        FakeHelper.integer(),
+        FakeHelper.image(),
+        FakeHelper.word(),
+        FakeHelper.sentence(),
+        FakeHelper.datetime(),
+        FakeHelper.datetime(),
+        FakeHelper.datetime(),
+        FakeHelper.datetime(),
+      );
   /// Image ID.
   final int? id;
 
@@ -27,22 +55,6 @@ class WooProductImage {
 
   /// Image alternative text.
   final String? alt;
-
-  /// Creates a new WooProductImage instance.
-  WooProductImage(this.id, this.src, this.name, this.alt, this.dateCreated,
-      this.dateCreatedGMT, this.dateModified, this.dateModifiedGMT);
-
-  /// Creates a WooProductImage instance from JSON data.
-  WooProductImage.fromJson(Map<String, dynamic> json)
-      : id = json['id'],
-        // Note: Consider adding type checks or defaults if API might return null for non-nullable DateTime fields
-        dateCreated = DateTime.parse(json['date_created']),
-        dateCreatedGMT = DateTime.parse(json['date_created_gmt']),
-        dateModified = DateTime.parse(json['date_modified']),
-        dateModifiedGMT = DateTime.parse(json['date_modified_gmt']),
-        src = json['src'],
-        name = json['name'],
-        alt = json['alt'];
 
   /// Converts this WooProductImage instance into a JSON encodable Map.
   ///
@@ -70,18 +82,6 @@ class WooProductImage {
     }
     return data;
   }
-
-  /// Creates a fake WooProductImage instance for testing purposes.
-  factory WooProductImage.fake() => WooProductImage(
-        FakeHelper.integer(),
-        FakeHelper.image(),
-        FakeHelper.word(),
-        FakeHelper.sentence(),
-        FakeHelper.datetime(),
-        FakeHelper.datetime(),
-        FakeHelper.datetime(),
-        FakeHelper.datetime(),
-      );
 
   @override
   String toString() {

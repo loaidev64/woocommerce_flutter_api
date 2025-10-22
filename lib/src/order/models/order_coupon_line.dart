@@ -6,20 +6,6 @@ import 'package:woocommerce_flutter_api/src/helpers/fake_helper.dart';
 /// Contains coupon information, discount amounts, and tax details for coupons
 /// applied to an order. Used for discount tracking and order processing.
 class WooOrderCouponLine {
-  /// Unique identifier for the coupon line.
-  int? id;
-
-  /// Coupon code applied.
-  String? code;
-
-  /// Total discount amount.
-  double? discount;
-
-  /// Total discount tax amount.
-  double? discountTax;
-
-  /// Custom metadata for the coupon line.
-  List<WooMetaData> metaData;
 
   /// Creates a new WooOrderCouponLine instance.
   WooOrderCouponLine({
@@ -40,6 +26,28 @@ class WooOrderCouponLine {
             .map((i) => WooMetaData.fromJson(i))
             .toList();
 
+  factory WooOrderCouponLine.fake() => WooOrderCouponLine(
+        id: FakeHelper.integer(),
+        code: FakeHelper.word(),
+        discount: FakeHelper.decimal(),
+        discountTax: FakeHelper.decimal(),
+        metaData: FakeHelper.list(() => WooMetaData.fake()),
+      );
+  /// Unique identifier for the coupon line.
+  int? id;
+
+  /// Coupon code applied.
+  String? code;
+
+  /// Total discount amount.
+  double? discount;
+
+  /// Total discount tax amount.
+  double? discountTax;
+
+  /// Custom metadata for the coupon line.
+  List<WooMetaData> metaData;
+
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['id'] = id;
@@ -49,14 +57,6 @@ class WooOrderCouponLine {
     data['meta_data'] = metaData.map((v) => v.toJson()).toList();
     return data;
   }
-
-  factory WooOrderCouponLine.fake() => WooOrderCouponLine(
-        id: FakeHelper.integer(),
-        code: FakeHelper.word(),
-        discount: FakeHelper.decimal(),
-        discountTax: FakeHelper.decimal(),
-        metaData: FakeHelper.list(() => WooMetaData.fake()),
-      );
 
   /// Returns a string representation of the WooOrderCouponLine instance.
   ///

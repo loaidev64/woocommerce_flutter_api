@@ -118,89 +118,6 @@ import 'package:woocommerce_flutter_api/woocommerce_flutter_api.dart';
 /// final refund = WooOrderRefund.fromJson(jsonData);
 /// ```
 class WooOrderRefund {
-  /// Unique identifier for the refund
-  ///
-  /// This ID is automatically assigned by WooCommerce when the refund is created.
-  /// It's used to identify the refund in API calls and is read-only.
-  int? id;
-
-  /// Date and time when the refund was created (local time)
-  ///
-  /// This timestamp reflects when the refund was created in the store's local timezone.
-  /// This field is read-only and set automatically by WooCommerce.
-  DateTime? dateCreated;
-
-  /// Date and time when the refund was created (GMT)
-  ///
-  /// This timestamp reflects when the refund was created in GMT/UTC timezone.
-  /// This field is read-only and set automatically by WooCommerce.
-  DateTime? dateCreatedGmt;
-
-  /// Total refund amount
-  ///
-  /// The amount to be refunded to the customer. This can be a partial or full
-  /// refund amount. Must be a valid decimal number as a string.
-  String? amount;
-
-  /// Reason for the refund
-  ///
-  /// A description explaining why the refund was issued. This helps track
-  /// refund reasons for reporting and customer service purposes.
-  String? reason;
-
-  /// User ID of the user who created the refund
-  ///
-  /// The ID of the user (admin, shop manager, etc.) who processed the refund.
-  /// This field is read-only and set automatically by WooCommerce.
-  int? refundedBy;
-
-  /// Whether the payment was refunded via the API
-  ///
-  /// If true, the refund was processed through the payment gateway API.
-  /// If false, it was a manual refund. This field is read-only.
-  bool? refundedPayment;
-
-  /// Custom refund metadata
-  ///
-  /// Additional custom data associated with the refund, including
-  /// administrative notes and custom fields.
-  List<WooMetaData>? metaData;
-
-  /// Line items being refunded
-  ///
-  /// The specific products and quantities that are being refunded.
-  /// Each line item includes the product details and refund amounts.
-  List<WooLineItem>? lineItems;
-
-  /// Tax lines for the refund
-  ///
-  /// Tax calculations and amounts for the refunded items.
-  /// This field is read-only and calculated automatically.
-  List<WooTaxLine>? taxLines;
-
-  /// Shipping lines for the refund
-  ///
-  /// Shipping costs and methods being refunded, including
-  /// any shipping-related taxes.
-  List<WooShippingLine>? shippingLines;
-
-  /// Fee lines for the refund
-  ///
-  /// Additional fees and charges being refunded, including
-  /// any fee-related taxes.
-  List<WooOrderFeeLine>? feeLines;
-
-  /// Whether to use payment gateway API for refund
-  ///
-  /// When true, the payment gateway API will be used to process the refund.
-  /// When false, it will be a manual refund. This is a write-only field.
-  bool? apiRefund;
-
-  /// Whether to restock refunded items
-  ///
-  /// When true, the refunded items will be added back to inventory.
-  /// When false, inventory levels will remain unchanged. This is a write-only field.
-  bool? apiRestock;
 
   /// Creates a new WooOrderRefund instance
   ///
@@ -309,6 +226,142 @@ class WooOrderRefund {
     apiRestock = json['api_restock'];
   }
 
+  /// Creates a fake WooOrderRefund instance for testing purposes
+  ///
+  /// This factory constructor generates a refund with random but realistic
+  /// data, making it useful for testing, development, and demonstration purposes.
+  /// The generated refund will have valid data for all fields.
+  ///
+  /// ## Generated Data
+  ///
+  /// The fake refund includes:
+  /// - Random refund ID and amount
+  /// - Random reason and refunded by user
+  /// - Random timestamps for creation dates
+  /// - Random line items, tax lines, and shipping lines
+  /// - Random metadata and fee lines
+  /// - Random API refund and restock settings
+  ///
+  /// ## Returns
+  ///
+  /// A `WooOrderRefund` instance with randomly generated fake data.
+  ///
+  /// ## Example Usage
+  ///
+  /// ```dart
+  /// // Generate a fake refund for testing
+  /// final fakeRefund = WooOrderRefund.fake();
+  /// print('Fake refund amount: ${fakeRefund.amount}');
+  /// print('Reason: ${fakeRefund.reason}');
+  ///
+  /// // Use in tests
+  /// test('refund creation', () {
+  ///   final refund = WooOrderRefund.fake();
+  ///   expect(refund.id, isNotNull);
+  ///   expect(refund.amount, isNotNull);
+  ///   expect(refund.reason, isNotNull);
+  /// });
+  /// ```
+  factory WooOrderRefund.fake() => WooOrderRefund(
+        id: FakeHelper.integer(),
+        dateCreated: FakeHelper.datetime(),
+        dateCreatedGmt: FakeHelper.datetime(),
+        amount: FakeHelper.decimal().toString(),
+        reason: FakeHelper.sentence(),
+        refundedBy: FakeHelper.integer(),
+        refundedPayment: FakeHelper.boolean(),
+        metaData: FakeHelper.list(() => WooMetaData.fake()),
+        lineItems: FakeHelper.list(() => WooLineItem.fake()),
+        taxLines: FakeHelper.list(() => WooTaxLine.fake()),
+        shippingLines: FakeHelper.list(() => WooShippingLine.fake()),
+        feeLines: FakeHelper.list(() => WooOrderFeeLine.fake()),
+        apiRefund: FakeHelper.boolean(),
+        apiRestock: FakeHelper.boolean(),
+      );
+  /// Unique identifier for the refund
+  ///
+  /// This ID is automatically assigned by WooCommerce when the refund is created.
+  /// It's used to identify the refund in API calls and is read-only.
+  int? id;
+
+  /// Date and time when the refund was created (local time)
+  ///
+  /// This timestamp reflects when the refund was created in the store's local timezone.
+  /// This field is read-only and set automatically by WooCommerce.
+  DateTime? dateCreated;
+
+  /// Date and time when the refund was created (GMT)
+  ///
+  /// This timestamp reflects when the refund was created in GMT/UTC timezone.
+  /// This field is read-only and set automatically by WooCommerce.
+  DateTime? dateCreatedGmt;
+
+  /// Total refund amount
+  ///
+  /// The amount to be refunded to the customer. This can be a partial or full
+  /// refund amount. Must be a valid decimal number as a string.
+  String? amount;
+
+  /// Reason for the refund
+  ///
+  /// A description explaining why the refund was issued. This helps track
+  /// refund reasons for reporting and customer service purposes.
+  String? reason;
+
+  /// User ID of the user who created the refund
+  ///
+  /// The ID of the user (admin, shop manager, etc.) who processed the refund.
+  /// This field is read-only and set automatically by WooCommerce.
+  int? refundedBy;
+
+  /// Whether the payment was refunded via the API
+  ///
+  /// If true, the refund was processed through the payment gateway API.
+  /// If false, it was a manual refund. This field is read-only.
+  bool? refundedPayment;
+
+  /// Custom refund metadata
+  ///
+  /// Additional custom data associated with the refund, including
+  /// administrative notes and custom fields.
+  List<WooMetaData>? metaData;
+
+  /// Line items being refunded
+  ///
+  /// The specific products and quantities that are being refunded.
+  /// Each line item includes the product details and refund amounts.
+  List<WooLineItem>? lineItems;
+
+  /// Tax lines for the refund
+  ///
+  /// Tax calculations and amounts for the refunded items.
+  /// This field is read-only and calculated automatically.
+  List<WooTaxLine>? taxLines;
+
+  /// Shipping lines for the refund
+  ///
+  /// Shipping costs and methods being refunded, including
+  /// any shipping-related taxes.
+  List<WooShippingLine>? shippingLines;
+
+  /// Fee lines for the refund
+  ///
+  /// Additional fees and charges being refunded, including
+  /// any fee-related taxes.
+  List<WooOrderFeeLine>? feeLines;
+
+  /// Whether to use payment gateway API for refund
+  ///
+  /// When true, the payment gateway API will be used to process the refund.
+  /// When false, it will be a manual refund. This is a write-only field.
+  bool? apiRefund;
+
+  /// Whether to restock refunded items
+  ///
+  /// When true, the refunded items will be added back to inventory.
+  /// When false, inventory levels will remain unchanged. This is a write-only field.
+  bool? apiRestock;
+
   /// Converts the WooOrderRefund instance to JSON format
   ///
   /// This method serializes the refund data into a Map that can be sent
@@ -397,57 +450,4 @@ class WooOrderRefund {
 
   @override
   int get hashCode => id.hashCode;
-
-  /// Creates a fake WooOrderRefund instance for testing purposes
-  ///
-  /// This factory constructor generates a refund with random but realistic
-  /// data, making it useful for testing, development, and demonstration purposes.
-  /// The generated refund will have valid data for all fields.
-  ///
-  /// ## Generated Data
-  ///
-  /// The fake refund includes:
-  /// - Random refund ID and amount
-  /// - Random reason and refunded by user
-  /// - Random timestamps for creation dates
-  /// - Random line items, tax lines, and shipping lines
-  /// - Random metadata and fee lines
-  /// - Random API refund and restock settings
-  ///
-  /// ## Returns
-  ///
-  /// A `WooOrderRefund` instance with randomly generated fake data.
-  ///
-  /// ## Example Usage
-  ///
-  /// ```dart
-  /// // Generate a fake refund for testing
-  /// final fakeRefund = WooOrderRefund.fake();
-  /// print('Fake refund amount: ${fakeRefund.amount}');
-  /// print('Reason: ${fakeRefund.reason}');
-  ///
-  /// // Use in tests
-  /// test('refund creation', () {
-  ///   final refund = WooOrderRefund.fake();
-  ///   expect(refund.id, isNotNull);
-  ///   expect(refund.amount, isNotNull);
-  ///   expect(refund.reason, isNotNull);
-  /// });
-  /// ```
-  factory WooOrderRefund.fake() => WooOrderRefund(
-        id: FakeHelper.integer(),
-        dateCreated: FakeHelper.datetime(),
-        dateCreatedGmt: FakeHelper.datetime(),
-        amount: FakeHelper.decimal().toString(),
-        reason: FakeHelper.sentence(),
-        refundedBy: FakeHelper.integer(),
-        refundedPayment: FakeHelper.boolean(),
-        metaData: FakeHelper.list(() => WooMetaData.fake()),
-        lineItems: FakeHelper.list(() => WooLineItem.fake()),
-        taxLines: FakeHelper.list(() => WooTaxLine.fake()),
-        shippingLines: FakeHelper.list(() => WooShippingLine.fake()),
-        feeLines: FakeHelper.list(() => WooOrderFeeLine.fake()),
-        apiRefund: FakeHelper.boolean(),
-        apiRestock: FakeHelper.boolean(),
-      );
 }

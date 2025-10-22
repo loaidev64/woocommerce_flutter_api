@@ -1,16 +1,6 @@
 import 'package:woocommerce_flutter_api/src/helpers/fake_helper.dart';
 
 class WooSystemStatusSettings {
-  final bool? apiEnabled;
-  final bool? forceSsl;
-  final String? currency;
-  final String? currencySymbol;
-  final String? currencyPosition;
-  final String? thousandSeparator;
-  final String? decimalSeparator;
-  final int? numberOfDecimals;
-  final bool? geolocationEnabled;
-  final List<String>? taxonomies;
 
   WooSystemStatusSettings({
     this.apiEnabled,
@@ -41,19 +31,6 @@ class WooSystemStatusSettings {
             : null,
       );
 
-  Map<String, dynamic> toJson() => {
-        'api_enabled': apiEnabled,
-        'force_ssl': forceSsl,
-        'currency': currency,
-        'currency_symbol': currencySymbol,
-        'currency_position': currencyPosition,
-        'thousand_separator': thousandSeparator,
-        'decimal_separator': decimalSeparator,
-        'number_of_decimals': numberOfDecimals,
-        'geolocation_enabled': geolocationEnabled,
-        'taxonomies': taxonomies,
-      };
-
   factory WooSystemStatusSettings.fake() => WooSystemStatusSettings(
         apiEnabled: FakeHelper.boolean(),
         forceSsl: FakeHelper.boolean(),
@@ -66,4 +43,27 @@ class WooSystemStatusSettings {
         geolocationEnabled: FakeHelper.boolean(),
         taxonomies: FakeHelper.list(() => FakeHelper.word()),
       );
+  final bool? apiEnabled;
+  final bool? forceSsl;
+  final String? currency;
+  final String? currencySymbol;
+  final String? currencyPosition;
+  final String? thousandSeparator;
+  final String? decimalSeparator;
+  final int? numberOfDecimals;
+  final bool? geolocationEnabled;
+  final List<String>? taxonomies;
+
+  Map<String, dynamic> toJson() => {
+        'api_enabled': apiEnabled,
+        'force_ssl': forceSsl,
+        'currency': currency,
+        'currency_symbol': currencySymbol,
+        'currency_position': currencyPosition,
+        'thousand_separator': thousandSeparator,
+        'decimal_separator': decimalSeparator,
+        'number_of_decimals': numberOfDecimals,
+        'geolocation_enabled': geolocationEnabled,
+        'taxonomies': taxonomies,
+      };
 }

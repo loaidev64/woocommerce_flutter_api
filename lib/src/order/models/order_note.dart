@@ -5,6 +5,37 @@ import 'package:woocommerce_flutter_api/woocommerce_flutter_api.dart';
 /// Contains note information, author details, and visibility settings for notes
 /// added to an order. Used for order communication and tracking.
 class WooOrderNote {
+
+  /// Creates a new WooOrderNote instance.
+  WooOrderNote({
+    required this.note, this.id,
+    this.author,
+    this.dateCreated,
+    this.dateCreatedGmt,
+    this.customerNote = false,
+    this.addedByUser = false,
+  });
+
+  /// Creates a WooOrderNote instance from JSON data.
+  WooOrderNote.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    author = json['author'];
+    dateCreated = DateTime.tryParse(json['date_created']);
+    dateCreatedGmt = DateTime.tryParse(json['date_created_gmt']);
+    note = json['note'];
+    customerNote = json['customer_note'];
+    addedByUser = json['added_by_user'];
+  }
+
+  factory WooOrderNote.fake() => WooOrderNote(
+        id: FakeHelper.integer(),
+        author: FakeHelper.firstName(),
+        dateCreated: FakeHelper.datetime(),
+        dateCreatedGmt: FakeHelper.datetime(),
+        note: FakeHelper.sentence(),
+        customerNote: FakeHelper.boolean(),
+        addedByUser: FakeHelper.boolean(),
+      );
   /// Unique identifier for the order note.
   int? id;
 
@@ -25,28 +56,6 @@ class WooOrderNote {
 
   /// Whether the note was added by a user.
   bool? addedByUser;
-
-  /// Creates a new WooOrderNote instance.
-  WooOrderNote({
-    this.id,
-    this.author,
-    this.dateCreated,
-    this.dateCreatedGmt,
-    required this.note,
-    this.customerNote = false,
-    this.addedByUser = false,
-  });
-
-  /// Creates a WooOrderNote instance from JSON data.
-  WooOrderNote.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    author = json['author'];
-    dateCreated = DateTime.tryParse(json['date_created']);
-    dateCreatedGmt = DateTime.tryParse(json['date_created_gmt']);
-    note = json['note'];
-    customerNote = json['customer_note'];
-    addedByUser = json['added_by_user'];
-  }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
@@ -77,14 +86,4 @@ class WooOrderNote {
 
   @override
   int get hashCode => id.hashCode;
-
-  factory WooOrderNote.fake() => WooOrderNote(
-        id: FakeHelper.integer(),
-        author: FakeHelper.firstName(),
-        dateCreated: FakeHelper.datetime(),
-        dateCreatedGmt: FakeHelper.datetime(),
-        note: FakeHelper.sentence(),
-        customerNote: FakeHelper.boolean(),
-        addedByUser: FakeHelper.boolean(),
-      );
 }

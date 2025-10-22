@@ -4,14 +4,6 @@ import 'package:woocommerce_flutter_api/src/helpers/fake_helper.dart';
 ///
 /// Brief description of the model's purpose and usage for product physical dimensions.
 class WooProductDimension {
-  /// Product length.
-  final String? length;
-
-  /// Product width.
-  final String? width;
-
-  /// Product height.
-  final String? height;
 
   /// Creates a new WooProductDimension instance.
   const WooProductDimension({this.length, this.height, this.width});
@@ -22,16 +14,24 @@ class WooProductDimension {
         width = json['width'],
         height = json['height'];
 
-  /// Converts the WooProductDimension instance to JSON format.
-  Map<String, dynamic> toJson() =>
-      {'length': length, 'width': width, 'height': height};
-
   /// Creates a fake WooProductDimension instance for testing purposes.
   factory WooProductDimension.fake() => WooProductDimension(
         length: FakeHelper.integer().toString(),
         height: FakeHelper.integer().toString(),
         width: FakeHelper.integer().toString(),
       );
+  /// Product length.
+  final String? length;
+
+  /// Product width.
+  final String? width;
+
+  /// Product height.
+  final String? height;
+
+  /// Converts the WooProductDimension instance to JSON format.
+  Map<String, dynamic> toJson() =>
+      {'length': length, 'width': width, 'height': height};
 
   /// Returns a string representation of the WooProductDimension instance.
   ///

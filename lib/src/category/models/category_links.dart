@@ -3,11 +3,6 @@
 /// This class models the API links associated with a product category,
 /// including self-referencing links and collection links.
 class WooProductCategoryLinks {
-  /// Self-referencing API links for the category
-  List<WooProductCategorySelf>? self;
-
-  /// Collection API links for the category
-  List<WooProductCategoryCollection>? collection;
 
   /// Creates a new WooProductCategoryLinks instance.
   ///
@@ -49,6 +44,11 @@ class WooProductCategoryLinks {
       });
     }
   }
+  /// Self-referencing API links for the category
+  List<WooProductCategorySelf>? self;
+
+  /// Collection API links for the category
+  List<WooProductCategoryCollection>? collection;
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
@@ -66,8 +66,6 @@ class WooProductCategoryLinks {
 ///
 /// This class models a single self-referencing link that points to the category itself.
 class WooProductCategorySelf {
-  /// The URL of the self-referencing link
-  String? href;
 
   /// Creates a new WooProductCategorySelf instance.
   ///
@@ -97,6 +95,8 @@ class WooProductCategorySelf {
   WooProductCategorySelf.fromJson(Map<String, dynamic> json) {
     href = json['href'];
   }
+  /// The URL of the self-referencing link
+  String? href;
 
   /// Converts the WooProductCategorySelf instance to JSON format
   ///
@@ -123,8 +123,6 @@ class WooProductCategorySelf {
 ///
 /// This class models a single collection link that points to related category resources.
 class WooProductCategoryCollection {
-  /// The URL of the collection link
-  String? href;
 
   /// Creates a new WooProductCategoryCollection instance.
   ///
@@ -154,6 +152,8 @@ class WooProductCategoryCollection {
   WooProductCategoryCollection.fromJson(Map<String, dynamic> json) {
     href = json['href'];
   }
+  /// The URL of the collection link
+  String? href;
 
   /// Converts the WooProductCategoryCollection instance to JSON format
   ///

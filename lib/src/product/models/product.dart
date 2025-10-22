@@ -123,259 +123,6 @@ import 'product_tag.dart';
 /// final product = WooProduct.fromJson(jsonData);
 /// ```
 class WooProduct {
-  /// Unique identifier for the product
-  ///
-  /// This ID is automatically assigned by WooCommerce when the product is created.
-  /// It's used to identify the product in API calls and is required for updates.
-  final int? id;
-
-  /// Product name
-  ///
-  /// The display name of the product as it appears to customers.
-  /// This is the primary identifier for the product in the store.
-  final String? name;
-
-  /// Product slug
-  ///
-  /// A URL-friendly version of the product name, used in product URLs.
-  /// Automatically generated from the name but can be customized.
-  final String? slug;
-
-  /// Product permalink URL
-  ///
-  /// The full URL where the product can be viewed on the website.
-  /// This is automatically generated based on the slug and store settings.
-  final String? permalink;
-
-  /// Date and time when the product was created (local time)
-  ///
-  /// This timestamp reflects when the product was first created in the store's local timezone.
-  DateTime? dateCreated;
-
-  /// Date and time when the product was created (GMT)
-  ///
-  /// This timestamp reflects when the product was first created in GMT/UTC timezone.
-  DateTime? dateCreatedGmt;
-
-  /// Date and time when the product was last modified (local time)
-  ///
-  /// This timestamp reflects when the product was last updated in the store's local timezone.
-  DateTime? dateModified;
-
-  /// Date and time when the product was last modified (GMT)
-  ///
-  /// This timestamp reflects when the product was last updated in GMT/UTC timezone.
-  DateTime? dateModifiedGmt;
-
-  /// Product type
-  ///
-  /// Determines the behavior and capabilities of the product:
-  /// - `WooProductType.simple`: Basic products with fixed pricing
-  /// - `WooProductType.variable`: Products with multiple variations
-  /// - `WooProductType.grouped`: Collections of related products
-  /// - `WooProductType.external`: Products sold on external websites
-  final WooProductType? type;
-
-  /// Product status
-  ///
-  /// Controls the visibility and availability of the product:
-  /// - `WooProductStatus.publish`: Product is live and visible to customers
-  /// - `WooProductStatus.draft`: Product is saved but not visible
-  /// - `WooProductStatus.pending`: Product is pending review
-  /// - `WooProductStatus.private`: Product is visible only to specific users
-  final WooProductStatus? status;
-
-  /// Whether the product is featured
-  ///
-  /// Featured products can be highlighted in special sections of the store
-  /// and are often used for promotional purposes.
-  final bool? featured;
-
-  /// Catalog visibility setting
-  ///
-  /// Controls where the product appears in the store:
-  /// - `WooProductCatalogVisibility.visible`: Visible in catalog and search
-  /// - `WooProductCatalogVisibility.catalog`: Visible only in catalog
-  /// - `WooProductCatalogVisibility.search`: Visible only in search results
-  /// - `WooProductCatalogVisibility.hidden`: Hidden from catalog and search
-  final WooProductCatalogVisibility? catalogVisibility;
-
-  /// Product description
-  ///
-  /// The full description of the product, displayed on the product page.
-  /// Supports HTML formatting and can include detailed information about the product.
-  final String? description;
-
-  /// Product short description
-  ///
-  /// A brief summary of the product, often displayed in product listings
-  /// and search results. Should be concise and compelling.
-  final String? shortDescription;
-
-  /// Product SKU (Stock Keeping Unit)
-  ///
-  /// A unique identifier for the product used for inventory management.
-  /// Must be unique across all products in the store.
-  final String? sku;
-
-  /// Current product price
-  ///
-  /// The active price of the product. If the product is on sale,
-  /// this will be the sale price; otherwise, it will be the regular price.
-  final double? price;
-
-  /// Product regular price
-  ///
-  /// The standard price of the product before any discounts or sales.
-  /// This is the price that will be shown when the product is not on sale.
-  final double? regularPrice;
-
-  /// Product sale price
-  ///
-  /// The discounted price of the product when it's on sale.
-  /// This price is only active during the sale period.
-  final double? salePrice;
-
-  /// Start date of sale price, in the site's timezone.
-  DateTime? dateOnSaleFrom;
-
-  /// Start date of sale price, as GMT.
-  DateTime? dateOnSaleFromGmt;
-
-  /// End date of sale price, in the site's timezone.
-  DateTime? dateOnSaleTo;
-
-  /// End date of sale price, as GMT.
-  DateTime? dateOnSaleToGmt;
-
-  /// Price formatted in HTML.
-  final String? priceHtml;
-
-  /// Shows if the product is on sale.
-  final bool? onSale;
-
-  /// Shows if the product can be bought.
-  final bool? purchasable;
-
-  /// Amount of sales.
-  final int? totalSales;
-
-  /// If the product is virtual. Default is false.
-  final bool? virtual;
-
-  /// If the product is downloadable. Default is false.
-  final bool? downloadable;
-
-  /// List of downloadable files.
-  final List<WooProductDownload> downloads;
-
-  /// Number of times downloadable files can be downloaded after purchase. Default is -1.
-  final int? downloadLimit;
-
-  /// Number of days until access to downloadable files expires. Default is -1.
-  final int? downloadExpiry;
-
-  /// Product external URL. Only for external products.
-  final String? externalUrl;
-
-  /// Product external button text. Only for external products.
-  final String? buttonText;
-
-  /// Tax status. Options: taxable, shipping and none. Default is taxable.
-  final WooProductTaxStatus? taxStatus;
-
-  /// Tax class.
-  final String? taxClass;
-
-  /// Stock management at product level. Default is false.
-  final bool? manageStock;
-
-  /// Stock quantity.
-  final int? stockQuantity;
-
-  /// Controls the stock status of the product. Options: instock, outofstock, onbackorder. Default is instock.
-  final WooProductStockStatus? stockStatus;
-
-  /// If managing stock, this controls if backorders are allowed. Options: no, notify and yes. Default is no.
-  final WooProductBackorder? backorders;
-
-  /// Shows if backorders are allowed.
-  final bool? backordersAllowed;
-
-  /// Shows if the product is on backordered.
-  final bool? backordered;
-
-  /// Allow one item to be bought in a single order. Default is false.
-  final bool? soldIndividually;
-
-  /// Product weight.
-  final String? weight;
-
-  /// Product dimensions.
-  final WooProductDimension? dimensions;
-
-  /// Shows if the product need to be shipped.
-  final bool? shippingRequired;
-
-  /// Shows whether or not the product shipping is taxable.
-  final bool? shippingTaxable;
-
-  /// Shipping class slug.
-  final String? shippingClass;
-
-  /// Shipping class ID.
-  final int? shippingClassId;
-
-  /// Allow reviews. Default is true.
-  final bool? reviewsAllowed;
-
-  /// Reviews average rating.
-  final String? averageRating;
-
-  /// Amount of reviews that the product have.
-  final int? ratingCount;
-
-  /// List of related products IDs.
-  final List<int>? relatedIds;
-
-  /// List of up-sell products IDs.
-  final List<int>? upsellIds;
-
-  /// List of cross-sell products IDs.
-  final List<int>? crossSellIds;
-
-  /// Product parent ID.
-  final int? parentId;
-
-  /// Optional note to send the customer after purchase.
-  final String? purchaseNote;
-
-  /// List of categories. it just includes id, name, slug
-  final List<WooProductCategory> categories;
-
-  /// List of tags.
-  final List<WooProductTag> tags;
-
-  /// List of images.
-  final List<WooProductImage> images;
-
-  /// List of attributes.
-  final List<WooProductItemAttribute> attributes;
-
-  /// Defaults variation attributes.
-  final List<WooProductDefaultAttribute> defaultAttributes;
-
-  /// List of variations IDs.
-  final List<int>? variations;
-
-  /// List of grouped products ID.
-  final List<int>? groupedProducts;
-
-  /// Menu order, used to custom sort products.
-  final int? menuOrder;
-
-  /// Meta data
-  final List<WooMetaData> metaData;
 
   /// Creates a new WooProduct instance
   ///
@@ -652,8 +399,368 @@ class WooProduct {
             .map((i) => WooMetaData.fromJson(i))
             .toList();
 
+  /// Creates a fake WooProduct instance for testing purposes
+  ///
+  /// This factory constructor generates a product with random but realistic
+  /// data, making it useful for testing, development, and demonstration purposes.
+  /// The generated product will have valid data for all fields.
+  ///
+  /// ## Generated Data
+  ///
+  /// The fake product includes:
+  /// - Random name and description
+  /// - Random product type from available types
+  /// - Random status from available statuses
+  /// - Random pricing information
+  /// - Random stock and inventory data
+  /// - Random categories, tags, and images
+  /// - Random attributes and metadata
+  ///
+  /// ## Returns
+  ///
+  /// A `WooProduct` instance with randomly generated fake data.
+  ///
+  /// ## Example Usage
+  ///
+  /// ```dart
+  /// // Generate a fake product for testing
+  /// final fakeProduct = WooProduct.fake();
+  /// print('Fake product: ${fakeProduct.name}');
+  /// print('Type: ${fakeProduct.type}');
+  /// print('Price: ${fakeProduct.price}');
+  ///
+  /// // Use in tests
+  /// test('product creation', () {
+  ///   final product = WooProduct.fake();
+  ///   expect(product.name, isNotNull);
+  ///   expect(product.type, isNotNull);
+  ///   expect(product.price, isNotNull);
+  /// });
+  /// ```
+  factory WooProduct.fake() => WooProduct(
+        id: FakeHelper.integer(),
+        name: FakeHelper.word(),
+        slug: FakeHelper.word(),
+        permalink: FakeHelper.url(),
+        type: WooProductType.fake(),
+        status: WooProductStatus.fake(),
+        featured: FakeHelper.boolean(),
+        catalogVisibility: WooProductCatalogVisibility.fake(),
+        description: FakeHelper.sentence(),
+        shortDescription: FakeHelper.sentence(),
+        sku: FakeHelper.word(),
+        price: FakeHelper.decimal(),
+        regularPrice: FakeHelper.decimal(),
+        salePrice: FakeHelper.decimal(),
+        priceHtml: FakeHelper.sentence(),
+        onSale: FakeHelper.boolean(),
+        purchasable: FakeHelper.boolean(),
+        totalSales: FakeHelper.integer(),
+        virtual: FakeHelper.boolean(),
+        downloadable: FakeHelper.boolean(),
+        downloads: FakeHelper.list(() => WooProductDownload.fake()),
+        downloadLimit: FakeHelper.integer(),
+        downloadExpiry: FakeHelper.integer(),
+        externalUrl: FakeHelper.url(),
+        buttonText: FakeHelper.word(),
+        taxStatus: WooProductTaxStatus.fake(),
+        taxClass: FakeHelper.word(),
+        manageStock: FakeHelper.boolean(),
+        stockQuantity: FakeHelper.integer(),
+        stockStatus: WooProductStockStatus.fake(),
+        backorders: WooProductBackorder.fake(),
+        backordersAllowed: FakeHelper.boolean(),
+        backordered: FakeHelper.boolean(),
+        soldIndividually: FakeHelper.boolean(),
+        weight: FakeHelper.decimal().toString(),
+        dimensions: WooProductDimension.fake(),
+        shippingRequired: FakeHelper.boolean(),
+        shippingTaxable: FakeHelper.boolean(),
+        shippingClass: FakeHelper.word(),
+        shippingClassId: FakeHelper.integer(),
+        reviewsAllowed: FakeHelper.boolean(),
+        averageRating: FakeHelper.word(),
+        ratingCount: FakeHelper.integer(),
+        relatedIds: FakeHelper.listOfIntegers(),
+        upsellIds: FakeHelper.listOfIntegers(),
+        crossSellIds: FakeHelper.listOfIntegers(),
+        parentId: FakeHelper.integer(),
+        purchaseNote: FakeHelper.word(),
+        categories: FakeHelper.list(() => WooProductCategory.fake()),
+        tags: FakeHelper.list(() => WooProductTag.fake()),
+        images: FakeHelper.list(() => WooProductImage.fake()),
+        attributes: FakeHelper.list(() => WooProductItemAttribute.fake()),
+        defaultAttributes:
+            FakeHelper.list(() => WooProductDefaultAttribute.fake()),
+        variations: FakeHelper.listOfIntegers(),
+        groupedProducts: FakeHelper.listOfIntegers(),
+        menuOrder: FakeHelper.integer(),
+        metaData: FakeHelper.list(() => WooMetaData.fake()),
+        dateCreated: FakeHelper.datetime(),
+        dateCreatedGmt: FakeHelper.datetime(),
+        dateModified: FakeHelper.datetime(),
+        dateModifiedGmt: FakeHelper.datetime(),
+        dateOnSaleFrom: FakeHelper.datetime(),
+        dateOnSaleFromGmt: FakeHelper.datetime(),
+        dateOnSaleTo: FakeHelper.datetime(),
+        dateOnSaleToGmt: FakeHelper.datetime(),
+      );
+  /// Unique identifier for the product
+  ///
+  /// This ID is automatically assigned by WooCommerce when the product is created.
+  /// It's used to identify the product in API calls and is required for updates.
+  final int? id;
+
+  /// Product name
+  ///
+  /// The display name of the product as it appears to customers.
+  /// This is the primary identifier for the product in the store.
+  final String? name;
+
+  /// Product slug
+  ///
+  /// A URL-friendly version of the product name, used in product URLs.
+  /// Automatically generated from the name but can be customized.
+  final String? slug;
+
+  /// Product permalink URL
+  ///
+  /// The full URL where the product can be viewed on the website.
+  /// This is automatically generated based on the slug and store settings.
+  final String? permalink;
+
+  /// Date and time when the product was created (local time)
+  ///
+  /// This timestamp reflects when the product was first created in the store's local timezone.
+  DateTime? dateCreated;
+
+  /// Date and time when the product was created (GMT)
+  ///
+  /// This timestamp reflects when the product was first created in GMT/UTC timezone.
+  DateTime? dateCreatedGmt;
+
+  /// Date and time when the product was last modified (local time)
+  ///
+  /// This timestamp reflects when the product was last updated in the store's local timezone.
+  DateTime? dateModified;
+
+  /// Date and time when the product was last modified (GMT)
+  ///
+  /// This timestamp reflects when the product was last updated in GMT/UTC timezone.
+  DateTime? dateModifiedGmt;
+
+  /// Product type
+  ///
+  /// Determines the behavior and capabilities of the product:
+  /// - `WooProductType.simple`: Basic products with fixed pricing
+  /// - `WooProductType.variable`: Products with multiple variations
+  /// - `WooProductType.grouped`: Collections of related products
+  /// - `WooProductType.external`: Products sold on external websites
+  final WooProductType? type;
+
+  /// Product status
+  ///
+  /// Controls the visibility and availability of the product:
+  /// - `WooProductStatus.publish`: Product is live and visible to customers
+  /// - `WooProductStatus.draft`: Product is saved but not visible
+  /// - `WooProductStatus.pending`: Product is pending review
+  /// - `WooProductStatus.private`: Product is visible only to specific users
+  final WooProductStatus? status;
+
+  /// Whether the product is featured
+  ///
+  /// Featured products can be highlighted in special sections of the store
+  /// and are often used for promotional purposes.
+  final bool? featured;
+
+  /// Catalog visibility setting
+  ///
+  /// Controls where the product appears in the store:
+  /// - `WooProductCatalogVisibility.visible`: Visible in catalog and search
+  /// - `WooProductCatalogVisibility.catalog`: Visible only in catalog
+  /// - `WooProductCatalogVisibility.search`: Visible only in search results
+  /// - `WooProductCatalogVisibility.hidden`: Hidden from catalog and search
+  final WooProductCatalogVisibility? catalogVisibility;
+
+  /// Product description
+  ///
+  /// The full description of the product, displayed on the product page.
+  /// Supports HTML formatting and can include detailed information about the product.
+  final String? description;
+
+  /// Product short description
+  ///
+  /// A brief summary of the product, often displayed in product listings
+  /// and search results. Should be concise and compelling.
+  final String? shortDescription;
+
+  /// Product SKU (Stock Keeping Unit)
+  ///
+  /// A unique identifier for the product used for inventory management.
+  /// Must be unique across all products in the store.
+  final String? sku;
+
+  /// Current product price
+  ///
+  /// The active price of the product. If the product is on sale,
+  /// this will be the sale price; otherwise, it will be the regular price.
+  final double? price;
+
+  /// Product regular price
+  ///
+  /// The standard price of the product before any discounts or sales.
+  /// This is the price that will be shown when the product is not on sale.
+  final double? regularPrice;
+
+  /// Product sale price
+  ///
+  /// The discounted price of the product when it's on sale.
+  /// This price is only active during the sale period.
+  final double? salePrice;
+
+  /// Start date of sale price, in the site's timezone.
+  DateTime? dateOnSaleFrom;
+
+  /// Start date of sale price, as GMT.
+  DateTime? dateOnSaleFromGmt;
+
+  /// End date of sale price, in the site's timezone.
+  DateTime? dateOnSaleTo;
+
+  /// End date of sale price, as GMT.
+  DateTime? dateOnSaleToGmt;
+
+  /// Price formatted in HTML.
+  final String? priceHtml;
+
+  /// Shows if the product is on sale.
+  final bool? onSale;
+
+  /// Shows if the product can be bought.
+  final bool? purchasable;
+
+  /// Amount of sales.
+  final int? totalSales;
+
+  /// If the product is virtual. Default is false.
+  final bool? virtual;
+
+  /// If the product is downloadable. Default is false.
+  final bool? downloadable;
+
+  /// List of downloadable files.
+  final List<WooProductDownload> downloads;
+
+  /// Number of times downloadable files can be downloaded after purchase. Default is -1.
+  final int? downloadLimit;
+
+  /// Number of days until access to downloadable files expires. Default is -1.
+  final int? downloadExpiry;
+
+  /// Product external URL. Only for external products.
+  final String? externalUrl;
+
+  /// Product external button text. Only for external products.
+  final String? buttonText;
+
+  /// Tax status. Options: taxable, shipping and none. Default is taxable.
+  final WooProductTaxStatus? taxStatus;
+
+  /// Tax class.
+  final String? taxClass;
+
+  /// Stock management at product level. Default is false.
+  final bool? manageStock;
+
+  /// Stock quantity.
+  final int? stockQuantity;
+
+  /// Controls the stock status of the product. Options: instock, outofstock, onbackorder. Default is instock.
+  final WooProductStockStatus? stockStatus;
+
+  /// If managing stock, this controls if backorders are allowed. Options: no, notify and yes. Default is no.
+  final WooProductBackorder? backorders;
+
+  /// Shows if backorders are allowed.
+  final bool? backordersAllowed;
+
+  /// Shows if the product is on backordered.
+  final bool? backordered;
+
+  /// Allow one item to be bought in a single order. Default is false.
+  final bool? soldIndividually;
+
+  /// Product weight.
+  final String? weight;
+
+  /// Product dimensions.
+  final WooProductDimension? dimensions;
+
+  /// Shows if the product need to be shipped.
+  final bool? shippingRequired;
+
+  /// Shows whether or not the product shipping is taxable.
+  final bool? shippingTaxable;
+
+  /// Shipping class slug.
+  final String? shippingClass;
+
+  /// Shipping class ID.
+  final int? shippingClassId;
+
+  /// Allow reviews. Default is true.
+  final bool? reviewsAllowed;
+
+  /// Reviews average rating.
+  final String? averageRating;
+
+  /// Amount of reviews that the product have.
+  final int? ratingCount;
+
+  /// List of related products IDs.
+  final List<int>? relatedIds;
+
+  /// List of up-sell products IDs.
+  final List<int>? upsellIds;
+
+  /// List of cross-sell products IDs.
+  final List<int>? crossSellIds;
+
+  /// Product parent ID.
+  final int? parentId;
+
+  /// Optional note to send the customer after purchase.
+  final String? purchaseNote;
+
+  /// List of categories. it just includes id, name, slug
+  final List<WooProductCategory> categories;
+
+  /// List of tags.
+  final List<WooProductTag> tags;
+
+  /// List of images.
+  final List<WooProductImage> images;
+
+  /// List of attributes.
+  final List<WooProductItemAttribute> attributes;
+
+  /// Defaults variation attributes.
+  final List<WooProductDefaultAttribute> defaultAttributes;
+
+  /// List of variations IDs.
+  final List<int>? variations;
+
+  /// List of grouped products ID.
+  final List<int>? groupedProducts;
+
+  /// Menu order, used to custom sort products.
+  final int? menuOrder;
+
+  /// Meta data
+  final List<WooMetaData> metaData;
+
   @override
-  toString() => "{id: $id}, {name: $name}, {price: $price}, {status: $status}";
+  String toString() => '{id: $id}, {name: $name}, {price: $price}, {status: $status}';
 
   @override
   bool operator ==(Object other) {
@@ -815,113 +922,6 @@ class WooProduct {
       metaData: metaData ?? this.metaData,
     );
   }
-
-  /// Creates a fake WooProduct instance for testing purposes
-  ///
-  /// This factory constructor generates a product with random but realistic
-  /// data, making it useful for testing, development, and demonstration purposes.
-  /// The generated product will have valid data for all fields.
-  ///
-  /// ## Generated Data
-  ///
-  /// The fake product includes:
-  /// - Random name and description
-  /// - Random product type from available types
-  /// - Random status from available statuses
-  /// - Random pricing information
-  /// - Random stock and inventory data
-  /// - Random categories, tags, and images
-  /// - Random attributes and metadata
-  ///
-  /// ## Returns
-  ///
-  /// A `WooProduct` instance with randomly generated fake data.
-  ///
-  /// ## Example Usage
-  ///
-  /// ```dart
-  /// // Generate a fake product for testing
-  /// final fakeProduct = WooProduct.fake();
-  /// print('Fake product: ${fakeProduct.name}');
-  /// print('Type: ${fakeProduct.type}');
-  /// print('Price: ${fakeProduct.price}');
-  ///
-  /// // Use in tests
-  /// test('product creation', () {
-  ///   final product = WooProduct.fake();
-  ///   expect(product.name, isNotNull);
-  ///   expect(product.type, isNotNull);
-  ///   expect(product.price, isNotNull);
-  /// });
-  /// ```
-  factory WooProduct.fake() => WooProduct(
-        id: FakeHelper.integer(),
-        name: FakeHelper.word(),
-        slug: FakeHelper.word(),
-        permalink: FakeHelper.url(),
-        type: WooProductType.fake(),
-        status: WooProductStatus.fake(),
-        featured: FakeHelper.boolean(),
-        catalogVisibility: WooProductCatalogVisibility.fake(),
-        description: FakeHelper.sentence(),
-        shortDescription: FakeHelper.sentence(),
-        sku: FakeHelper.word(),
-        price: FakeHelper.decimal(),
-        regularPrice: FakeHelper.decimal(),
-        salePrice: FakeHelper.decimal(),
-        priceHtml: FakeHelper.sentence(),
-        onSale: FakeHelper.boolean(),
-        purchasable: FakeHelper.boolean(),
-        totalSales: FakeHelper.integer(),
-        virtual: FakeHelper.boolean(),
-        downloadable: FakeHelper.boolean(),
-        downloads: FakeHelper.list(() => WooProductDownload.fake()),
-        downloadLimit: FakeHelper.integer(),
-        downloadExpiry: FakeHelper.integer(),
-        externalUrl: FakeHelper.url(),
-        buttonText: FakeHelper.word(),
-        taxStatus: WooProductTaxStatus.fake(),
-        taxClass: FakeHelper.word(),
-        manageStock: FakeHelper.boolean(),
-        stockQuantity: FakeHelper.integer(),
-        stockStatus: WooProductStockStatus.fake(),
-        backorders: WooProductBackorder.fake(),
-        backordersAllowed: FakeHelper.boolean(),
-        backordered: FakeHelper.boolean(),
-        soldIndividually: FakeHelper.boolean(),
-        weight: FakeHelper.decimal().toString(),
-        dimensions: WooProductDimension.fake(),
-        shippingRequired: FakeHelper.boolean(),
-        shippingTaxable: FakeHelper.boolean(),
-        shippingClass: FakeHelper.word(),
-        shippingClassId: FakeHelper.integer(),
-        reviewsAllowed: FakeHelper.boolean(),
-        averageRating: FakeHelper.word(),
-        ratingCount: FakeHelper.integer(),
-        relatedIds: FakeHelper.listOfIntegers(),
-        upsellIds: FakeHelper.listOfIntegers(),
-        crossSellIds: FakeHelper.listOfIntegers(),
-        parentId: FakeHelper.integer(),
-        purchaseNote: FakeHelper.word(),
-        categories: FakeHelper.list(() => WooProductCategory.fake()),
-        tags: FakeHelper.list(() => WooProductTag.fake()),
-        images: FakeHelper.list(() => WooProductImage.fake()),
-        attributes: FakeHelper.list(() => WooProductItemAttribute.fake()),
-        defaultAttributes:
-            FakeHelper.list(() => WooProductDefaultAttribute.fake()),
-        variations: FakeHelper.listOfIntegers(),
-        groupedProducts: FakeHelper.listOfIntegers(),
-        menuOrder: FakeHelper.integer(),
-        metaData: FakeHelper.list(() => WooMetaData.fake()),
-        dateCreated: FakeHelper.datetime(),
-        dateCreatedGmt: FakeHelper.datetime(),
-        dateModified: FakeHelper.datetime(),
-        dateModifiedGmt: FakeHelper.datetime(),
-        dateOnSaleFrom: FakeHelper.datetime(),
-        dateOnSaleFromGmt: FakeHelper.datetime(),
-        dateOnSaleTo: FakeHelper.datetime(),
-        dateOnSaleToGmt: FakeHelper.datetime(),
-      );
 
   /// Converts the WooProduct instance to JSON format
   ///

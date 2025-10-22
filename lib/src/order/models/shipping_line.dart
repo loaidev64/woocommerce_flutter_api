@@ -7,26 +7,6 @@ import 'package:woocommerce_flutter_api/src/order/models/tax.dart';
 /// Contains shipping method information, costs, and tax details for shipping
 /// methods used in an order. Used for shipping cost tracking and order processing.
 class WooShippingLine {
-  /// Unique identifier for the shipping line.
-  int? id;
-
-  /// Shipping method display name.
-  String? methodTitle;
-
-  /// Shipping method identifier.
-  String? methodId;
-
-  /// Line total after discounts.
-  double? total;
-
-  /// Line total tax after discounts.
-  double? totalTax;
-
-  /// Tax details for the shipping line.
-  List<WooTax>? taxes;
-
-  /// Custom metadata for the shipping line.
-  List<WooMetaData>? metaData;
 
   /// Creates a new WooShippingLine instance.
   WooShippingLine(
@@ -52,6 +32,36 @@ class WooShippingLine {
         .toList();
   }
 
+  factory WooShippingLine.fake() => WooShippingLine(
+        id: FakeHelper.integer(),
+        methodId: FakeHelper.integer().toString(),
+        methodTitle: FakeHelper.word(),
+        total: FakeHelper.decimal(),
+        totalTax: FakeHelper.decimal(),
+        taxes: FakeHelper.list(() => WooTax.fake()),
+        metaData: FakeHelper.list(() => WooMetaData.fake()),
+      );
+  /// Unique identifier for the shipping line.
+  int? id;
+
+  /// Shipping method display name.
+  String? methodTitle;
+
+  /// Shipping method identifier.
+  String? methodId;
+
+  /// Line total after discounts.
+  double? total;
+
+  /// Line total tax after discounts.
+  double? totalTax;
+
+  /// Tax details for the shipping line.
+  List<WooTax>? taxes;
+
+  /// Custom metadata for the shipping line.
+  List<WooMetaData>? metaData;
+
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['id'] = id;
@@ -67,16 +77,6 @@ class WooShippingLine {
     }
     return data;
   }
-
-  factory WooShippingLine.fake() => WooShippingLine(
-        id: FakeHelper.integer(),
-        methodId: FakeHelper.integer().toString(),
-        methodTitle: FakeHelper.word(),
-        total: FakeHelper.decimal(),
-        totalTax: FakeHelper.decimal(),
-        taxes: FakeHelper.list(() => WooTax.fake()),
-        metaData: FakeHelper.list(() => WooMetaData.fake()),
-      );
 
   /// Returns a string representation of the WooShippingLine instance.
   ///

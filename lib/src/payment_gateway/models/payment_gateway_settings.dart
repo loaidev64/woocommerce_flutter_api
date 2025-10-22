@@ -44,59 +44,6 @@ import 'package:woocommerce_flutter_api/woocommerce_flutter_api.dart';
 /// print('Type: ${setting.type}');
 /// ```
 class WooPaymentGatewaySetting {
-  /// Unique identifier for the setting
-  ///
-  /// This ID is used to reference the setting in API calls and configuration.
-  /// Common examples include 'api_key', 'api_secret', 'webhook_url', etc.
-  final String? id;
-
-  /// Human-readable label for the setting
-  ///
-  /// This is the display name shown to users in the payment gateway configuration
-  /// interface. It should be descriptive and user-friendly.
-  final String? label;
-
-  /// Detailed description of the setting
-  ///
-  /// Provides additional context about what the setting controls and how
-  /// it affects the payment gateway's behavior.
-  final String? description;
-
-  /// Type of setting input
-  ///
-  /// Determines the input method and validation rules:
-  /// - 'text': Single-line text input
-  /// - 'textarea': Multi-line text input
-  /// - 'select': Dropdown with predefined options
-  /// - 'checkbox': Boolean true/false values
-  /// - 'number': Numeric input with validation
-  /// - 'email': Email address input with validation
-  /// - 'url': URL input with validation
-  final String? type;
-
-  /// Current value of the setting
-  ///
-  /// The active configuration value for this setting. This is what the
-  /// payment gateway will use for its operation.
-  final String? value;
-
-  /// Default value for the setting
-  ///
-  /// The fallback value used when no custom value is set. This is typically
-  /// the value that comes with the payment gateway by default.
-  final String? defaultValue;
-
-  /// Additional help text for users
-  ///
-  /// Provides additional guidance or tips for users configuring
-  /// the setting in the admin interface.
-  final String? tip;
-
-  /// Placeholder text for input fields
-  ///
-  /// Shown as placeholder text in input fields to guide users
-  /// on what kind of input is expected.
-  final String? placeholder;
 
   /// Creates a new WooPaymentGatewaySetting instance
   ///
@@ -204,6 +151,110 @@ class WooPaymentGatewaySetting {
         placeholder: json['placeholder'],
       );
 
+  /// Creates a fake WooPaymentGatewaySetting instance for testing purposes
+  ///
+  /// This factory constructor generates a payment gateway setting with random but realistic
+  /// data, making it useful for testing, development, and demonstration purposes.
+  /// The generated setting will have valid data for all fields.
+  ///
+  /// ## Generated Data
+  ///
+  /// The fake payment gateway setting includes:
+  /// - Random ID from word generator
+  /// - Random label from word generator
+  /// - Random description from sentence generator
+  /// - Random type from available setting types
+  /// - Random value from word generator
+  /// - Random default value from word generator
+  /// - Random tip from sentence generator
+  /// - Random placeholder from word generator
+  ///
+  /// ## Returns
+  ///
+  /// A `WooPaymentGatewaySetting` instance with randomly generated fake data.
+  ///
+  /// ## Example Usage
+  ///
+  /// ```dart
+  /// // Generate a fake payment gateway setting for testing
+  /// final fakeSetting = WooPaymentGatewaySetting.fake();
+  /// print('Fake setting: ${fakeSetting.label}');
+  /// print('Type: ${fakeSetting.type}');
+  /// print('Value: ${fakeSetting.value}');
+  ///
+  /// // Use in tests
+  /// test('payment gateway setting creation', () {
+  ///   final setting = WooPaymentGatewaySetting.fake();
+  ///   expect(setting.id, isNotNull);
+  ///   expect(setting.label, isNotNull);
+  ///   expect(setting.type, isNotNull);
+  ///   expect(setting.value, isNotNull);
+  /// });
+  /// ```
+  factory WooPaymentGatewaySetting.fake() => WooPaymentGatewaySetting(
+        id: FakeHelper.word(),
+        label: FakeHelper.word(),
+        description: FakeHelper.sentence(),
+        type: FakeHelper.randomItem(['text', 'select', 'checkbox']),
+        value: FakeHelper.word(),
+        defaultValue: FakeHelper.word(),
+        tip: FakeHelper.sentence(),
+        placeholder: FakeHelper.word(),
+      );
+  /// Unique identifier for the setting
+  ///
+  /// This ID is used to reference the setting in API calls and configuration.
+  /// Common examples include 'api_key', 'api_secret', 'webhook_url', etc.
+  final String? id;
+
+  /// Human-readable label for the setting
+  ///
+  /// This is the display name shown to users in the payment gateway configuration
+  /// interface. It should be descriptive and user-friendly.
+  final String? label;
+
+  /// Detailed description of the setting
+  ///
+  /// Provides additional context about what the setting controls and how
+  /// it affects the payment gateway's behavior.
+  final String? description;
+
+  /// Type of setting input
+  ///
+  /// Determines the input method and validation rules:
+  /// - 'text': Single-line text input
+  /// - 'textarea': Multi-line text input
+  /// - 'select': Dropdown with predefined options
+  /// - 'checkbox': Boolean true/false values
+  /// - 'number': Numeric input with validation
+  /// - 'email': Email address input with validation
+  /// - 'url': URL input with validation
+  final String? type;
+
+  /// Current value of the setting
+  ///
+  /// The active configuration value for this setting. This is what the
+  /// payment gateway will use for its operation.
+  final String? value;
+
+  /// Default value for the setting
+  ///
+  /// The fallback value used when no custom value is set. This is typically
+  /// the value that comes with the payment gateway by default.
+  final String? defaultValue;
+
+  /// Additional help text for users
+  ///
+  /// Provides additional guidance or tips for users configuring
+  /// the setting in the admin interface.
+  final String? tip;
+
+  /// Placeholder text for input fields
+  ///
+  /// Shown as placeholder text in input fields to guide users
+  /// on what kind of input is expected.
+  final String? placeholder;
+
   /// Converts the WooPaymentGatewaySetting instance to JSON format
   ///
   /// This method serializes the payment gateway setting data into a Map that can be sent
@@ -257,55 +308,4 @@ class WooPaymentGatewaySetting {
         'tip': tip,
         'placeholder': placeholder,
       };
-
-  /// Creates a fake WooPaymentGatewaySetting instance for testing purposes
-  ///
-  /// This factory constructor generates a payment gateway setting with random but realistic
-  /// data, making it useful for testing, development, and demonstration purposes.
-  /// The generated setting will have valid data for all fields.
-  ///
-  /// ## Generated Data
-  ///
-  /// The fake payment gateway setting includes:
-  /// - Random ID from word generator
-  /// - Random label from word generator
-  /// - Random description from sentence generator
-  /// - Random type from available setting types
-  /// - Random value from word generator
-  /// - Random default value from word generator
-  /// - Random tip from sentence generator
-  /// - Random placeholder from word generator
-  ///
-  /// ## Returns
-  ///
-  /// A `WooPaymentGatewaySetting` instance with randomly generated fake data.
-  ///
-  /// ## Example Usage
-  ///
-  /// ```dart
-  /// // Generate a fake payment gateway setting for testing
-  /// final fakeSetting = WooPaymentGatewaySetting.fake();
-  /// print('Fake setting: ${fakeSetting.label}');
-  /// print('Type: ${fakeSetting.type}');
-  /// print('Value: ${fakeSetting.value}');
-  ///
-  /// // Use in tests
-  /// test('payment gateway setting creation', () {
-  ///   final setting = WooPaymentGatewaySetting.fake();
-  ///   expect(setting.id, isNotNull);
-  ///   expect(setting.label, isNotNull);
-  ///   expect(setting.type, isNotNull);
-  ///   expect(setting.value, isNotNull);
-  /// });
-  /// ```
-  factory WooPaymentGatewaySetting.fake() => WooPaymentGatewaySetting(
-        id: FakeHelper.word(),
-        label: FakeHelper.word(),
-        description: FakeHelper.sentence(),
-        type: FakeHelper.randomItem(['text', 'select', 'checkbox']),
-        value: FakeHelper.word(),
-        defaultValue: FakeHelper.word(),
-        tip: FakeHelper.sentence(),
-        placeholder: FakeHelper.word(),
-      );
 }

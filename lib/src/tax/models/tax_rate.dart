@@ -56,89 +56,6 @@ import 'package:woocommerce_flutter_api/woocommerce_flutter_api.dart';
 /// final taxRate = WooTaxRate.fromJson(jsonData);
 /// ```
 class WooTaxRate {
-  /// Unique identifier for the resource. Read-only.
-  ///
-  /// The system-generated ID for this tax rate. This field is read-only
-  /// and assigned by WooCommerce when the tax rate is created.
-  int? id;
-
-  /// Country ISO 3166 code.
-  ///
-  /// The two-letter country code (ISO 3166-1 alpha-2) that this tax rate
-  /// applies to. Use 'XX' for all countries.
-  String? country;
-
-  /// State code.
-  ///
-  /// The state or province code that this tax rate applies to.
-  /// Leave empty to apply to all states in the country.
-  String? state;
-
-  /// Postcode/ZIP. Deprecated as of WooCommerce 5.3.
-  ///
-  /// Single postal code that this tax rate applies to.
-  /// This field is deprecated in favor of the [postcodes] list.
-  String? postcode;
-
-  /// City name. Deprecated as of WooCommerce 5.3.
-  ///
-  /// Single city name that this tax rate applies to.
-  /// This field is deprecated in favor of the [cities] list.
-  String? city;
-
-  /// Postcodes/ZIPs. Introduced in WooCommerce 5.3.
-  ///
-  /// List of postal codes that this tax rate applies to.
-  /// This replaces the deprecated [postcode] field for better flexibility.
-  List<String>? postcodes;
-
-  /// City names. Introduced in WooCommerce 5.3.
-  ///
-  /// List of city names that this tax rate applies to.
-  /// This replaces the deprecated [city] field for better flexibility.
-  List<String>? cities;
-
-  /// Tax rate.
-  ///
-  /// The tax rate as a decimal number (e.g., '8.25' for 8.25%).
-  /// This is the percentage rate that will be applied to applicable items.
-  String? rate;
-
-  /// Tax rate name.
-  ///
-  /// A descriptive name for this tax rate (e.g., 'California Sales Tax').
-  /// This helps identify the tax rate in the admin interface.
-  String? name;
-
-  /// Tax priority. Default is 1.
-  ///
-  /// The priority of this tax rate when multiple rates could apply.
-  /// Lower numbers have higher priority. Default is 1.
-  int? priority;
-
-  /// Whether or not this is a compound tax rate. Default is false.
-  ///
-  /// When true, this tax rate is calculated on top of other tax rates.
-  /// Compound taxes are applied after non-compound taxes.
-  bool? compound;
-
-  /// Whether or not this tax rate also gets applied to shipping. Default is true.
-  ///
-  /// When true, this tax rate will be applied to shipping costs.
-  /// When false, shipping will be exempt from this tax rate.
-  bool? shipping;
-
-  /// Indicates the order that will appear in queries.
-  ///
-  /// The display order for this tax rate in admin interfaces.
-  /// Lower numbers appear first.
-  int? order;
-
-  /// Tax class. Default is standard.
-  ///
-  /// The tax class this rate applies to. Common values include
-  /// 'standard', 'reduced-rate', 'zero-rate', and custom tax classes.
-  String? taxClass;
 
   /// Creates a new WooTaxRate instance
   ///
@@ -228,6 +145,125 @@ class WooTaxRate {
         order = json['order'],
         taxClass = json['class'];
 
+  /// Creates a fake WooTaxRate instance for testing purposes
+  ///
+  /// This factory constructor generates a tax rate with random but realistic
+  /// data, making it useful for testing and development.
+  ///
+  /// ## Parameters
+  ///
+  /// * [id] - Optional specific ID to use for the fake tax rate
+  ///
+  /// ## Returns
+  ///
+  /// A `WooTaxRate` instance with randomly generated fake data.
+  ///
+  /// ## Example Usage
+  ///
+  /// ```dart
+  /// final fakeTaxRate = WooTaxRate.fake();
+  /// final fakeTaxRateWithId = WooTaxRate.fake(123);
+  /// ```
+  factory WooTaxRate.fake([int? id]) => WooTaxRate(
+        id: id ?? FakeHelper.integer(),
+        country: FakeHelper.countryCode(),
+        state: FakeHelper.state(),
+        postcode: FakeHelper.zipCode(),
+        city: FakeHelper.city(),
+        postcodes: FakeHelper.list(FakeHelper.zipCode),
+        cities: FakeHelper.list(FakeHelper.city),
+        rate: FakeHelper.decimal().toString(),
+        name: FakeHelper.word(),
+        priority: FakeHelper.integer(min: 1, max: 10),
+        compound: FakeHelper.boolean(),
+        shipping: FakeHelper.boolean(),
+        order: FakeHelper.integer(),
+        taxClass: FakeHelper.word(),
+      );
+  /// Unique identifier for the resource. Read-only.
+  ///
+  /// The system-generated ID for this tax rate. This field is read-only
+  /// and assigned by WooCommerce when the tax rate is created.
+  int? id;
+
+  /// Country ISO 3166 code.
+  ///
+  /// The two-letter country code (ISO 3166-1 alpha-2) that this tax rate
+  /// applies to. Use 'XX' for all countries.
+  String? country;
+
+  /// State code.
+  ///
+  /// The state or province code that this tax rate applies to.
+  /// Leave empty to apply to all states in the country.
+  String? state;
+
+  /// Postcode/ZIP. Deprecated as of WooCommerce 5.3.
+  ///
+  /// Single postal code that this tax rate applies to.
+  /// This field is deprecated in favor of the [postcodes] list.
+  String? postcode;
+
+  /// City name. Deprecated as of WooCommerce 5.3.
+  ///
+  /// Single city name that this tax rate applies to.
+  /// This field is deprecated in favor of the [cities] list.
+  String? city;
+
+  /// Postcodes/ZIPs. Introduced in WooCommerce 5.3.
+  ///
+  /// List of postal codes that this tax rate applies to.
+  /// This replaces the deprecated [postcode] field for better flexibility.
+  List<String>? postcodes;
+
+  /// City names. Introduced in WooCommerce 5.3.
+  ///
+  /// List of city names that this tax rate applies to.
+  /// This replaces the deprecated [city] field for better flexibility.
+  List<String>? cities;
+
+  /// Tax rate.
+  ///
+  /// The tax rate as a decimal number (e.g., '8.25' for 8.25%).
+  /// This is the percentage rate that will be applied to applicable items.
+  String? rate;
+
+  /// Tax rate name.
+  ///
+  /// A descriptive name for this tax rate (e.g., 'California Sales Tax').
+  /// This helps identify the tax rate in the admin interface.
+  String? name;
+
+  /// Tax priority. Default is 1.
+  ///
+  /// The priority of this tax rate when multiple rates could apply.
+  /// Lower numbers have higher priority. Default is 1.
+  int? priority;
+
+  /// Whether or not this is a compound tax rate. Default is false.
+  ///
+  /// When true, this tax rate is calculated on top of other tax rates.
+  /// Compound taxes are applied after non-compound taxes.
+  bool? compound;
+
+  /// Whether or not this tax rate also gets applied to shipping. Default is true.
+  ///
+  /// When true, this tax rate will be applied to shipping costs.
+  /// When false, shipping will be exempt from this tax rate.
+  bool? shipping;
+
+  /// Indicates the order that will appear in queries.
+  ///
+  /// The display order for this tax rate in admin interfaces.
+  /// Lower numbers appear first.
+  int? order;
+
+  /// Tax class. Default is standard.
+  ///
+  /// The tax class this rate applies to. Common values include
+  /// 'standard', 'reduced-rate', 'zero-rate', and custom tax classes.
+  String? taxClass;
+
   /// Converts the WooTaxRate instance to JSON format
   ///
   /// This method serializes the tax rate data into a Map that can be sent
@@ -315,40 +351,4 @@ class WooTaxRate {
       shipping.hashCode ^
       order.hashCode ^
       taxClass.hashCode;
-
-  /// Creates a fake WooTaxRate instance for testing purposes
-  ///
-  /// This factory constructor generates a tax rate with random but realistic
-  /// data, making it useful for testing and development.
-  ///
-  /// ## Parameters
-  ///
-  /// * [id] - Optional specific ID to use for the fake tax rate
-  ///
-  /// ## Returns
-  ///
-  /// A `WooTaxRate` instance with randomly generated fake data.
-  ///
-  /// ## Example Usage
-  ///
-  /// ```dart
-  /// final fakeTaxRate = WooTaxRate.fake();
-  /// final fakeTaxRateWithId = WooTaxRate.fake(123);
-  /// ```
-  factory WooTaxRate.fake([int? id]) => WooTaxRate(
-        id: id ?? FakeHelper.integer(),
-        country: FakeHelper.countryCode(),
-        state: FakeHelper.state(),
-        postcode: FakeHelper.zipCode(),
-        city: FakeHelper.city(),
-        postcodes: FakeHelper.list(FakeHelper.zipCode),
-        cities: FakeHelper.list(FakeHelper.city),
-        rate: FakeHelper.decimal().toString(),
-        name: FakeHelper.word(),
-        priority: FakeHelper.integer(min: 1, max: 10),
-        compound: FakeHelper.boolean(),
-        shipping: FakeHelper.boolean(),
-        order: FakeHelper.integer(),
-        taxClass: FakeHelper.word(),
-      );
 }

@@ -38,36 +38,6 @@ import 'package:woocommerce_flutter_api/src/helpers/fake_helper.dart';
 /// print('Has sub-groups: ${group.subGroups?.isNotEmpty ?? false}');
 /// ```
 class WooSettings {
-  /// A unique identifier that can be used to link settings together.
-  ///
-  /// This identifier is used to reference the settings group in API calls
-  /// and to organize related settings. Common values include 'general',
-  /// 'products', 'shipping', and 'payments'.
-  final String? id;
-
-  /// A human readable label for the setting used in interfaces.
-  ///
-  /// This is the display name shown to users in the WooCommerce admin
-  /// interface. It should be descriptive and user-friendly.
-  final String? label;
-
-  /// A human readable description for the setting used in interfaces.
-  ///
-  /// Provides additional context about what the settings group contains
-  /// and how it affects store functionality.
-  final String? description;
-
-  /// ID of parent grouping.
-  ///
-  /// Used to create hierarchical relationships between settings groups.
-  /// When set, this group becomes a sub-group of the parent.
-  final String? parentId;
-
-  /// IDs for settings sub groups.
-  ///
-  /// Contains a list of sub-group identifiers that belong to this
-  /// settings group, enabling nested organization of settings.
-  final List<String>? subGroups;
 
   /// Creates a new WooSettings instance
   ///
@@ -159,6 +129,79 @@ class WooSettings {
             ? List<String>.from(json['sub_groups'])
             : null;
 
+  /// Creates a fake WooSettings instance for testing purposes
+  ///
+  /// This factory constructor generates a settings group with random but realistic
+  /// data, making it useful for testing, development, and demonstration purposes.
+  /// The generated settings group will have valid data for all fields.
+  ///
+  /// ## Generated Data
+  ///
+  /// The fake settings group includes:
+  /// - Random ID from word generator
+  /// - Random label from sentence generator
+  /// - Random description from sentence generator
+  /// - Random parent ID from word generator
+  /// - Random list of sub-group IDs
+  ///
+  /// ## Returns
+  ///
+  /// A `WooSettings` instance with randomly generated fake data.
+  ///
+  /// ## Example Usage
+  ///
+  /// ```dart
+  /// // Generate a fake settings group for testing
+  /// final fakeGroup = WooSettings.fake();
+  /// print('Fake group: ${fakeGroup.label}');
+  /// print('ID: ${fakeGroup.id}');
+  ///
+  /// // Use in tests
+  /// test('settings group creation', () {
+  ///   final group = WooSettings.fake();
+  ///   expect(group.id, isNotNull);
+  ///   expect(group.label, isNotNull);
+  ///   expect(group.description, isNotNull);
+  /// });
+  /// ```
+  factory WooSettings.fake() => WooSettings(
+        id: FakeHelper.word(),
+        label: FakeHelper.sentence(),
+        description: FakeHelper.sentence(),
+        parentId: FakeHelper.word(),
+        subGroups: FakeHelper.list(() => FakeHelper.word()),
+      );
+  /// A unique identifier that can be used to link settings together.
+  ///
+  /// This identifier is used to reference the settings group in API calls
+  /// and to organize related settings. Common values include 'general',
+  /// 'products', 'shipping', and 'payments'.
+  final String? id;
+
+  /// A human readable label for the setting used in interfaces.
+  ///
+  /// This is the display name shown to users in the WooCommerce admin
+  /// interface. It should be descriptive and user-friendly.
+  final String? label;
+
+  /// A human readable description for the setting used in interfaces.
+  ///
+  /// Provides additional context about what the settings group contains
+  /// and how it affects store functionality.
+  final String? description;
+
+  /// ID of parent grouping.
+  ///
+  /// Used to create hierarchical relationships between settings groups.
+  /// When set, this group becomes a sub-group of the parent.
+  final String? parentId;
+
+  /// IDs for settings sub groups.
+  ///
+  /// Contains a list of sub-group identifiers that belong to this
+  /// settings group, enabling nested organization of settings.
+  final List<String>? subGroups;
+
   /// Converts the WooSettings instance to JSON format
   ///
   /// This method serializes the settings group data into a Map that can be sent
@@ -205,47 +248,4 @@ class WooSettings {
         'parent_id': parentId,
         'sub_groups': subGroups,
       };
-
-  /// Creates a fake WooSettings instance for testing purposes
-  ///
-  /// This factory constructor generates a settings group with random but realistic
-  /// data, making it useful for testing, development, and demonstration purposes.
-  /// The generated settings group will have valid data for all fields.
-  ///
-  /// ## Generated Data
-  ///
-  /// The fake settings group includes:
-  /// - Random ID from word generator
-  /// - Random label from sentence generator
-  /// - Random description from sentence generator
-  /// - Random parent ID from word generator
-  /// - Random list of sub-group IDs
-  ///
-  /// ## Returns
-  ///
-  /// A `WooSettings` instance with randomly generated fake data.
-  ///
-  /// ## Example Usage
-  ///
-  /// ```dart
-  /// // Generate a fake settings group for testing
-  /// final fakeGroup = WooSettings.fake();
-  /// print('Fake group: ${fakeGroup.label}');
-  /// print('ID: ${fakeGroup.id}');
-  ///
-  /// // Use in tests
-  /// test('settings group creation', () {
-  ///   final group = WooSettings.fake();
-  ///   expect(group.id, isNotNull);
-  ///   expect(group.label, isNotNull);
-  ///   expect(group.description, isNotNull);
-  /// });
-  /// ```
-  factory WooSettings.fake() => WooSettings(
-        id: FakeHelper.word(),
-        label: FakeHelper.sentence(),
-        description: FakeHelper.sentence(),
-        parentId: FakeHelper.word(),
-        subGroups: FakeHelper.list(() => FakeHelper.word()),
-      );
 }

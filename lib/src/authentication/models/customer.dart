@@ -1,6 +1,67 @@
 import 'package:woocommerce_flutter_api/woocommerce_flutter_api.dart';
 
 class WooCustomer {
+
+  WooCustomer({
+    this.id,
+    this.dateCreated,
+    this.dateCreatedGmt,
+    this.dateModified,
+    this.dateModifiedGmt,
+    this.email,
+    this.firstName,
+    this.lastName,
+    this.role,
+    this.username,
+    this.password,
+    this.billing,
+    this.shipping,
+    this.isPayingCustomer,
+    this.avatarUrl,
+    this.metaData,
+  });
+
+  WooCustomer.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    dateCreated = DateTime.tryParse(json['date_created']);
+    dateCreatedGmt = DateTime.tryParse(json['date_created_gmt']);
+    dateModified = DateTime.tryParse(json['date_modified']);
+    dateModifiedGmt = DateTime.tryParse(json['date_modified_gmt']);
+    email = json['email'];
+    firstName = json['first_name'];
+    lastName = json['last_name'];
+    role = json['role'];
+    username = json['username'];
+    billing =
+        json['billing'] != null ? WooBilling.fromJson(json['billing']) : null;
+    shipping = json['shipping'] != null
+        ? WooShipping.fromJson(json['shipping'])
+        : null;
+    isPayingCustomer = json['is_paying_customer'];
+    avatarUrl = json['avatar_url'];
+    metaData = (json['meta_data'] as List)
+        .map((i) => WooMetaData.fromJson(i))
+        .toList();
+  }
+
+  factory WooCustomer.fake([int? id]) => WooCustomer(
+        id: id ?? FakeHelper.integer(),
+        firstName: FakeHelper.firstName(),
+        lastName: FakeHelper.lastName(),
+        email: FakeHelper.email(),
+        password: FakeHelper.firstName(),
+        username: FakeHelper.firstName(),
+        avatarUrl: FakeHelper.image(),
+        billing: WooBilling.fake(),
+        dateCreated: FakeHelper.datetime(),
+        dateCreatedGmt: FakeHelper.datetime(),
+        dateModified: FakeHelper.datetime(),
+        dateModifiedGmt: FakeHelper.datetime(),
+        isPayingCustomer: FakeHelper.boolean(),
+        metaData: FakeHelper.list(() => WooMetaData.fake()),
+        role: 'customer',
+        shipping: WooShipping.fake(),
+      );
   /// Unique identifier for the resource.
   int? id;
 
@@ -49,48 +110,6 @@ class WooCustomer {
   /// Meta data.
   List<WooMetaData>? metaData;
 
-  WooCustomer({
-    this.id,
-    this.dateCreated,
-    this.dateCreatedGmt,
-    this.dateModified,
-    this.dateModifiedGmt,
-    this.email,
-    this.firstName,
-    this.lastName,
-    this.role,
-    this.username,
-    this.password,
-    this.billing,
-    this.shipping,
-    this.isPayingCustomer,
-    this.avatarUrl,
-    this.metaData,
-  });
-
-  WooCustomer.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    dateCreated = DateTime.tryParse(json['date_created']);
-    dateCreatedGmt = DateTime.tryParse(json['date_created_gmt']);
-    dateModified = DateTime.tryParse(json['date_modified']);
-    dateModifiedGmt = DateTime.tryParse(json['date_modified_gmt']);
-    email = json['email'];
-    firstName = json['first_name'];
-    lastName = json['last_name'];
-    role = json['role'];
-    username = json['username'];
-    billing =
-        json['billing'] != null ? WooBilling.fromJson(json['billing']) : null;
-    shipping = json['shipping'] != null
-        ? WooShipping.fromJson(json['shipping'])
-        : null;
-    isPayingCustomer = json['is_paying_customer'];
-    avatarUrl = json['avatar_url'];
-    metaData = (json['meta_data'] as List)
-        .map((i) => WooMetaData.fromJson(i))
-        .toList();
-  }
-
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['id'] = id;
@@ -123,7 +142,7 @@ class WooCustomer {
   }
 
   @override
-  toString() => toJson().toString();
+  String toString() => toJson().toString();
 
   @override
   bool operator ==(Object other) {
@@ -136,23 +155,4 @@ class WooCustomer {
   int get hashCode {
     return id.hashCode;
   }
-
-  factory WooCustomer.fake([int? id]) => WooCustomer(
-        id: id ?? FakeHelper.integer(),
-        firstName: FakeHelper.firstName(),
-        lastName: FakeHelper.lastName(),
-        email: FakeHelper.email(),
-        password: FakeHelper.firstName(),
-        username: FakeHelper.firstName(),
-        avatarUrl: FakeHelper.image(),
-        billing: WooBilling.fake(),
-        dateCreated: FakeHelper.datetime(),
-        dateCreatedGmt: FakeHelper.datetime(),
-        dateModified: FakeHelper.datetime(),
-        dateModifiedGmt: FakeHelper.datetime(),
-        isPayingCustomer: FakeHelper.boolean(),
-        metaData: FakeHelper.list(() => WooMetaData.fake()),
-        role: 'customer',
-        shipping: WooShipping.fake(),
-      );
 }

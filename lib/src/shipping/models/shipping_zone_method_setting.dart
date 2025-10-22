@@ -1,14 +1,6 @@
 import 'package:woocommerce_flutter_api/src/helpers/fake_helper.dart';
 
 class WooShippingZoneMethodSetting {
-  final String? id;
-  final String? label;
-  final String? description;
-  final String? type;
-  final String? value;
-  final String? defaultValue;
-  final String? tip;
-  final String? placeholder;
 
   WooShippingZoneMethodSetting({
     this.id,
@@ -33,17 +25,6 @@ class WooShippingZoneMethodSetting {
         placeholder: json['placeholder'],
       );
 
-  Map<String, dynamic> toJson() => {
-        'id': id,
-        'label': label,
-        'description': description,
-        'type': type,
-        'value': value,
-        'default': defaultValue,
-        'tip': tip,
-        'placeholder': placeholder,
-      };
-
   factory WooShippingZoneMethodSetting.fake() => WooShippingZoneMethodSetting(
         id: FakeHelper.word(),
         label: FakeHelper.sentence(),
@@ -54,4 +35,23 @@ class WooShippingZoneMethodSetting {
         tip: FakeHelper.sentence(),
         placeholder: FakeHelper.word(),
       );
+  final String? id;
+  final String? label;
+  final String? description;
+  final String? type;
+  final String? value;
+  final String? defaultValue;
+  final String? tip;
+  final String? placeholder;
+
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'label': label,
+        'description': description,
+        'type': type,
+        'value': value,
+        'default': defaultValue,
+        'tip': tip,
+        'placeholder': placeholder,
+      };
 }
