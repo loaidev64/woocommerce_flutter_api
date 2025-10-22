@@ -1,5 +1,8 @@
 import 'package:woocommerce_flutter_api/woocommerce_flutter_api.dart';
 
+/// Represents a product review with rating and metadata.
+///
+/// Brief description of the model's purpose and usage for product reviews.
 class WooProductReview {
   /// Unique identifier for the resource. Read-only.
   int? id;
@@ -31,6 +34,7 @@ class WooProductReview {
   /// Shows if the reviewer bought the product or not.
   bool? verified;
 
+  /// Creates a new WooProductReview instance.
   WooProductReview({
     this.id,
     this.dateCreated,
@@ -44,6 +48,7 @@ class WooProductReview {
     this.verified,
   });
 
+  /// Creates a WooProductReview instance from JSON data.
   WooProductReview.fromJson(Map<String, dynamic> json)
       : id = json['id'],
         dateCreated = DateTime.tryParse(json['date_created']),
@@ -56,6 +61,7 @@ class WooProductReview {
         rating = json['rating'],
         verified = json['verified'];
 
+  /// Converts the WooProductReview instance to JSON format.
   Map<String, dynamic> toJson() => {
         'id': id,
         'date_created': dateCreated?.toIso8601String(),
@@ -82,6 +88,7 @@ class WooProductReview {
   @override
   int get hashCode => id.hashCode;
 
+  /// Creates a fake WooProductReview instance for testing purposes.
   factory WooProductReview.fake([int? id]) => WooProductReview(
         id: id ?? FakeHelper.integer(),
         dateCreated: FakeHelper.datetime(),

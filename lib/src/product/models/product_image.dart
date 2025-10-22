@@ -1,5 +1,8 @@
 import 'package:woocommerce_flutter_api/src/helpers/fake_helper.dart';
 
+/// Represents a product image with metadata and URLs.
+///
+/// Brief description of the model's purpose and usage for product images.
 class WooProductImage {
   /// Image ID.
   final int? id;
@@ -25,9 +28,11 @@ class WooProductImage {
   /// Image alternative text.
   final String? alt;
 
+  /// Creates a new WooProductImage instance.
   WooProductImage(this.id, this.src, this.name, this.alt, this.dateCreated,
       this.dateCreatedGMT, this.dateModified, this.dateModifiedGMT);
 
+  /// Creates a WooProductImage instance from JSON data.
   WooProductImage.fromJson(Map<String, dynamic> json)
       : id = json['id'],
         // Note: Consider adding type checks or defaults if API might return null for non-nullable DateTime fields
@@ -66,6 +71,7 @@ class WooProductImage {
     return data;
   }
 
+  /// Creates a fake WooProductImage instance for testing purposes.
   factory WooProductImage.fake() => WooProductImage(
         FakeHelper.integer(),
         FakeHelper.image(),

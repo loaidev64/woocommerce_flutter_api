@@ -1,29 +1,32 @@
 import 'package:woocommerce_flutter_api/woocommerce_flutter_api.dart';
 
+/// Represents an order note in a WooCommerce order.
+///
+/// Contains note information, author details, and visibility settings for notes
+/// added to an order. Used for order communication and tracking.
 class WooOrderNote {
-  /// Unique identifier for the resource. Read-only.
+  /// Unique identifier for the order note.
   int? id;
 
-  /// Order note author. Read-only.
+  /// Author of the order note.
   String? author;
 
-  /// The date the order note was created, in the site's timezone. Read-only.
+  /// Date when the note was created (local time).
   DateTime? dateCreated;
 
-  /// The date the order note was created, as GMT. Read-only.
+  /// Date when the note was created (GMT).
   DateTime? dateCreatedGmt;
 
-  /// Order note content. Mandatory.
+  /// Content of the order note.
   String? note;
 
-  /// If true, the note will be shown to customers and they will be notified.
-  /// If false, the note will be for admin reference only. Default is false.
+  /// Whether the note is visible to customers.
   bool? customerNote;
 
-  /// If true, this note will be attributed to the current user.
-  /// If false, the note will be attributed to the system. Default is false.
+  /// Whether the note was added by a user.
   bool? addedByUser;
 
+  /// Creates a new WooOrderNote instance.
   WooOrderNote({
     this.id,
     this.author,
@@ -34,6 +37,7 @@ class WooOrderNote {
     this.addedByUser = false,
   });
 
+  /// Creates a WooOrderNote instance from JSON data.
   WooOrderNote.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     author = json['author'];
@@ -56,8 +60,13 @@ class WooOrderNote {
     return data;
   }
 
+  /// Returns a string representation of the WooOrderNote instance.
+  ///
+  /// Displays all main fields for debugging and logging purposes.
   @override
-  String toString() => toJson().toString();
+  String toString() {
+    return 'WooOrderNote(id: $id, author: $author, note: $note, customerNote: $customerNote)';
+  }
 
   @override
   bool operator ==(Object other) {

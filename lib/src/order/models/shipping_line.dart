@@ -2,28 +2,33 @@ import 'package:woocommerce_flutter_api/src/base/models/metadata.dart';
 import 'package:woocommerce_flutter_api/src/helpers/fake_helper.dart';
 import 'package:woocommerce_flutter_api/src/order/models/tax.dart';
 
+/// Represents a shipping line in a WooCommerce order.
+///
+/// Contains shipping method information, costs, and tax details for shipping
+/// methods used in an order. Used for shipping cost tracking and order processing.
 class WooShippingLine {
-  /// Item ID.
+  /// Unique identifier for the shipping line.
   int? id;
 
-  /// Shipping method name.
+  /// Shipping method display name.
   String? methodTitle;
 
-  /// Shipping method ID.
+  /// Shipping method identifier.
   String? methodId;
 
-  /// Line total (after discounts).
+  /// Line total after discounts.
   double? total;
 
-  /// Line total tax (after discounts).
+  /// Line total tax after discounts.
   double? totalTax;
 
-  /// Line taxes.
+  /// Tax details for the shipping line.
   List<WooTax>? taxes;
 
-  /// Meta data.
+  /// Custom metadata for the shipping line.
   List<WooMetaData>? metaData;
 
+  /// Creates a new WooShippingLine instance.
   WooShippingLine(
       {this.id,
       this.methodTitle,
@@ -33,6 +38,7 @@ class WooShippingLine {
       this.taxes,
       this.metaData});
 
+  /// Creates a WooShippingLine instance from JSON data.
   WooShippingLine.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     methodTitle = json['method_title'];
@@ -71,4 +77,12 @@ class WooShippingLine {
         taxes: FakeHelper.list(() => WooTax.fake()),
         metaData: FakeHelper.list(() => WooMetaData.fake()),
       );
+
+  /// Returns a string representation of the WooShippingLine instance.
+  ///
+  /// Displays all main fields for debugging and logging purposes.
+  @override
+  String toString() {
+    return 'WooShippingLine(id: $id, methodTitle: $methodTitle, methodId: $methodId, total: $total)';
+  }
 }

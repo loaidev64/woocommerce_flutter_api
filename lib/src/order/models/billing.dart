@@ -1,40 +1,45 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:woocommerce_flutter_api/woocommerce_flutter_api.dart';
 
+/// Represents billing address information for a WooCommerce order.
+///
+/// Contains customer billing details including name, address, contact information,
+/// and company details. Used for order processing and customer communication.
 class WooBilling {
-  /// First name.
+  /// Customer's first name.
   String? firstName;
 
-  /// Last name.
+  /// Customer's last name.
   String? lastName;
 
-  /// Company name.
+  /// Company name (optional).
   String? company;
 
-  /// Address line 1
+  /// Primary address line.
   String? address1;
 
-  /// Address line 2
+  /// Secondary address line (apartment, suite, etc.).
   String? address2;
 
   /// City name.
   String? city;
 
-  /// ISO code or name of the state, province or district.
+  /// State, province, or district code/name.
   String? state;
 
-  /// Postal code.
+  /// Postal or ZIP code.
   String? postcode;
 
   /// Country code in ISO 3166-1 alpha-2 format.
   String? country;
 
-  /// Email address.
+  /// Customer's email address.
   String? email;
 
-  /// Phone number.
+  /// Customer's phone number.
   String? phone;
 
+  /// Creates a new WooBilling instance.
   WooBilling(
       {this.firstName,
       this.lastName,
@@ -48,6 +53,7 @@ class WooBilling {
       this.email,
       this.phone});
 
+  /// Creates a WooBilling instance from JSON data.
   WooBilling.fromJson(Map<String, dynamic> json) {
     firstName = json['first_name'];
     lastName = json['last_name'];
@@ -92,8 +98,11 @@ class WooBilling {
         postcode: FakeHelper.zipCode(),
       );
 
+  /// Returns a string representation of the WooBilling instance.
+  ///
+  /// Displays all main fields for debugging and logging purposes.
   @override
   String toString() {
-    return toJson().toString();
+    return 'WooBilling(firstName: $firstName, lastName: $lastName, email: $email, phone: $phone)';
   }
 }

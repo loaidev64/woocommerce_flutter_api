@@ -1,5 +1,8 @@
 import 'package:woocommerce_flutter_api/woocommerce_flutter_api.dart';
 
+/// Represents a top sellers report with basic information.
+///
+/// Brief description of the model's purpose and usage.
 class WooTopSellersReport {
   /// Product title.
   String? title;
@@ -10,12 +13,14 @@ class WooTopSellersReport {
   /// Total number of purchases.
   int? quantity;
 
+  /// Creates a new WooTopSellersReport instance.
   WooTopSellersReport({
     this.title,
     this.productId,
     this.quantity,
   });
 
+  /// Creates a WooTopSellersReport instance from JSON data.
   WooTopSellersReport.fromJson(Map<String, dynamic> json)
       : title = json['title'],
         productId = json['product_id'],
@@ -27,6 +32,9 @@ class WooTopSellersReport {
         'quantity': quantity,
       };
 
+  /// Returns a string representation of the WooTopSellersReport instance.
+  ///
+  /// Displays all main fields for debugging and logging purposes.
   @override
   String toString() => _toJson().toString();
 

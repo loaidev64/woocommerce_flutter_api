@@ -3,36 +3,89 @@ import 'package:woocommerce_flutter_api/woocommerce_flutter_api.dart';
 
 part 'endpoints.dart';
 
+/// WooCommerce Coupon API Extension
+///
+/// This extension provides comprehensive coupon management capabilities for WooCommerce stores.
+/// It allows you to create, read, update, and delete coupons, as well as retrieve coupon lists
+/// with extensive filtering and pagination options.
+///
+/// ## Key Features
+///
+/// - **Coupon Management**: Create, read, update, and delete coupons
+/// - **Advanced Filtering**: Filter coupons by date, status, code, and more
+/// - **Pagination Support**: Efficiently handle large coupon collections
+/// - **Search Capabilities**: Find coupons by code or other criteria
+/// - **Bulk Operations**: Handle multiple coupons efficiently
+///
+/// ## Example Usage
+///
+/// ```dart
+/// // Get all coupons
+/// final coupons = await wooCommerce.getCoupons();
+///
+/// // Create a new coupon
+/// final coupon = WooCoupon(
+///   code: 'SAVE20',
+///   discountType: WooCouponDiscountType.percent,
+///   amount: '20',
+/// );
+/// final created = await wooCommerce.createCoupon(coupon);
+/// ```
 extension WooCouponApi on WooCommerce {
-  /// [context]	Scope under which the request is made; determines fields present in response. Options: view and edit. Default is view.
+  /// Retrieves a list of coupons from the WooCommerce store.
   ///
-  /// [page] integer	Current page of the collection. Default is 1.
+  /// This method supports extensive filtering and pagination options to help you
+  /// find exactly the coupons you need.
+  /// https://woocommerce.github.io/woocommerce-rest-api-docs/#list-all-coupons
   ///
-  /// [perPage] integer	Maximum number of items to be returned in result set. Default is 10.
+  /// ## Parameters
   ///
-  /// [search] Limit results to those matching a string.
+  /// * [context] - Scope under which the request is made; determines fields present in response.
+  ///   - `WooContext.view`: Returns basic coupon information (default)
+  ///   - `WooContext.edit`: Returns full coupon details including sensitive data
   ///
-  /// [after] Limit response to resources published after a given ISO8601 compliant date.
+  /// * [page] - Current page of the collection (default: 1)
+  /// * [perPage] - Maximum number of items to return (default: 10, max: 100)
+  /// * [search] - Limit results to coupons matching a search string
+  /// * [after] - Limit response to coupons published after a given ISO8601 compliant date
+  /// * [before] - Limit response to coupons published before a given ISO8601 compliant date
+  /// * [modifiedAfter] - Limit response to coupons modified after a given ISO8601 compliant date
+  /// * [modifiedBefore] - Limit response to coupons modified before a given ISO8601 compliant date
+  /// * [datesAreGmt] - Whether to consider GMT post dates when limiting response by published or modified date
+  /// * [exclude] - Ensure result set excludes specific coupon IDs
+  /// * [include] - Limit result set to specific coupon IDs
+  /// * [offset] - Offset the result set by a specific number of items
+  /// * [order] - Order sort attribute ascending or descending (default: desc)
+  /// * [orderby] - Sort collection by object attribute (default: date)
+  /// * [code] - Limit result set to coupons with a specific code
+  /// * [useFaker] - When true, returns fake data for testing purposes
   ///
-  /// [before] Limit response to resources published before a given ISO8601 compliant date.
+  /// ## Returns
   ///
-  /// [modifiedAfter] Limit response to resources modified after a given ISO8601 compliant date.
+  /// A `Future<List<WooCoupon>>` containing the coupon objects.
   ///
-  /// [modifiedBefore] Limit response to resources modified after a given ISO8601 compliant date.
+  /// ## Throws
   ///
-  /// [datesAreGmt] Whether to consider GMT post dates when limiting response by published or modified date.
+  /// * `WooCommerceException` if the request fails or access is denied
   ///
-  /// [exclude] Ensure result set excludes specific IDs.
+  /// ## Example Usage
   ///
-  /// [include] Limit result set to specific ids.
+  /// ```dart
+  /// // Get all coupons
+  /// final coupons = await wooCommerce.getCoupons();
   ///
-  /// [offset] Offset the result set by a specific number of items.
+  /// // Search for coupons with specific code
+  /// final searchResults = await wooCommerce.getCoupons(
+  ///   search: 'SAVE20',
+  ///   perPage: 20,
+  /// );
   ///
-  /// [order] Order sort attribute ascending or descending. Options: asc and desc. Default is desc.
-  ///
-  /// [orderby] Sort collection by object attribute. Options: date, modified, id, include, title and slug. Default is date.
-  ///
-  /// [code] Limit result set to resources with a specific code.
+  /// // Get coupons created after a specific date
+  /// final recentCoupons = await wooCommerce.getCoupons(
+  ///   after: DateTime(2024, 1, 1),
+  ///   order: WooSortOrder.desc,
+  /// );
+  /// ```
   Future<List<WooCoupon>> getCoupons({
     WooContext context = WooContext.view,
     int page = 1,
@@ -83,6 +136,18 @@ extension WooCouponApi on WooCommerce {
         .toList();
   }
 
+  /// Resolves query parameters for the getCoupons method.
+  ///
+  /// This private helper method converts the method parameters into the appropriate
+  /// query parameters format expected by the WooCommerce REST API.
+  ///
+  /// ## Parameters
+  ///
+  /// All parameters correspond to the getCoupons method parameters.
+  ///
+  /// ## Returns
+  ///
+  /// A `Map<String, dynamic>` containing the formatted query parameters.
   Map<String, dynamic> _resolveQueryParametersForGettingCoupons({
     required WooContext context,
     required int page,
@@ -151,6 +216,36 @@ extension WooCouponApi on WooCommerce {
     return map;
   }
 
+  /// Retrieves a single coupon by its ID from the WooCommerce store.
+  ///
+  /// This method fetches detailed information about a specific coupon,
+  /// including all its properties and settings.
+  /// https://woocommerce.github.io/woocommerce-rest-api-docs/#retrieve-a-coupon
+  ///
+  /// ## Parameters
+  ///
+  /// * [id] - The unique identifier of the coupon to retrieve
+  /// * [useFaker] - When true, returns fake data for testing purposes
+  ///
+  /// ## Returns
+  ///
+  /// A `Future<WooCoupon>` containing the coupon object.
+  ///
+  /// ## Throws
+  ///
+  /// * `WooCommerceException` if the coupon is not found or access is denied
+  ///
+  /// ## Example Usage
+  ///
+  /// ```dart
+  /// // Get a specific coupon
+  /// final coupon = await wooCommerce.getCoupon(123);
+  ///
+  /// // Check coupon details
+  /// if (coupon.isActive) {
+  ///   print('Coupon ${coupon.code} is active');
+  /// }
+  /// ```
   Future<WooCoupon> getCoupon(int id, {bool? useFaker}) async {
     final isUsingFaker = useFaker ?? this.useFaker;
 
@@ -165,6 +260,45 @@ extension WooCouponApi on WooCommerce {
     return WooCoupon.fromJson(response.data as Map<String, dynamic>);
   }
 
+  /// Creates a new coupon in the WooCommerce store.
+  ///
+  /// This method creates a new coupon with the specified properties and settings.
+  /// The coupon will be immediately available for use in the store.
+  /// https://woocommerce.github.io/woocommerce-rest-api-docs/#create-a-coupon
+  ///
+  /// ## Parameters
+  ///
+  /// * [coupon] - The coupon object containing all the coupon details
+  /// * [useFaker] - When true, returns fake data for testing purposes
+  ///
+  /// ## Returns
+  ///
+  /// A `Future<WooCoupon>` containing the created coupon object with server-assigned ID.
+  ///
+  /// ## Throws
+  ///
+  /// * `WooCommerceException` if the coupon creation fails or validation errors occur
+  ///
+  /// ## Example Usage
+  ///
+  /// ```dart
+  /// // Create a percentage discount coupon
+  /// final coupon = WooCoupon(
+  ///   code: 'SAVE20',
+  ///   discountType: WooCouponDiscountType.percent,
+  ///   amount: '20',
+  ///   description: '20% off your order',
+  /// );
+  /// final created = await wooCommerce.createCoupon(coupon);
+  ///
+  /// // Create a fixed amount discount coupon
+  /// final fixedCoupon = WooCoupon(
+  ///   code: 'FIXED10',
+  ///   discountType: WooCouponDiscountType.fixedCart,
+  ///   amount: '10.00',
+  /// );
+  /// final createdFixed = await wooCommerce.createCoupon(fixedCoupon);
+  /// ```
   Future<WooCoupon> createCoupon(WooCoupon coupon, {bool? useFaker}) async {
     final isUsingFaker = useFaker ?? this.useFaker;
 
@@ -180,6 +314,42 @@ extension WooCouponApi on WooCommerce {
     return WooCoupon.fromJson(response.data as Map<String, dynamic>);
   }
 
+  /// Updates an existing coupon in the WooCommerce store.
+  ///
+  /// This method updates the properties and settings of an existing coupon.
+  /// The coupon must have a valid ID to be updated.
+  /// https://woocommerce.github.io/woocommerce-rest-api-docs/#update-a-coupon
+  ///
+  /// ## Parameters
+  ///
+  /// * [coupon] - The coupon object with updated properties (must include valid ID)
+  /// * [useFaker] - When true, returns fake data for testing purposes
+  ///
+  /// ## Returns
+  ///
+  /// A `Future<WooCoupon>` containing the updated coupon object.
+  ///
+  /// ## Throws
+  ///
+  /// * `WooCommerceException` if the coupon update fails, coupon not found, or validation errors occur
+  ///
+  /// ## Example Usage
+  ///
+  /// ```dart
+  /// // Update an existing coupon
+  /// final existingCoupon = await wooCommerce.getCoupon(123);
+  /// final updatedCoupon = existingCoupon.copyWith(
+  ///   amount: '25', // Change discount from 20% to 25%
+  ///   description: 'Updated 25% off your order',
+  /// );
+  /// final result = await wooCommerce.updateCoupon(updatedCoupon);
+  ///
+  /// // Update coupon status
+  /// final deactivatedCoupon = existingCoupon.copyWith(
+  ///   status: WooCouponStatus.draft,
+  /// );
+  /// await wooCommerce.updateCoupon(deactivatedCoupon);
+  /// ```
   Future<WooCoupon> updateCoupon(WooCoupon coupon, {bool? useFaker}) async {
     final isUsingFaker = useFaker ?? this.useFaker;
 
@@ -195,7 +365,42 @@ extension WooCouponApi on WooCommerce {
     return WooCoupon.fromJson(response.data as Map<String, dynamic>);
   }
 
-  /// [force] Use true whether to permanently delete the order, Default is false.
+  /// Deletes a coupon from the WooCommerce store.
+  ///
+  /// This method removes a coupon from the store. By default, the coupon is moved to trash,
+  /// but it can be permanently deleted using the force parameter.
+  /// https://woocommerce.github.io/woocommerce-rest-api-docs/#delete-a-coupon
+  ///
+  /// ## Parameters
+  ///
+  /// * [id] - The unique identifier of the coupon to delete
+  /// * [useFaker] - When true, returns fake data for testing purposes
+  /// * [force] - Whether to permanently delete the coupon (default: false, moves to trash)
+  ///
+  /// ## Returns
+  ///
+  /// A `Future<bool>` indicating whether the deletion was successful.
+  ///
+  /// ## Throws
+  ///
+  /// * `WooCommerceException` if the coupon deletion fails or coupon not found
+  ///
+  /// ## Example Usage
+  ///
+  /// ```dart
+  /// // Move coupon to trash (can be restored)
+  /// final success = await wooCommerce.deleteCoupon(123);
+  ///
+  /// // Permanently delete coupon
+  /// final permanentDelete = await wooCommerce.deleteCoupon(
+  ///   123,
+  ///   force: true,
+  /// );
+  ///
+  /// if (success) {
+  ///   print('Coupon deleted successfully');
+  /// }
+  /// ```
   Future<bool> deleteCoupon(
     int id, {
     bool? useFaker,

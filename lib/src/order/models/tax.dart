@@ -1,31 +1,36 @@
 import 'package:woocommerce_flutter_api/src/base/models/metadata.dart';
 import 'package:woocommerce_flutter_api/src/helpers/fake_helper.dart';
 
+/// Represents tax information for a WooCommerce order.
+///
+/// Contains tax rate details, calculations, and amounts for taxes applied
+/// to order items. Used for tax tracking and order processing.
 class WooTax {
-  /// Item ID.
+  /// Unique identifier for the tax item.
   final int? id;
 
   /// Tax rate code.
   final String? rateCode;
 
-  /// Tax rate ID.
+  /// Tax rate identifier.
   final String? rateId;
 
-  /// Tax rate label.
+  /// Tax rate display label.
   final String? label;
 
-  /// Show if is a compound tax rate.
+  /// Whether this is a compound tax rate.
   final bool? compound;
 
-  /// Tax total (not including shipping taxes).
+  /// Tax total excluding shipping taxes.
   final double? taxTotal;
 
   /// Shipping tax total.
   final double? shippingTaxTotal;
 
-  /// Meta data.
+  /// Custom metadata for the tax item.
   final List<WooMetaData>? metaData;
 
+  /// Creates a new WooTax instance.
   WooTax({
     this.id,
     this.rateCode,
@@ -37,6 +42,7 @@ class WooTax {
     this.metaData,
   });
 
+  /// Creates a WooTax instance from JSON data.
   factory WooTax.fromJson(Map<String, dynamic> json) => WooTax(
         id: json['id'],
         rateCode: json['rate_code'],
@@ -75,4 +81,12 @@ class WooTax {
         shippingTaxTotal: FakeHelper.decimal(),
         metaData: FakeHelper.list(() => WooMetaData.fake()),
       );
+
+  /// Returns a string representation of the WooTax instance.
+  ///
+  /// Displays all main fields for debugging and logging purposes.
+  @override
+  String toString() {
+    return 'WooTax(id: $id, rateCode: $rateCode, label: $label, taxTotal: $taxTotal)';
+  }
 }

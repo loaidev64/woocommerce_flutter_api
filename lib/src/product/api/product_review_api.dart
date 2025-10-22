@@ -2,40 +2,110 @@ import 'package:woocommerce_flutter_api/woocommerce_flutter_api.dart';
 
 part 'product_review_endpoints.dart';
 
+/// WooCommerce Product Review API Extension
+///
+/// This extension provides comprehensive product review management capabilities for WooCommerce stores.
+/// Product reviews allow customers to share their experiences with products, helping other customers
+/// make informed purchasing decisions and providing valuable feedback to store owners.
+///
+/// ## Product Review Overview
+///
+/// Product reviews are customer-generated content that includes ratings, comments, and feedback
+/// about products. They help build trust, improve SEO, and provide social proof for your products.
+///
+/// ## Key Features
+///
+/// - **Review Retrieval**: Get product reviews with extensive filtering and pagination
+/// - **Review Management**: Create, update, and delete product reviews
+/// - **Status Control**: Manage review approval and moderation
+/// - **Advanced Filtering**: Filter by product, reviewer, status, and date
+/// - **Rating System**: Support for star ratings and review scoring
+///
+/// ## Review Lifecycle
+///
+/// 1. **Submission**: Customer submits review with rating and comment
+/// 2. **Moderation**: Review is held for approval (if moderation is enabled)
+/// 3. **Approval**: Review is approved and becomes visible to customers
+/// 4. **Display**: Review appears on product pages and in listings
+///
+/// ## Example Usage
+///
+/// ```dart
+/// // Get all approved reviews
+/// final reviews = await wooCommerce.getProductReviews();
+///
+/// // Get reviews for a specific product
+/// final productReviews = await wooCommerce.getProductReviews(
+///   product: [123],
+///   status: WooProductReviewStatus.approved,
+/// );
+///
+/// // Get pending reviews for moderation
+/// final pendingReviews = await wooCommerce.getProductReviews(
+///   status: WooProductReviewStatus.hold,
+/// );
+/// ```
 extension WooProductReviewApi on WooCommerce {
-  /// [context] Scope under which the request is made; determines fields present in response. Options: view and edit. Default is view.
+  /// Retrieves a list of product reviews from the WooCommerce store.
   ///
-  /// [page] Current page of the collection. Default is 1.
+  /// This method supports extensive filtering and pagination options to help you
+  /// find exactly the reviews you need for moderation, display, or analysis.
+  /// https://woocommerce.github.io/woocommerce-rest-api-docs/#list-all-product-reviews
   ///
-  /// [perPage] Maximum number of items to be returned in result set. Default is 10.
+  /// ## Parameters
   ///
-  /// [search] Limit results to those matching a string.
+  /// * [context] - Scope under which the request is made; determines fields present in response.
+  ///   - `WooContext.view`: Returns basic review information (default)
+  ///   - `WooContext.edit`: Returns full review details including sensitive data
   ///
-  /// [after] Limit response to reviews published after a given ISO8601 compliant date.
+  /// * [page] - Current page of the collection (default: 1)
+  /// * [perPage] - Maximum number of items to return (default: 10, max: 100)
+  /// * [search] - Limit results to reviews matching a search string
+  /// * [after] - Limit response to reviews published after this date
+  /// * [before] - Limit response to reviews published before this date
+  /// * [exclude] - Exclude reviews with specific IDs from results
+  /// * [include] - Only include reviews with specific IDs
+  /// * [offset] - Offset the result set by a specific number of items
+  /// * [order] - Sort order: `WooSortOrder.asc` or `WooSortOrder.desc` (default: desc)
+  /// * [orderBy] - Sort by: `WooSortProductReview.date`, `WooSortProductReview.id`, etc. (default: dateGmt)
+  /// * [reviewer] - Filter by reviewer user IDs
+  /// * [reviewerExclude] - Exclude reviews from specific reviewer IDs
+  /// * [reviewerEmail] - Filter by reviewer email addresses
+  /// * [product] - Filter by product IDs
+  /// * [status] - Filter by review status (default: approved)
+  /// * [useFaker] - When true, returns fake data for testing purposes
   ///
-  /// [before] Limit response to reviews published before a given ISO8601 compliant date.
+  /// ## Returns
   ///
-  /// [exclude] Ensure result set excludes specific IDs.
+  /// A `Future<List<WooProductReview>>` containing the review objects.
   ///
-  /// [include] Limit result set to specific IDs.
+  /// ## Throws
   ///
-  /// [offset] Offset the result set by a specific number of items.
+  /// * `WooCommerceException` if the request fails or access is denied
   ///
-  /// [order] Order sort attribute ascending or descending. Options: asc and desc. Default is desc.
+  /// ## Example Usage
   ///
-  /// [orderBy] Sort collection by resource attribute. Options: date, date_gmt, id, slug, include, and product. Default is date_gmt.
+  /// ```dart
+  /// // Get all approved reviews
+  /// final reviews = await wooCommerce.getProductReviews();
   ///
-  /// [reviewer] Limit result set to reviews assigned to specific user IDs.
+  /// // Get reviews for a specific product
+  /// final productReviews = await wooCommerce.getProductReviews(
+  ///   product: [123],
+  ///   status: WooProductReviewStatus.approved,
+  /// );
   ///
-  /// [reviewerExclude] Ensure result set excludes reviews assigned to specific user IDs.
+  /// // Get pending reviews for moderation
+  /// final pendingReviews = await wooCommerce.getProductReviews(
+  ///   status: WooProductReviewStatus.hold,
+  /// );
   ///
-  /// [reviewerEmail] Limit result set to that from a specific author email.
-  ///
-  /// [product] Limit result set to reviews assigned to specific product IDs.
-  ///
-  /// [status] Limit result set to reviews assigned a specific status. Options: all, hold, approved, spam, and trash. Default is approved.
-  ///
-  /// [useFaker] If true, returns fake data instead of making an API request.
+  /// // Search reviews by content
+  /// final searchResults = await wooCommerce.getProductReviews(
+  ///   search: 'excellent',
+  ///   perPage: 20,
+  /// );
+  /// ```
   Future<List<WooProductReview>> getProductReviews({
     WooContext context = WooContext.view,
     int page = 1,

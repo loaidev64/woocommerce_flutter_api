@@ -5,10 +5,40 @@ import 'package:woocommerce_flutter_api/woocommerce_flutter_api.dart';
 
 part 'product_endpoints.dart';
 
-/// Extension providing product-related API methods for WooCommerce.
+/// WooCommerce Product API Extension
 ///
-/// This extension adds methods to interact with WooCommerce products,
-/// including fetching, creating, updating, and deleting products.
+/// This extension provides comprehensive product management capabilities for WooCommerce stores.
+/// Products are the core entities in any e-commerce store, representing items that customers can purchase.
+///
+/// ## Key Features
+///
+/// - **Product Retrieval**: Get products with extensive filtering and pagination
+/// - **Product Management**: Create, update, and delete products
+/// - **Product Variations**: Handle variable products with multiple options
+/// - **Product Relationships**: Manage related, upsell, and cross-sell products
+/// - **Advanced Filtering**: Filter by category, tag, price, stock status, and more
+/// - **Bulk Operations**: Duplicate products and manage product hierarchies
+///
+/// ## Example Usage
+///
+/// ```dart
+/// // Get all products
+/// final products = await wooCommerce.getProducts();
+///
+/// // Create a new product
+/// final product = WooProduct(
+///   name: 'New Product',
+///   type: WooProductType.simple,
+///   price: 29.99,
+/// );
+/// final createdProduct = await wooCommerce.createProduct(product);
+///
+/// // Get products with filtering
+/// final featuredProducts = await wooCommerce.getProducts(
+///   featured: true,
+///   status: WooFilterStatus.publish,
+/// );
+/// ```
 extension WooProductApi on WooCommerce {
   /// Retrieves a list of products from the WooCommerce store.
   ///

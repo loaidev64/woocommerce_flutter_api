@@ -3,31 +3,36 @@ import 'package:woocommerce_flutter_api/src/helpers/fake_helper.dart';
 import 'package:woocommerce_flutter_api/src/order/enums/order_tax_status.dart';
 import 'package:woocommerce_flutter_api/src/order/models/fee_line_tax.dart';
 
+/// Represents a fee line in a WooCommerce order.
+///
+/// Contains fee information, amounts, and tax details for additional fees
+/// applied to an order. Used for fee tracking and order processing.
 class WooOrderFeeLine {
-  /// Item ID.
+  /// Unique identifier for the fee line.
   int? id;
 
-  /// Fee name.
+  /// Fee name or description.
   String? name;
 
-  /// Tax class of fee.
+  /// Tax class for the fee.
   String? taxClass;
 
-  /// Tax status of fee. Options: taxable and none.
+  /// Tax status of the fee (taxable or none).
   WooOrderTaxStatus? taxStatus;
 
-  /// Line total (after discounts).
+  /// Line total after discounts.
   double? total;
 
-  /// Line total tax (after discounts).
+  /// Line total tax after discounts.
   double? totalTax;
 
-  /// Line taxes.
+  /// Tax details for the fee line.
   List<WooFeeLineTax> taxes;
 
-  /// Meta data.
+  /// Custom metadata for the fee line.
   List<WooMetaData> metaData;
 
+  /// Creates a new WooOrderFeeLine instance.
   WooOrderFeeLine({
     this.id,
     this.name,
@@ -39,6 +44,7 @@ class WooOrderFeeLine {
     this.metaData = const [],
   });
 
+  /// Creates a WooOrderFeeLine instance from JSON data.
   WooOrderFeeLine.fromJson(Map<String, dynamic> json)
       : id = json['id'],
         name = json['name'],
@@ -76,4 +82,12 @@ class WooOrderFeeLine {
         taxes: FakeHelper.list(() => WooFeeLineTax.fake()),
         metaData: FakeHelper.list(() => WooMetaData.fake()),
       );
+
+  /// Returns a string representation of the WooOrderFeeLine instance.
+  ///
+  /// Displays all main fields for debugging and logging purposes.
+  @override
+  String toString() {
+    return 'WooOrderFeeLine(id: $id, name: $name, total: $total, totalTax: $totalTax)';
+  }
 }

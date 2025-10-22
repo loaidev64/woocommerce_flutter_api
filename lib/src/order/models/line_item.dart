@@ -2,8 +2,12 @@ import 'package:woocommerce_flutter_api/src/base/models/metadata.dart';
 import 'package:woocommerce_flutter_api/src/helpers/fake_helper.dart';
 import 'package:woocommerce_flutter_api/src/order/models/tax.dart';
 
+/// Represents a line item in a WooCommerce order.
+///
+/// Contains product information, quantities, pricing, and tax details for items
+/// in an order. Used for order processing and inventory management.
 class WooLineItem {
-  /// Item ID.
+  /// Unique identifier for the line item.
   int? id;
 
   /// Product name.
@@ -18,33 +22,34 @@ class WooLineItem {
   /// Quantity ordered.
   int? quantity;
 
-  /// Slug of the tax class of product.
+  /// Tax class slug for the product.
   String? taxClass;
 
-  /// Line subtotal (before discounts).
+  /// Line subtotal before discounts.
   double? subtotal;
 
-  /// Line subtotal tax (before discounts).
+  /// Line subtotal tax before discounts.
   double? subtotalTax;
 
-  /// Line total (after discounts).
+  /// Line total after discounts.
   double? total;
 
-  /// Line total tax (after discounts).
+  /// Line total tax after discounts.
   double? totalTax;
 
-  /// Line taxes.
+  /// Tax details for the line item.
   List<WooTax>? taxes;
 
-  /// Meta data.
+  /// Custom metadata for the line item.
   List<WooMetaData>? metaData;
 
   /// Product SKU.
   String? sku;
 
-  /// Product price.
+  /// Product unit price.
   double? price;
 
+  /// Creates a new WooLineItem instance.
   WooLineItem({
     this.id,
     this.name,
@@ -62,6 +67,7 @@ class WooLineItem {
     this.price,
   });
 
+  /// Creates a WooLineItem instance from JSON data.
   WooLineItem.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     name = json['name'];
@@ -104,8 +110,13 @@ class WooLineItem {
     return data;
   }
 
+  /// Returns a string representation of the WooLineItem instance.
+  ///
+  /// Displays all main fields for debugging and logging purposes.
   @override
-  toString() => toJson().toString();
+  String toString() {
+    return 'WooLineItem(id: $id, name: $name, productId: $productId, quantity: $quantity, total: $total)';
+  }
 
   factory WooLineItem.fake() => WooLineItem(
         id: FakeHelper.integer(),
