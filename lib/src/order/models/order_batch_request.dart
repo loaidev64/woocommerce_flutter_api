@@ -73,22 +73,6 @@ import 'order.dart';
 /// final batchRequest = WooOrderBatchRequest.fromJson(jsonData);
 /// ```
 class WooOrderBatchRequest {
-  /// List of orders to create
-  ///
-  /// Each order in this list will be created as a new order in the store.
-  /// Orders in this list should have id set to 0 (will be assigned by WooCommerce).
-  final List<WooOrder>? create;
-
-  /// List of orders to update
-  ///
-  /// Each order in this list must have a valid ID and will be updated
-  /// with the provided values.
-  final List<WooOrder>? update;
-
-  /// List of order IDs to delete
-  ///
-  /// Each ID in this list represents an order that will be deleted from the store.
-  final List<int>? delete;
 
   /// Creates a new WooOrderBatchRequest instance
   ///
@@ -161,6 +145,22 @@ class WooOrderBatchRequest {
             ? (json['delete'] as List).cast<int>()
             : null,
       );
+  /// List of orders to create
+  ///
+  /// Each order in this list will be created as a new order in the store.
+  /// Orders in this list should have id set to 0 (will be assigned by WooCommerce).
+  final List<WooOrder>? create;
+
+  /// List of orders to update
+  ///
+  /// Each order in this list must have a valid ID and will be updated
+  /// with the provided values.
+  final List<WooOrder>? update;
+
+  /// List of order IDs to delete
+  ///
+  /// Each ID in this list represents an order that will be deleted from the store.
+  final List<int>? delete;
 
   /// Converts the WooOrderBatchRequest instance to JSON format
   ///

@@ -63,23 +63,6 @@ import 'product_shipping_class.dart';
 /// final json = batchResponse.toJson();
 /// ```
 class WooProductShippingClassBatchResponse {
-  /// List of created shipping classes
-  ///
-  /// Contains the shipping classes that were successfully created, each with a
-  /// server-assigned ID and all other properties as returned by the API.
-  final List<WooProductShippingClass>? create;
-
-  /// List of updated shipping classes
-  ///
-  /// Contains the shipping classes that were successfully updated, reflecting
-  /// the current state after the update operation.
-  final List<WooProductShippingClass>? update;
-
-  /// List of deleted shipping classes
-  ///
-  /// Contains the shipping classes that were successfully deleted. These shipping classes
-  /// may have limited information depending on the API response.
-  final List<WooProductShippingClass>? delete;
 
   /// Creates a new WooProductShippingClassBatchResponse instance
   ///
@@ -149,6 +132,23 @@ class WooProductShippingClassBatchResponse {
                 .toList()
             : null,
       );
+  /// List of created shipping classes
+  ///
+  /// Contains the shipping classes that were successfully created, each with a
+  /// server-assigned ID and all other properties as returned by the API.
+  final List<WooProductShippingClass>? create;
+
+  /// List of updated shipping classes
+  ///
+  /// Contains the shipping classes that were successfully updated, reflecting
+  /// the current state after the update operation.
+  final List<WooProductShippingClass>? update;
+
+  /// List of deleted shipping classes
+  ///
+  /// Contains the shipping classes that were successfully deleted. These shipping classes
+  /// may have limited information depending on the API response.
+  final List<WooProductShippingClass>? delete;
 
   /// Converts the WooProductShippingClassBatchResponse instance to JSON format
   ///

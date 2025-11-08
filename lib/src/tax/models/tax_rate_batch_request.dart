@@ -96,25 +96,6 @@ import 'tax_rate.dart';
 /// final batchRequest = WooTaxRateBatchRequest.fromJson(jsonData);
 /// ```
 class WooTaxRateBatchRequest {
-  /// List of tax rates to create
-  ///
-  /// Each tax rate in this list will be created as a new tax rate in the store.
-  /// Tax rates in this list should not have an ID assigned.
-  final List<WooTaxRate>? create;
-
-  /// List of tax rates to update
-  ///
-  /// Each tax rate in this list must have a valid ID and will be updated
-  /// with the provided values. Common use cases include:
-  /// - Updating tax rates for rate changes
-  /// - Modifying geographical targeting rules
-  /// - Changing priority or compound settings
-  final List<WooTaxRate>? update;
-
-  /// List of tax rate IDs to delete
-  ///
-  /// Each ID in this list represents a tax rate that will be permanently deleted from the store.
-  final List<int>? delete;
 
   /// Creates a new WooTaxRateBatchRequest instance
   ///
@@ -192,6 +173,25 @@ class WooTaxRateBatchRequest {
             ? (json['delete'] as List).cast<int>()
             : null,
       );
+  /// List of tax rates to create
+  ///
+  /// Each tax rate in this list will be created as a new tax rate in the store.
+  /// Tax rates in this list should not have an ID assigned.
+  final List<WooTaxRate>? create;
+
+  /// List of tax rates to update
+  ///
+  /// Each tax rate in this list must have a valid ID and will be updated
+  /// with the provided values. Common use cases include:
+  /// - Updating tax rates for rate changes
+  /// - Modifying geographical targeting rules
+  /// - Changing priority or compound settings
+  final List<WooTaxRate>? update;
+
+  /// List of tax rate IDs to delete
+  ///
+  /// Each ID in this list represents a tax rate that will be permanently deleted from the store.
+  final List<int>? delete;
 
   /// Converts the WooTaxRateBatchRequest instance to JSON format
   ///

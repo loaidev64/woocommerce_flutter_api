@@ -63,23 +63,6 @@ import 'category.dart';
 /// final json = batchResponse.toJson();
 /// ```
 class WooProductCategoryBatchResponse {
-  /// List of created categories
-  ///
-  /// Contains the categories that were successfully created, each with a
-  /// server-assigned ID and all other properties as returned by the API.
-  final List<WooProductCategory>? create;
-
-  /// List of updated categories
-  ///
-  /// Contains the categories that were successfully updated, reflecting
-  /// the current state after the update operation.
-  final List<WooProductCategory>? update;
-
-  /// List of deleted categories
-  ///
-  /// Contains the categories that were successfully deleted. These categories
-  /// may have limited information depending on the API response.
-  final List<WooProductCategory>? delete;
 
   /// Creates a new WooProductCategoryBatchResponse instance
   ///
@@ -149,6 +132,23 @@ class WooProductCategoryBatchResponse {
                 .toList()
             : null,
       );
+  /// List of created categories
+  ///
+  /// Contains the categories that were successfully created, each with a
+  /// server-assigned ID and all other properties as returned by the API.
+  final List<WooProductCategory>? create;
+
+  /// List of updated categories
+  ///
+  /// Contains the categories that were successfully updated, reflecting
+  /// the current state after the update operation.
+  final List<WooProductCategory>? update;
+
+  /// List of deleted categories
+  ///
+  /// Contains the categories that were successfully deleted. These categories
+  /// may have limited information depending on the API response.
+  final List<WooProductCategory>? delete;
 
   /// Converts the WooProductCategoryBatchResponse instance to JSON format
   ///

@@ -106,27 +106,6 @@ import 'setting_option.dart';
 /// final batchRequest = WooSettingOptionBatchRequest.fromJson(jsonData);
 /// ```
 class WooSettingOptionBatchRequest {
-  /// List of setting options to create
-  ///
-  /// Each setting option in this list will be created as a new option in the store.
-  /// Setting options in this list should not have an ID assigned, or should have
-  /// a unique string ID that doesn't conflict with existing options.
-  final List<WooSettingOption>? create;
-
-  /// List of setting options to update
-  ///
-  /// Each setting option in this list must have a valid string ID and will be updated
-  /// with the provided values. Common use cases include:
-  /// - Updating setting values
-  /// - Modifying setting labels or descriptions
-  /// - Changing setting types or options
-  final List<WooSettingOption>? update;
-
-  /// List of setting option IDs to delete
-  ///
-  /// Each ID in this list is a string representing a setting option that will be
-  /// permanently deleted from the store. Note: Setting option IDs are strings, not integers.
-  final List<String>? delete;
 
   /// Creates a new WooSettingOptionBatchRequest instance
   ///
@@ -206,6 +185,27 @@ class WooSettingOptionBatchRequest {
             ? (json['delete'] as List).cast<String>()
             : null,
       );
+  /// List of setting options to create
+  ///
+  /// Each setting option in this list will be created as a new option in the store.
+  /// Setting options in this list should not have an ID assigned, or should have
+  /// a unique string ID that doesn't conflict with existing options.
+  final List<WooSettingOption>? create;
+
+  /// List of setting options to update
+  ///
+  /// Each setting option in this list must have a valid string ID and will be updated
+  /// with the provided values. Common use cases include:
+  /// - Updating setting values
+  /// - Modifying setting labels or descriptions
+  /// - Changing setting types or options
+  final List<WooSettingOption>? update;
+
+  /// List of setting option IDs to delete
+  ///
+  /// Each ID in this list is a string representing a setting option that will be
+  /// permanently deleted from the store. Note: Setting option IDs are strings, not integers.
+  final List<String>? delete;
 
   /// Converts the WooSettingOptionBatchRequest instance to JSON format
   ///

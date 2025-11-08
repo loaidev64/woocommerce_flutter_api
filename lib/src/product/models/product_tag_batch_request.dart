@@ -76,22 +76,6 @@ import 'product_tag.dart';
 /// final batchRequest = WooProductTagBatchRequest.fromJson(jsonData);
 /// ```
 class WooProductTagBatchRequest {
-  /// List of tags to create
-  ///
-  /// Each tag in this list will be created as a new tag in the store.
-  /// Tags in this list should not have an ID assigned (use null for id).
-  final List<WooProductTag>? create;
-
-  /// List of tags to update
-  ///
-  /// Each tag in this list must have a valid ID and will be updated
-  /// with the provided values.
-  final List<WooProductTag>? update;
-
-  /// List of tag IDs to delete
-  ///
-  /// Each ID in this list represents a tag that will be deleted from the store.
-  final List<int>? delete;
 
   /// Creates a new WooProductTagBatchRequest instance
   ///
@@ -161,6 +145,22 @@ class WooProductTagBatchRequest {
             ? (json['delete'] as List).cast<int>()
             : null,
       );
+  /// List of tags to create
+  ///
+  /// Each tag in this list will be created as a new tag in the store.
+  /// Tags in this list should not have an ID assigned (use null for id).
+  final List<WooProductTag>? create;
+
+  /// List of tags to update
+  ///
+  /// Each tag in this list must have a valid ID and will be updated
+  /// with the provided values.
+  final List<WooProductTag>? update;
+
+  /// List of tag IDs to delete
+  ///
+  /// Each ID in this list represents a tag that will be deleted from the store.
+  final List<int>? delete;
 
   /// Converts the WooProductTagBatchRequest instance to JSON format
   ///

@@ -98,23 +98,6 @@ import 'webhook.dart';
 /// final json = batchResponse.toJson();
 /// ```
 class WooWebhookBatchResponse {
-  /// List of created webhooks
-  ///
-  /// Contains the webhooks that were successfully created, each with a
-  /// server-assigned ID and all other properties as returned by the API.
-  final List<WooWebhook>? create;
-
-  /// List of updated webhooks
-  ///
-  /// Contains the webhooks that were successfully updated, reflecting
-  /// the current state after the update operation, including any status changes.
-  final List<WooWebhook>? update;
-
-  /// List of deleted webhooks
-  ///
-  /// Contains the webhooks that were successfully deleted. These webhooks
-  /// may have limited information depending on the API response.
-  final List<WooWebhook>? delete;
 
   /// Creates a new WooWebhookBatchResponse instance
   ///
@@ -183,6 +166,23 @@ class WooWebhookBatchResponse {
                 .toList()
             : null,
       );
+  /// List of created webhooks
+  ///
+  /// Contains the webhooks that were successfully created, each with a
+  /// server-assigned ID and all other properties as returned by the API.
+  final List<WooWebhook>? create;
+
+  /// List of updated webhooks
+  ///
+  /// Contains the webhooks that were successfully updated, reflecting
+  /// the current state after the update operation, including any status changes.
+  final List<WooWebhook>? update;
+
+  /// List of deleted webhooks
+  ///
+  /// Contains the webhooks that were successfully deleted. These webhooks
+  /// may have limited information depending on the API response.
+  final List<WooWebhook>? delete;
 
   /// Converts the WooWebhookBatchResponse instance to JSON format
   ///

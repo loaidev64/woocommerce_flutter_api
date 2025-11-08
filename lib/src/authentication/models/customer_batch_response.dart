@@ -63,23 +63,6 @@ import 'customer.dart';
 /// final json = batchResponse.toJson();
 /// ```
 class WooCustomerBatchResponse {
-  /// List of created customers
-  ///
-  /// Contains the customers that were successfully created, each with a
-  /// server-assigned ID and all other properties as returned by the API.
-  final List<WooCustomer>? create;
-
-  /// List of updated customers
-  ///
-  /// Contains the customers that were successfully updated, reflecting
-  /// the current state after the update operation.
-  final List<WooCustomer>? update;
-
-  /// List of deleted customers
-  ///
-  /// Contains the customers that were successfully deleted. These customers
-  /// may have limited information depending on the API response.
-  final List<WooCustomer>? delete;
 
   /// Creates a new WooCustomerBatchResponse instance
   ///
@@ -148,6 +131,23 @@ class WooCustomerBatchResponse {
                 .toList()
             : null,
       );
+  /// List of created customers
+  ///
+  /// Contains the customers that were successfully created, each with a
+  /// server-assigned ID and all other properties as returned by the API.
+  final List<WooCustomer>? create;
+
+  /// List of updated customers
+  ///
+  /// Contains the customers that were successfully updated, reflecting
+  /// the current state after the update operation.
+  final List<WooCustomer>? update;
+
+  /// List of deleted customers
+  ///
+  /// Contains the customers that were successfully deleted. These customers
+  /// may have limited information depending on the API response.
+  final List<WooCustomer>? delete;
 
   /// Converts the WooCustomerBatchResponse instance to JSON format
   ///

@@ -103,26 +103,6 @@ import 'webhook.dart';
 /// final batchRequest = WooWebhookBatchRequest.fromJson(jsonData);
 /// ```
 class WooWebhookBatchRequest {
-  /// List of webhooks to create
-  ///
-  /// Each webhook in this list will be created as a new webhook in the store.
-  /// Webhooks in this list should not have an ID assigned.
-  final List<WooWebhook>? create;
-
-  /// List of webhooks to update
-  ///
-  /// Each webhook in this list must have a valid ID and will be updated
-  /// with the provided values. Common use cases include:
-  /// - Updating webhook status (active, paused, disabled)
-  /// - Changing delivery URLs
-  /// - Updating secret keys
-  /// - Modifying webhook names or topics
-  final List<WooWebhook>? update;
-
-  /// List of webhook IDs to delete
-  ///
-  /// Each ID in this list represents a webhook that will be permanently deleted from the store.
-  final List<int>? delete;
 
   /// Creates a new WooWebhookBatchRequest instance
   ///
@@ -200,6 +180,26 @@ class WooWebhookBatchRequest {
             ? (json['delete'] as List).cast<int>()
             : null,
       );
+  /// List of webhooks to create
+  ///
+  /// Each webhook in this list will be created as a new webhook in the store.
+  /// Webhooks in this list should not have an ID assigned.
+  final List<WooWebhook>? create;
+
+  /// List of webhooks to update
+  ///
+  /// Each webhook in this list must have a valid ID and will be updated
+  /// with the provided values. Common use cases include:
+  /// - Updating webhook status (active, paused, disabled)
+  /// - Changing delivery URLs
+  /// - Updating secret keys
+  /// - Modifying webhook names or topics
+  final List<WooWebhook>? update;
+
+  /// List of webhook IDs to delete
+  ///
+  /// Each ID in this list represents a webhook that will be permanently deleted from the store.
+  final List<int>? delete;
 
   /// Converts the WooWebhookBatchRequest instance to JSON format
   ///

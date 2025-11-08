@@ -4,23 +4,6 @@ import 'package:woocommerce_flutter_api/woocommerce_flutter_api.dart';
 ///
 /// Brief description of the model's purpose and usage for products with children.
 class WooProductWithChildrens {
-  /// Main Product
-  final WooProduct mainProduct;
-
-  /// Related Products
-  final List<WooProduct>? relatedProducts;
-
-  /// Upsell Products
-  final List<WooProduct>? upsellProducts;
-
-  /// Cross Sell Products
-  final List<WooProduct>? crossSellProducts;
-
-  /// Parent Products
-  final WooProduct? parentProduct;
-
-  /// Grouped Products
-  final List<WooProduct>? groupedProducts;
 
   //TODO:: add varitations if it can be added
 
@@ -89,6 +72,23 @@ class WooProductWithChildrens {
         groupedProducts: FakeHelper.list(() => WooProduct.fake()),
         upsellProducts: FakeHelper.list(() => WooProduct.fake()),
       );
+  /// Main Product
+  final WooProduct mainProduct;
+
+  /// Related Products
+  final List<WooProduct>? relatedProducts;
+
+  /// Upsell Products
+  final List<WooProduct>? upsellProducts;
+
+  /// Cross Sell Products
+  final List<WooProduct>? crossSellProducts;
+
+  /// Parent Products
+  final WooProduct? parentProduct;
+
+  /// Grouped Products
+  final List<WooProduct>? groupedProducts;
 
   /// Creates a copy of this WooProductWithChildrens with the given fields replaced.
   WooProductWithChildrens copyWith({

@@ -63,23 +63,6 @@ import 'product.dart';
 /// final json = batchResponse.toJson();
 /// ```
 class WooProductBatchResponse {
-  /// List of created products
-  ///
-  /// Contains the products that were successfully created, each with a
-  /// server-assigned ID and all other properties as returned by the API.
-  final List<WooProduct>? create;
-
-  /// List of updated products
-  ///
-  /// Contains the products that were successfully updated, reflecting
-  /// the current state after the update operation.
-  final List<WooProduct>? update;
-
-  /// List of deleted products
-  ///
-  /// Contains the products that were successfully deleted. These products
-  /// may have limited information depending on the API response.
-  final List<WooProduct>? delete;
 
   /// Creates a new WooProductBatchResponse instance
   ///
@@ -148,6 +131,23 @@ class WooProductBatchResponse {
                 .toList()
             : null,
       );
+  /// List of created products
+  ///
+  /// Contains the products that were successfully created, each with a
+  /// server-assigned ID and all other properties as returned by the API.
+  final List<WooProduct>? create;
+
+  /// List of updated products
+  ///
+  /// Contains the products that were successfully updated, reflecting
+  /// the current state after the update operation.
+  final List<WooProduct>? update;
+
+  /// List of deleted products
+  ///
+  /// Contains the products that were successfully deleted. These products
+  /// may have limited information depending on the API response.
+  final List<WooProduct>? delete;
 
   /// Converts the WooProductBatchResponse instance to JSON format
   ///

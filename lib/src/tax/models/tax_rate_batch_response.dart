@@ -83,23 +83,6 @@ import 'tax_rate.dart';
 /// final json = batchResponse.toJson();
 /// ```
 class WooTaxRateBatchResponse {
-  /// List of created tax rates
-  ///
-  /// Contains the tax rates that were successfully created, each with a
-  /// server-assigned ID and all other properties as returned by the API.
-  final List<WooTaxRate>? create;
-
-  /// List of updated tax rates
-  ///
-  /// Contains the tax rates that were successfully updated, reflecting
-  /// the current state after the update operation.
-  final List<WooTaxRate>? update;
-
-  /// List of deleted tax rates
-  ///
-  /// Contains the tax rates that were successfully deleted. These tax rates
-  /// may have limited information depending on the API response.
-  final List<WooTaxRate>? delete;
 
   /// Creates a new WooTaxRateBatchResponse instance
   ///
@@ -168,6 +151,23 @@ class WooTaxRateBatchResponse {
                 .toList()
             : null,
       );
+  /// List of created tax rates
+  ///
+  /// Contains the tax rates that were successfully created, each with a
+  /// server-assigned ID and all other properties as returned by the API.
+  final List<WooTaxRate>? create;
+
+  /// List of updated tax rates
+  ///
+  /// Contains the tax rates that were successfully updated, reflecting
+  /// the current state after the update operation.
+  final List<WooTaxRate>? update;
+
+  /// List of deleted tax rates
+  ///
+  /// Contains the tax rates that were successfully deleted. These tax rates
+  /// may have limited information depending on the API response.
+  final List<WooTaxRate>? delete;
 
   /// Converts the WooTaxRateBatchResponse instance to JSON format
   ///

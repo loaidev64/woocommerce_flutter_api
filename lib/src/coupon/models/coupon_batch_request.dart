@@ -69,22 +69,6 @@ import 'coupon.dart';
 /// final batchRequest = WooCouponBatchRequest.fromJson(jsonData);
 /// ```
 class WooCouponBatchRequest {
-  /// List of coupons to create
-  ///
-  /// Each coupon in this list will be created as a new coupon in the store.
-  /// Coupons in this list should not have an ID assigned.
-  final List<WooCoupon>? create;
-
-  /// List of coupons to update
-  ///
-  /// Each coupon in this list must have a valid ID and will be updated
-  /// with the provided values.
-  final List<WooCoupon>? update;
-
-  /// List of coupon IDs to delete
-  ///
-  /// Each ID in this list represents a coupon that will be deleted from the store.
-  final List<int>? delete;
 
   /// Creates a new WooCouponBatchRequest instance
   ///
@@ -152,6 +136,22 @@ class WooCouponBatchRequest {
             ? (json['delete'] as List).cast<int>()
             : null,
       );
+  /// List of coupons to create
+  ///
+  /// Each coupon in this list will be created as a new coupon in the store.
+  /// Coupons in this list should not have an ID assigned.
+  final List<WooCoupon>? create;
+
+  /// List of coupons to update
+  ///
+  /// Each coupon in this list must have a valid ID and will be updated
+  /// with the provided values.
+  final List<WooCoupon>? update;
+
+  /// List of coupon IDs to delete
+  ///
+  /// Each ID in this list represents a coupon that will be deleted from the store.
+  final List<int>? delete;
 
   /// Converts the WooCouponBatchRequest instance to JSON format
   ///

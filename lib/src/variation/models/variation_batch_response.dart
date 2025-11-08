@@ -70,23 +70,6 @@ import 'variation.dart';
 /// final json = batchResponse.toJson();
 /// ```
 class WooProductVariationBatchResponse {
-  /// List of created variations
-  ///
-  /// Contains the variations that were successfully created, each with a
-  /// server-assigned ID and all other properties as returned by the API.
-  final List<WooProductVariation>? create;
-
-  /// List of updated variations
-  ///
-  /// Contains the variations that were successfully updated, reflecting
-  /// the current state after the update operation.
-  final List<WooProductVariation>? update;
-
-  /// List of deleted variations
-  ///
-  /// Contains the variations that were successfully deleted. These variations
-  /// may have limited information depending on the API response.
-  final List<WooProductVariation>? delete;
 
   /// Creates a new WooProductVariationBatchResponse instance
   ///
@@ -156,6 +139,23 @@ class WooProductVariationBatchResponse {
                 .toList()
             : null,
       );
+  /// List of created variations
+  ///
+  /// Contains the variations that were successfully created, each with a
+  /// server-assigned ID and all other properties as returned by the API.
+  final List<WooProductVariation>? create;
+
+  /// List of updated variations
+  ///
+  /// Contains the variations that were successfully updated, reflecting
+  /// the current state after the update operation.
+  final List<WooProductVariation>? update;
+
+  /// List of deleted variations
+  ///
+  /// Contains the variations that were successfully deleted. These variations
+  /// may have limited information depending on the API response.
+  final List<WooProductVariation>? delete;
 
   /// Converts the WooProductVariationBatchResponse instance to JSON format
   ///

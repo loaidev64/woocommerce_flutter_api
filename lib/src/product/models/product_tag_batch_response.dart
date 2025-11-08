@@ -63,23 +63,6 @@ import 'product_tag.dart';
 /// final json = batchResponse.toJson();
 /// ```
 class WooProductTagBatchResponse {
-  /// List of created tags
-  ///
-  /// Contains the tags that were successfully created, each with a
-  /// server-assigned ID and all other properties as returned by the API.
-  final List<WooProductTag>? create;
-
-  /// List of updated tags
-  ///
-  /// Contains the tags that were successfully updated, reflecting
-  /// the current state after the update operation.
-  final List<WooProductTag>? update;
-
-  /// List of deleted tags
-  ///
-  /// Contains the tags that were successfully deleted. These tags
-  /// may have limited information depending on the API response.
-  final List<WooProductTag>? delete;
 
   /// Creates a new WooProductTagBatchResponse instance
   ///
@@ -148,6 +131,23 @@ class WooProductTagBatchResponse {
                 .toList()
             : null,
       );
+  /// List of created tags
+  ///
+  /// Contains the tags that were successfully created, each with a
+  /// server-assigned ID and all other properties as returned by the API.
+  final List<WooProductTag>? create;
+
+  /// List of updated tags
+  ///
+  /// Contains the tags that were successfully updated, reflecting
+  /// the current state after the update operation.
+  final List<WooProductTag>? update;
+
+  /// List of deleted tags
+  ///
+  /// Contains the tags that were successfully deleted. These tags
+  /// may have limited information depending on the API response.
+  final List<WooProductTag>? delete;
 
   /// Converts the WooProductTagBatchResponse instance to JSON format
   ///

@@ -51,71 +51,6 @@ import 'package:woocommerce_flutter_api/woocommerce_flutter_api.dart';
 /// final salesReport = WooSalesReport.fromJson(jsonData);
 /// ```
 class WooSalesReport {
-  /// Gross sales in the period. Read-only.
-  ///
-  /// The total revenue before any deductions such as taxes, shipping,
-  /// or discounts. This represents the raw sales amount.
-  String? totalSales;
-
-  /// Net sales in the period. Read-only.
-  ///
-  /// The total revenue after deducting taxes, shipping, and discounts.
-  /// This represents the actual revenue received by the store.
-  String? netSales;
-
-  /// Average net daily sales. Read-only.
-  ///
-  /// The average daily net sales calculated over the reporting period.
-  /// Useful for understanding daily performance trends.
-  String? averageSales;
-
-  /// Total of orders placed. Read-only.
-  ///
-  /// The total number of orders received during the reporting period.
-  /// This count includes all orders regardless of their status.
-  int? totalOrders;
-
-  /// Total of items purchased. Read-only.
-  ///
-  /// The total quantity of items sold across all orders in the period.
-  /// This represents the sum of all product quantities sold.
-  int? totalItems;
-
-  /// Total charged for taxes. Read-only.
-  ///
-  /// The total amount of taxes collected on all orders during the period.
-  /// This includes all applicable tax types (sales tax, VAT, etc.).
-  String? totalTax;
-
-  /// Total charged for shipping. Read-only.
-  ///
-  /// The total amount collected for shipping costs across all orders.
-  /// This includes both paid and free shipping charges.
-  String? totalShipping;
-
-  /// Total of refunded orders. Read-only.
-  ///
-  /// The total number of orders that have been refunded during the period.
-  /// This helps track customer satisfaction and return rates.
-  int? totalRefunds;
-
-  /// Total of coupons used. Read-only.
-  ///
-  /// The total number of discount coupons applied to orders during the period.
-  /// This helps track promotional campaign effectiveness.
-  int? totalDiscount;
-
-  /// Group type. Read-only.
-  ///
-  /// The grouping method used for the time-based totals breakdown.
-  /// Common values include 'day', 'week', 'month', or 'year'.
-  String? totalsGroupedBy;
-
-  /// Totals grouped by date. Read-only.
-  ///
-  /// A list of detailed sales data broken down by time periods.
-  /// Each entry contains sales metrics for a specific date or period.
-  List<WooSalesReportTotals>? totals;
 
   /// Creates a new WooSalesReport instance
   ///
@@ -199,6 +134,99 @@ class WooSalesReport {
             .values
             .toList();
 
+  /// Creates a fake WooSalesReport instance for testing purposes
+  ///
+  /// This factory constructor generates a sales report with random but realistic
+  /// data, making it useful for testing and development.
+  ///
+  /// ## Returns
+  ///
+  /// A `WooSalesReport` instance with randomly generated fake data.
+  ///
+  /// ## Example Usage
+  ///
+  /// ```dart
+  /// final fakeSalesReport = WooSalesReport.fake();
+  /// ```
+  factory WooSalesReport.fake() => WooSalesReport(
+        totalSales: FakeHelper.decimal().toString(),
+        netSales: FakeHelper.decimal().toString(),
+        averageSales: FakeHelper.decimal().toString(),
+        totalOrders: FakeHelper.integer(),
+        totalItems: FakeHelper.integer(),
+        totalTax: FakeHelper.decimal().toString(),
+        totalShipping: FakeHelper.decimal().toString(),
+        totalRefunds: FakeHelper.integer(),
+        totalDiscount: FakeHelper.integer(),
+        totalsGroupedBy: FakeHelper.word(),
+        totals: FakeHelper.list(WooSalesReportTotals.fake),
+      );
+  /// Gross sales in the period. Read-only.
+  ///
+  /// The total revenue before any deductions such as taxes, shipping,
+  /// or discounts. This represents the raw sales amount.
+  String? totalSales;
+
+  /// Net sales in the period. Read-only.
+  ///
+  /// The total revenue after deducting taxes, shipping, and discounts.
+  /// This represents the actual revenue received by the store.
+  String? netSales;
+
+  /// Average net daily sales. Read-only.
+  ///
+  /// The average daily net sales calculated over the reporting period.
+  /// Useful for understanding daily performance trends.
+  String? averageSales;
+
+  /// Total of orders placed. Read-only.
+  ///
+  /// The total number of orders received during the reporting period.
+  /// This count includes all orders regardless of their status.
+  int? totalOrders;
+
+  /// Total of items purchased. Read-only.
+  ///
+  /// The total quantity of items sold across all orders in the period.
+  /// This represents the sum of all product quantities sold.
+  int? totalItems;
+
+  /// Total charged for taxes. Read-only.
+  ///
+  /// The total amount of taxes collected on all orders during the period.
+  /// This includes all applicable tax types (sales tax, VAT, etc.).
+  String? totalTax;
+
+  /// Total charged for shipping. Read-only.
+  ///
+  /// The total amount collected for shipping costs across all orders.
+  /// This includes both paid and free shipping charges.
+  String? totalShipping;
+
+  /// Total of refunded orders. Read-only.
+  ///
+  /// The total number of orders that have been refunded during the period.
+  /// This helps track customer satisfaction and return rates.
+  int? totalRefunds;
+
+  /// Total of coupons used. Read-only.
+  ///
+  /// The total number of discount coupons applied to orders during the period.
+  /// This helps track promotional campaign effectiveness.
+  int? totalDiscount;
+
+  /// Group type. Read-only.
+  ///
+  /// The grouping method used for the time-based totals breakdown.
+  /// Common values include 'day', 'week', 'month', or 'year'.
+  String? totalsGroupedBy;
+
+  /// Totals grouped by date. Read-only.
+  ///
+  /// A list of detailed sales data broken down by time periods.
+  /// Each entry contains sales metrics for a specific date or period.
+  List<WooSalesReportTotals>? totals;
+
   /// Converts the WooSalesReport instance to JSON format
   ///
   /// This method serializes the sales report data into a Map that can be sent
@@ -277,34 +305,6 @@ class WooSalesReport {
       totalDiscount.hashCode ^
       totalsGroupedBy.hashCode ^
       totals.hashCode;
-
-  /// Creates a fake WooSalesReport instance for testing purposes
-  ///
-  /// This factory constructor generates a sales report with random but realistic
-  /// data, making it useful for testing and development.
-  ///
-  /// ## Returns
-  ///
-  /// A `WooSalesReport` instance with randomly generated fake data.
-  ///
-  /// ## Example Usage
-  ///
-  /// ```dart
-  /// final fakeSalesReport = WooSalesReport.fake();
-  /// ```
-  factory WooSalesReport.fake() => WooSalesReport(
-        totalSales: FakeHelper.decimal().toString(),
-        netSales: FakeHelper.decimal().toString(),
-        averageSales: FakeHelper.decimal().toString(),
-        totalOrders: FakeHelper.integer(),
-        totalItems: FakeHelper.integer(),
-        totalTax: FakeHelper.decimal().toString(),
-        totalShipping: FakeHelper.decimal().toString(),
-        totalRefunds: FakeHelper.integer(),
-        totalDiscount: FakeHelper.integer(),
-        totalsGroupedBy: FakeHelper.word(),
-        totals: FakeHelper.list(WooSalesReportTotals.fake),
-      );
 }
 
 /// WooCommerce Sales Report Totals Model
@@ -354,53 +354,6 @@ class WooSalesReport {
 /// final total = WooSalesReportTotals.fromJson(jsonData, dateKey);
 /// ```
 class WooSalesReportTotals {
-  /// The date of this total.
-  ///
-  /// The specific date or time period this data represents.
-  /// Used for time-based analysis and reporting.
-  DateTime? date;
-
-  /// Total sales for the date.
-  ///
-  /// The total sales amount for this specific time period.
-  /// This represents the gross sales before any deductions.
-  String? sales;
-
-  /// Total orders for the date.
-  ///
-  /// The number of orders placed during this time period.
-  /// This count includes all orders regardless of status.
-  int? orders;
-
-  /// Total items sold for the date.
-  ///
-  /// The total quantity of items sold during this time period.
-  /// This represents the sum of all product quantities sold.
-  int? items;
-
-  /// Total tax for the date.
-  ///
-  /// The total amount of taxes collected during this time period.
-  /// This includes all applicable tax types.
-  String? tax;
-
-  /// Total shipping for the date.
-  ///
-  /// The total amount collected for shipping costs during this time period.
-  /// This includes both paid and free shipping charges.
-  String? shipping;
-
-  /// Total discount for the date.
-  ///
-  /// The total amount of discounts applied during this time period.
-  /// This includes all types of discounts and coupons.
-  String? discount;
-
-  /// Total customers for the date.
-  ///
-  /// The number of unique customers who made purchases during this time period.
-  /// This helps track customer acquisition and retention.
-  int? customers;
 
   /// Creates a new WooSalesReportTotals instance
   ///
@@ -467,6 +420,78 @@ class WooSalesReportTotals {
         discount = json['discount'],
         customers = json['customers'],
         date = DateTime.tryParse(key);
+
+  /// Creates a fake WooSalesReportTotals instance for testing purposes
+  ///
+  /// This factory constructor generates sales totals with random but realistic
+  /// data, making it useful for testing and development.
+  ///
+  /// ## Returns
+  ///
+  /// A `WooSalesReportTotals` instance with randomly generated fake data.
+  ///
+  /// ## Example Usage
+  ///
+  /// ```dart
+  /// final fakeTotal = WooSalesReportTotals.fake();
+  /// ```
+  factory WooSalesReportTotals.fake() => WooSalesReportTotals(
+        sales: FakeHelper.decimal().toString(),
+        orders: FakeHelper.integer(),
+        items: FakeHelper.integer(),
+        tax: FakeHelper.decimal().toString(),
+        shipping: FakeHelper.decimal().toString(),
+        discount: FakeHelper.decimal().toString(),
+        customers: FakeHelper.integer(),
+        date: FakeHelper.datetime(),
+      );
+  /// The date of this total.
+  ///
+  /// The specific date or time period this data represents.
+  /// Used for time-based analysis and reporting.
+  DateTime? date;
+
+  /// Total sales for the date.
+  ///
+  /// The total sales amount for this specific time period.
+  /// This represents the gross sales before any deductions.
+  String? sales;
+
+  /// Total orders for the date.
+  ///
+  /// The number of orders placed during this time period.
+  /// This count includes all orders regardless of status.
+  int? orders;
+
+  /// Total items sold for the date.
+  ///
+  /// The total quantity of items sold during this time period.
+  /// This represents the sum of all product quantities sold.
+  int? items;
+
+  /// Total tax for the date.
+  ///
+  /// The total amount of taxes collected during this time period.
+  /// This includes all applicable tax types.
+  String? tax;
+
+  /// Total shipping for the date.
+  ///
+  /// The total amount collected for shipping costs during this time period.
+  /// This includes both paid and free shipping charges.
+  String? shipping;
+
+  /// Total discount for the date.
+  ///
+  /// The total amount of discounts applied during this time period.
+  /// This includes all types of discounts and coupons.
+  String? discount;
+
+  /// Total customers for the date.
+  ///
+  /// The number of unique customers who made purchases during this time period.
+  /// This helps track customer acquisition and retention.
+  int? customers;
 
   /// Converts the WooSalesReportTotals instance to JSON format
   ///
@@ -535,29 +560,4 @@ class WooSalesReportTotals {
       shipping.hashCode ^
       discount.hashCode ^
       customers.hashCode;
-
-  /// Creates a fake WooSalesReportTotals instance for testing purposes
-  ///
-  /// This factory constructor generates sales totals with random but realistic
-  /// data, making it useful for testing and development.
-  ///
-  /// ## Returns
-  ///
-  /// A `WooSalesReportTotals` instance with randomly generated fake data.
-  ///
-  /// ## Example Usage
-  ///
-  /// ```dart
-  /// final fakeTotal = WooSalesReportTotals.fake();
-  /// ```
-  factory WooSalesReportTotals.fake() => WooSalesReportTotals(
-        sales: FakeHelper.decimal().toString(),
-        orders: FakeHelper.integer(),
-        items: FakeHelper.integer(),
-        tax: FakeHelper.decimal().toString(),
-        shipping: FakeHelper.decimal().toString(),
-        discount: FakeHelper.decimal().toString(),
-        customers: FakeHelper.integer(),
-        date: FakeHelper.datetime(),
-      );
 }

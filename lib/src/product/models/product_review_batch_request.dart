@@ -92,25 +92,6 @@ import 'product_review.dart';
 /// final batchRequest = WooProductReviewBatchRequest.fromJson(jsonData);
 /// ```
 class WooProductReviewBatchRequest {
-  /// List of reviews to create
-  ///
-  /// Each review in this list will be created as a new review in the store.
-  /// Reviews in this list should not have an ID assigned.
-  final List<WooProductReview>? create;
-
-  /// List of reviews to update
-  ///
-  /// Each review in this list must have a valid ID and will be updated
-  /// with the provided values. Common use cases include:
-  /// - Approving pending reviews (changing status from hold to approved)
-  /// - Updating review content or ratings
-  /// - Changing review status (spam, trash, etc.)
-  final List<WooProductReview>? update;
-
-  /// List of review IDs to delete
-  ///
-  /// Each ID in this list represents a review that will be permanently deleted from the store.
-  final List<int>? delete;
 
   /// Creates a new WooProductReviewBatchRequest instance
   ///
@@ -190,6 +171,25 @@ class WooProductReviewBatchRequest {
             ? (json['delete'] as List).cast<int>()
             : null,
       );
+  /// List of reviews to create
+  ///
+  /// Each review in this list will be created as a new review in the store.
+  /// Reviews in this list should not have an ID assigned.
+  final List<WooProductReview>? create;
+
+  /// List of reviews to update
+  ///
+  /// Each review in this list must have a valid ID and will be updated
+  /// with the provided values. Common use cases include:
+  /// - Approving pending reviews (changing status from hold to approved)
+  /// - Updating review content or ratings
+  /// - Changing review status (spam, trash, etc.)
+  final List<WooProductReview>? update;
+
+  /// List of review IDs to delete
+  ///
+  /// Each ID in this list represents a review that will be permanently deleted from the store.
+  final List<int>? delete;
 
   /// Converts the WooProductReviewBatchRequest instance to JSON format
   ///

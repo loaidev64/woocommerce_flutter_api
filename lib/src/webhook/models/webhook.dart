@@ -67,6 +67,171 @@ import '../enums/webhook_topic.dart';
 /// - `X-WC-Webhook-ID`: Webhook's ID
 /// - `X-WC-Webhook-Delivery-ID`: Delivery log ID
 class WooWebhook {
+
+  /// Creates a new WooWebhook instance
+  ///
+  /// ## Required Parameters
+  ///
+  /// * [name] - Human-readable name for the webhook
+  /// * [topic] - The event topic that triggers this webhook (e.g., 'order.created')
+  /// * [deliveryUrl] - URL where webhook payloads will be delivered
+  ///
+  /// ## Optional Parameters
+  ///
+  /// * [id] - Unique identifier (assigned by WooCommerce)
+  /// * [status] - Webhook status (default: active)
+  /// * [resource] - Resource type (auto-derived from topic)
+  /// * [event] - Event type (auto-derived from topic)
+  /// * [hooks] - WordPress hook names (auto-assigned)
+  /// * [secret] - Secret key for signature verification
+  /// * [dateCreated] - Creation timestamp (local time)
+  /// * [dateCreatedGmt] - Creation timestamp (GMT)
+  /// * [dateModified] - Last modification timestamp (local time)
+  /// * [dateModifiedGmt] - Last modification timestamp (GMT)
+  ///
+  /// ## Example Usage
+  ///
+  /// ```dart
+  /// // Create a basic webhook
+  /// final webhook = WooWebhook(
+  ///   name: 'Order Updates',
+  ///   topic: 'order.updated',
+  ///   deliveryUrl: 'https://your-app.com/webhooks/orders',
+  /// );
+  ///
+  /// // Create a webhook with secret for verification
+  /// final secureWebhook = WooWebhook(
+  ///   name: 'Secure Order Updates',
+  ///   topic: 'order.created',
+  ///   deliveryUrl: 'https://your-app.com/webhooks/orders',
+  ///   secret: 'your-secret-key',
+  ///   status: WooWebhookStatus.active,
+  /// );
+  /// ```
+  WooWebhook({
+    required this.name, required this.topic, required this.deliveryUrl, this.id,
+    this.status = WooWebhookStatus.active,
+    this.resource,
+    this.event,
+    this.hooks,
+    this.secret,
+    this.dateCreated,
+    this.dateCreatedGmt,
+    this.dateModified,
+    this.dateModifiedGmt,
+  });
+
+  /// Creates a WooWebhook instance from JSON data
+  ///
+  /// This factory constructor is used to deserialize webhook data received
+  /// from the WooCommerce REST API. It handles the conversion of JSON fields
+  /// to the appropriate Dart types and provides fallback values where needed.
+  ///
+  /// ## Parameters
+  ///
+  /// * [json] - A Map containing the webhook data in JSON format
+  ///
+  /// ## Returns
+  ///
+  /// A `WooWebhook` instance populated with data from the JSON.
+  ///
+  /// ## JSON Structure
+  ///
+  /// The expected JSON structure includes:
+  /// ```json
+  /// {
+  ///   "id": 123,
+  ///   "name": "Order Updates",
+  ///   "status": "active",
+  ///   "topic": "order.updated",
+  ///   "resource": "order",
+  ///   "event": "updated",
+  ///   "hooks": ["woocommerce_order_status_changed"],
+  ///   "delivery_url": "https://example.com/webhook",
+  ///   "secret": "secret-key",
+  ///   "date_created": "2023-01-01T00:00:00",
+  ///   "date_created_gmt": "2023-01-01T00:00:00",
+  ///   "date_modified": "2023-01-01T00:00:00",
+  ///   "date_modified_gmt": "2023-01-01T00:00:00"
+  /// }
+  /// ```
+  ///
+  /// ## Example Usage
+  ///
+  /// ```dart
+  /// // Parse webhook from API response
+  /// final jsonData = {
+  ///   'id': 123,
+  ///   'name': 'Order Updates',
+  ///   'status': 'active',
+  ///   'topic': 'order.updated',
+  ///   'delivery_url': 'https://example.com/webhook',
+  /// };
+  ///
+  /// final webhook = WooWebhook.fromJson(jsonData);
+  /// print('Webhook: ${webhook.name}');
+  /// ```
+  factory WooWebhook.fromJson(Map<String, dynamic> json) => WooWebhook(
+        id: json['id'],
+        name: json['name'],
+        status: WooWebhookStatus.values.firstWhere(
+          (e) => e.name == json['status'],
+          orElse: () => WooWebhookStatus.active,
+        ),
+        topic: json['topic'],
+        resource: json['resource'],
+        event: json['event'],
+        hooks: json['hooks'] != null ? List<String>.from(json['hooks']) : null,
+        deliveryUrl: json['delivery_url'],
+        secret: json['secret'],
+        dateCreated: DateTime.parse(json['date_created']),
+        dateCreatedGmt: DateTime.parse(json['date_created_gmt']),
+        dateModified: DateTime.parse(json['date_modified']),
+        dateModifiedGmt: DateTime.parse(json['date_modified_gmt']),
+      );
+
+  /// Creates a fake WooWebhook instance for testing purposes
+  ///
+  /// This factory constructor generates a webhook with random but realistic
+  /// data, making it useful for testing, development, and demonstration purposes.
+  /// The generated webhook will have valid data for all fields.
+  ///
+  /// ## Generated Data
+  ///
+  /// The fake webhook includes:
+  /// - Random name from sentence generator
+  /// - Random status from available statuses
+  /// - Random topic from available topics
+  /// - Random delivery URL
+  /// - Random secret key
+  ///
+  /// ## Returns
+  ///
+  /// A `WooWebhook` instance with randomly generated fake data.
+  ///
+  /// ## Example Usage
+  ///
+  /// ```dart
+  /// // Generate a fake webhook for testing
+  /// final fakeWebhook = WooWebhook.fake();
+  /// print('Fake webhook: ${fakeWebhook.name}');
+  /// print('Topic: ${fakeWebhook.topic}');
+  ///
+  /// // Use in tests
+  /// test('webhook creation', () {
+  ///   final webhook = WooWebhook.fake();
+  ///   expect(webhook.name, isNotNull);
+  ///   expect(webhook.topic, isNotNull);
+  ///   expect(webhook.deliveryUrl, isNotNull);
+  /// });
+  /// ```
+  factory WooWebhook.fake() => WooWebhook(
+        name: FakeHelper.sentence(),
+        status: FakeHelper.randomItem(WooWebhookStatus.values),
+        topic: WooWebhookTopic.randomTopic(),
+        deliveryUrl: FakeHelper.url(),
+        secret: FakeHelper.code(),
+      );
   /// Unique identifier for the webhook
   ///
   /// This ID is automatically assigned by WooCommerce when the webhook is created.
@@ -149,131 +314,6 @@ class WooWebhook {
   /// This timestamp reflects when the webhook was last updated in GMT/UTC timezone.
   final DateTime? dateModifiedGmt;
 
-  /// Creates a new WooWebhook instance
-  ///
-  /// ## Required Parameters
-  ///
-  /// * [name] - Human-readable name for the webhook
-  /// * [topic] - The event topic that triggers this webhook (e.g., 'order.created')
-  /// * [deliveryUrl] - URL where webhook payloads will be delivered
-  ///
-  /// ## Optional Parameters
-  ///
-  /// * [id] - Unique identifier (assigned by WooCommerce)
-  /// * [status] - Webhook status (default: active)
-  /// * [resource] - Resource type (auto-derived from topic)
-  /// * [event] - Event type (auto-derived from topic)
-  /// * [hooks] - WordPress hook names (auto-assigned)
-  /// * [secret] - Secret key for signature verification
-  /// * [dateCreated] - Creation timestamp (local time)
-  /// * [dateCreatedGmt] - Creation timestamp (GMT)
-  /// * [dateModified] - Last modification timestamp (local time)
-  /// * [dateModifiedGmt] - Last modification timestamp (GMT)
-  ///
-  /// ## Example Usage
-  ///
-  /// ```dart
-  /// // Create a basic webhook
-  /// final webhook = WooWebhook(
-  ///   name: 'Order Updates',
-  ///   topic: 'order.updated',
-  ///   deliveryUrl: 'https://your-app.com/webhooks/orders',
-  /// );
-  ///
-  /// // Create a webhook with secret for verification
-  /// final secureWebhook = WooWebhook(
-  ///   name: 'Secure Order Updates',
-  ///   topic: 'order.created',
-  ///   deliveryUrl: 'https://your-app.com/webhooks/orders',
-  ///   secret: 'your-secret-key',
-  ///   status: WooWebhookStatus.active,
-  /// );
-  /// ```
-  WooWebhook({
-    this.id,
-    required this.name,
-    this.status = WooWebhookStatus.active,
-    required this.topic,
-    this.resource,
-    this.event,
-    this.hooks,
-    required this.deliveryUrl,
-    this.secret,
-    this.dateCreated,
-    this.dateCreatedGmt,
-    this.dateModified,
-    this.dateModifiedGmt,
-  });
-
-  /// Creates a WooWebhook instance from JSON data
-  ///
-  /// This factory constructor is used to deserialize webhook data received
-  /// from the WooCommerce REST API. It handles the conversion of JSON fields
-  /// to the appropriate Dart types and provides fallback values where needed.
-  ///
-  /// ## Parameters
-  ///
-  /// * [json] - A Map containing the webhook data in JSON format
-  ///
-  /// ## Returns
-  ///
-  /// A `WooWebhook` instance populated with data from the JSON.
-  ///
-  /// ## JSON Structure
-  ///
-  /// The expected JSON structure includes:
-  /// ```json
-  /// {
-  ///   "id": 123,
-  ///   "name": "Order Updates",
-  ///   "status": "active",
-  ///   "topic": "order.updated",
-  ///   "resource": "order",
-  ///   "event": "updated",
-  ///   "hooks": ["woocommerce_order_status_changed"],
-  ///   "delivery_url": "https://example.com/webhook",
-  ///   "secret": "secret-key",
-  ///   "date_created": "2023-01-01T00:00:00",
-  ///   "date_created_gmt": "2023-01-01T00:00:00",
-  ///   "date_modified": "2023-01-01T00:00:00",
-  ///   "date_modified_gmt": "2023-01-01T00:00:00"
-  /// }
-  /// ```
-  ///
-  /// ## Example Usage
-  ///
-  /// ```dart
-  /// // Parse webhook from API response
-  /// final jsonData = {
-  ///   'id': 123,
-  ///   'name': 'Order Updates',
-  ///   'status': 'active',
-  ///   'topic': 'order.updated',
-  ///   'delivery_url': 'https://example.com/webhook',
-  /// };
-  ///
-  /// final webhook = WooWebhook.fromJson(jsonData);
-  /// print('Webhook: ${webhook.name}');
-  /// ```
-  factory WooWebhook.fromJson(Map<String, dynamic> json) => WooWebhook(
-        id: json['id'],
-        name: json['name'],
-        status: WooWebhookStatus.values.firstWhere(
-          (e) => e.name == json['status'],
-          orElse: () => WooWebhookStatus.active,
-        ),
-        topic: json['topic'],
-        resource: json['resource'],
-        event: json['event'],
-        hooks: json['hooks'] != null ? List<String>.from(json['hooks']) : null,
-        deliveryUrl: json['delivery_url'],
-        secret: json['secret'],
-        dateCreated: DateTime.parse(json['date_created']),
-        dateCreatedGmt: DateTime.parse(json['date_created_gmt']),
-        dateModified: DateTime.parse(json['date_modified']),
-        dateModifiedGmt: DateTime.parse(json['date_modified_gmt']),
-      );
-
   /// Converts the WooWebhook instance to JSON format
   ///
   /// This method serializes the webhook data into a Map that can be sent
@@ -336,47 +376,4 @@ class WooWebhook {
         'date_modified': dateModified?.toIso8601String(),
         'date_modified_gmt': dateModifiedGmt?.toIso8601String(),
       };
-
-  /// Creates a fake WooWebhook instance for testing purposes
-  ///
-  /// This factory constructor generates a webhook with random but realistic
-  /// data, making it useful for testing, development, and demonstration purposes.
-  /// The generated webhook will have valid data for all fields.
-  ///
-  /// ## Generated Data
-  ///
-  /// The fake webhook includes:
-  /// - Random name from sentence generator
-  /// - Random status from available statuses
-  /// - Random topic from available topics
-  /// - Random delivery URL
-  /// - Random secret key
-  ///
-  /// ## Returns
-  ///
-  /// A `WooWebhook` instance with randomly generated fake data.
-  ///
-  /// ## Example Usage
-  ///
-  /// ```dart
-  /// // Generate a fake webhook for testing
-  /// final fakeWebhook = WooWebhook.fake();
-  /// print('Fake webhook: ${fakeWebhook.name}');
-  /// print('Topic: ${fakeWebhook.topic}');
-  ///
-  /// // Use in tests
-  /// test('webhook creation', () {
-  ///   final webhook = WooWebhook.fake();
-  ///   expect(webhook.name, isNotNull);
-  ///   expect(webhook.topic, isNotNull);
-  ///   expect(webhook.deliveryUrl, isNotNull);
-  /// });
-  /// ```
-  factory WooWebhook.fake() => WooWebhook(
-        name: FakeHelper.sentence(),
-        status: FakeHelper.randomItem(WooWebhookStatus.values),
-        topic: WooWebhookTopic.randomTopic(),
-        deliveryUrl: FakeHelper.url(),
-        secret: FakeHelper.code(),
-      );
 }

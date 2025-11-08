@@ -78,23 +78,6 @@ import 'product_review.dart';
 /// final json = batchResponse.toJson();
 /// ```
 class WooProductReviewBatchResponse {
-  /// List of created reviews
-  ///
-  /// Contains the reviews that were successfully created, each with a
-  /// server-assigned ID and all other properties as returned by the API.
-  final List<WooProductReview>? create;
-
-  /// List of updated reviews
-  ///
-  /// Contains the reviews that were successfully updated, reflecting
-  /// the current state after the update operation, including any status changes.
-  final List<WooProductReview>? update;
-
-  /// List of deleted reviews
-  ///
-  /// Contains the reviews that were successfully deleted. These reviews
-  /// may have limited information depending on the API response.
-  final List<WooProductReview>? delete;
 
   /// Creates a new WooProductReviewBatchResponse instance
   ///
@@ -163,6 +146,23 @@ class WooProductReviewBatchResponse {
                 .toList()
             : null,
       );
+  /// List of created reviews
+  ///
+  /// Contains the reviews that were successfully created, each with a
+  /// server-assigned ID and all other properties as returned by the API.
+  final List<WooProductReview>? create;
+
+  /// List of updated reviews
+  ///
+  /// Contains the reviews that were successfully updated, reflecting
+  /// the current state after the update operation, including any status changes.
+  final List<WooProductReview>? update;
+
+  /// List of deleted reviews
+  ///
+  /// Contains the reviews that were successfully deleted. These reviews
+  /// may have limited information depending on the API response.
+  final List<WooProductReview>? delete;
 
   /// Converts the WooProductReviewBatchResponse instance to JSON format
   ///

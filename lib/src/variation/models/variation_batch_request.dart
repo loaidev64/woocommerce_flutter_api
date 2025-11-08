@@ -74,22 +74,6 @@ import 'variation.dart';
 /// final batchRequest = WooProductVariationBatchRequest.fromJson(jsonData);
 /// ```
 class WooProductVariationBatchRequest {
-  /// List of variations to create
-  ///
-  /// Each variation in this list will be created as a new variation for the parent product.
-  /// Variations in this list should not have an ID assigned.
-  final List<WooProductVariation>? create;
-
-  /// List of variations to update
-  ///
-  /// Each variation in this list must have a valid ID and will be updated
-  /// with the provided values.
-  final List<WooProductVariation>? update;
-
-  /// List of variation IDs to delete
-  ///
-  /// Each ID in this list represents a variation that will be deleted from the product.
-  final List<int>? delete;
 
   /// Creates a new WooProductVariationBatchRequest instance
   ///
@@ -163,6 +147,22 @@ class WooProductVariationBatchRequest {
             ? (json['delete'] as List).cast<int>()
             : null,
       );
+  /// List of variations to create
+  ///
+  /// Each variation in this list will be created as a new variation for the parent product.
+  /// Variations in this list should not have an ID assigned.
+  final List<WooProductVariation>? create;
+
+  /// List of variations to update
+  ///
+  /// Each variation in this list must have a valid ID and will be updated
+  /// with the provided values.
+  final List<WooProductVariation>? update;
+
+  /// List of variation IDs to delete
+  ///
+  /// Each ID in this list represents a variation that will be deleted from the product.
+  final List<int>? delete;
 
   /// Converts the WooProductVariationBatchRequest instance to JSON format
   ///

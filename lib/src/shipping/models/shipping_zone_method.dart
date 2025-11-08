@@ -1,21 +1,12 @@
 import 'package:woocommerce_flutter_api/woocommerce_flutter_api.dart';
 
 class WooShippingZoneMethod {
-  final int? instanceId;
-  final String? title;
-  final int? order;
-  final bool? enabled;
-  final String? methodId;
-  final String? methodTitle;
-  final String? methodDescription;
-  final Map<String, WooShippingZoneMethodSetting>? settings;
 
   WooShippingZoneMethod({
-    this.instanceId,
+    required this.methodId, this.instanceId,
     this.title,
     this.order,
     this.enabled,
-    required this.methodId,
     this.methodTitle,
     this.methodDescription,
     this.settings,
@@ -37,18 +28,6 @@ class WooShippingZoneMethod {
     );
   }
 
-  Map<String, dynamic> toJson() => {
-        'instance_id': instanceId,
-        'title': title,
-        'order': order,
-        'enabled': enabled,
-        'method_id': methodId,
-        'method_title': methodTitle,
-        'method_description': methodDescription,
-        'settings':
-            settings?.map((key, value) => MapEntry(key, value.toJson())),
-      };
-
   factory WooShippingZoneMethod.fake() => WooShippingZoneMethod(
         instanceId: FakeHelper.integer(),
         title: FakeHelper.sentence(),
@@ -63,4 +42,24 @@ class WooShippingZoneMethod {
             FakeHelper.word(): WooShippingZoneMethodSetting.fake(),
         },
       );
+  final int? instanceId;
+  final String? title;
+  final int? order;
+  final bool? enabled;
+  final String? methodId;
+  final String? methodTitle;
+  final String? methodDescription;
+  final Map<String, WooShippingZoneMethodSetting>? settings;
+
+  Map<String, dynamic> toJson() => {
+        'instance_id': instanceId,
+        'title': title,
+        'order': order,
+        'enabled': enabled,
+        'method_id': methodId,
+        'method_title': methodTitle,
+        'method_description': methodDescription,
+        'settings':
+            settings?.map((key, value) => MapEntry(key, value.toJson())),
+      };
 }

@@ -1,18 +1,6 @@
 import 'package:woocommerce_flutter_api/src/helpers/fake_helper.dart';
 
 class WooSystemStatusTheme {
-  final String? name;
-  final String? version;
-  final String? versionLatest;
-  final String? authorUrl;
-  final bool? isChildTheme;
-  final bool? hasWooCommerceSupport;
-  final bool? hasWooCommerceFile;
-  final bool? hasOutdatedTemplates;
-  final List<String>? overrides;
-  final String? parentName;
-  final String? parentVersion;
-  final String? parentAuthorUrl;
 
   WooSystemStatusTheme({
     this.name,
@@ -46,21 +34,6 @@ class WooSystemStatusTheme {
     parentAuthorUrl: json['parent_author_url'],
   );
 
-  Map<String, dynamic> toJson() => {
-    'name': name,
-    'version': version,
-    'version_latest': versionLatest,
-    'author_url': authorUrl,
-    'is_child_theme': isChildTheme,
-    'has_woocommerce_support': hasWooCommerceSupport,
-    'has_woocommerce_file': hasWooCommerceFile,
-    'has_outdated_templates': hasOutdatedTemplates,
-    'overrides': overrides,
-    'parent_name': parentName,
-    'parent_version': parentVersion,
-    'parent_author_url': parentAuthorUrl,
-  };
-
   factory WooSystemStatusTheme.fake() => WooSystemStatusTheme(
     name: 'Storefront',
     version: '4.2.0',
@@ -75,4 +48,31 @@ class WooSystemStatusTheme {
     parentVersion: '4.2.0',
     parentAuthorUrl: FakeHelper.url(),
   );
+  final String? name;
+  final String? version;
+  final String? versionLatest;
+  final String? authorUrl;
+  final bool? isChildTheme;
+  final bool? hasWooCommerceSupport;
+  final bool? hasWooCommerceFile;
+  final bool? hasOutdatedTemplates;
+  final List<String>? overrides;
+  final String? parentName;
+  final String? parentVersion;
+  final String? parentAuthorUrl;
+
+  Map<String, dynamic> toJson() => {
+    'name': name,
+    'version': version,
+    'version_latest': versionLatest,
+    'author_url': authorUrl,
+    'is_child_theme': isChildTheme,
+    'has_woocommerce_support': hasWooCommerceSupport,
+    'has_woocommerce_file': hasWooCommerceFile,
+    'has_outdated_templates': hasOutdatedTemplates,
+    'overrides': overrides,
+    'parent_name': parentName,
+    'parent_version': parentVersion,
+    'parent_author_url': parentAuthorUrl,
+  };
 }

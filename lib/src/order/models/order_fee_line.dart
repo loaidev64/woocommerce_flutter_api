@@ -8,29 +8,6 @@ import 'package:woocommerce_flutter_api/src/order/models/fee_line_tax.dart';
 /// Contains fee information, amounts, and tax details for additional fees
 /// applied to an order. Used for fee tracking and order processing.
 class WooOrderFeeLine {
-  /// Unique identifier for the fee line.
-  int? id;
-
-  /// Fee name or description.
-  String? name;
-
-  /// Tax class for the fee.
-  String? taxClass;
-
-  /// Tax status of the fee (taxable or none).
-  WooOrderTaxStatus? taxStatus;
-
-  /// Line total after discounts.
-  double? total;
-
-  /// Line total tax after discounts.
-  double? totalTax;
-
-  /// Tax details for the fee line.
-  List<WooFeeLineTax> taxes;
-
-  /// Custom metadata for the fee line.
-  List<WooMetaData> metaData;
 
   /// Creates a new WooOrderFeeLine instance.
   WooOrderFeeLine({
@@ -59,6 +36,40 @@ class WooOrderFeeLine {
             .map((i) => WooMetaData.fromJson(i))
             .toList();
 
+  factory WooOrderFeeLine.fake() => WooOrderFeeLine(
+        id: FakeHelper.integer(),
+        name: FakeHelper.word(),
+        taxClass: FakeHelper.word(),
+        taxStatus: WooOrderTaxStatus.fake(),
+        totalTax: FakeHelper.decimal(),
+        total: FakeHelper.decimal(),
+        taxes: FakeHelper.list(() => WooFeeLineTax.fake()),
+        metaData: FakeHelper.list(() => WooMetaData.fake()),
+      );
+  /// Unique identifier for the fee line.
+  int? id;
+
+  /// Fee name or description.
+  String? name;
+
+  /// Tax class for the fee.
+  String? taxClass;
+
+  /// Tax status of the fee (taxable or none).
+  WooOrderTaxStatus? taxStatus;
+
+  /// Line total after discounts.
+  double? total;
+
+  /// Line total tax after discounts.
+  double? totalTax;
+
+  /// Tax details for the fee line.
+  List<WooFeeLineTax> taxes;
+
+  /// Custom metadata for the fee line.
+  List<WooMetaData> metaData;
+
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['id'] = id;
@@ -71,17 +82,6 @@ class WooOrderFeeLine {
     data['meta_data'] = metaData.map((v) => v.toJson()).toList();
     return data;
   }
-
-  factory WooOrderFeeLine.fake() => WooOrderFeeLine(
-        id: FakeHelper.integer(),
-        name: FakeHelper.word(),
-        taxClass: FakeHelper.word(),
-        taxStatus: WooOrderTaxStatus.fake(),
-        totalTax: FakeHelper.decimal(),
-        total: FakeHelper.decimal(),
-        taxes: FakeHelper.list(() => WooFeeLineTax.fake()),
-        metaData: FakeHelper.list(() => WooMetaData.fake()),
-      );
 
   /// Returns a string representation of the WooOrderFeeLine instance.
   ///

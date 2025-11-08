@@ -63,23 +63,6 @@ import 'coupon.dart';
 /// final json = batchResponse.toJson();
 /// ```
 class WooCouponBatchResponse {
-  /// List of created coupons
-  ///
-  /// Contains the coupons that were successfully created, each with a
-  /// server-assigned ID and all other properties as returned by the API.
-  final List<WooCoupon>? create;
-
-  /// List of updated coupons
-  ///
-  /// Contains the coupons that were successfully updated, reflecting
-  /// the current state after the update operation.
-  final List<WooCoupon>? update;
-
-  /// List of deleted coupons
-  ///
-  /// Contains the coupons that were successfully deleted. These coupons
-  /// may have limited information depending on the API response.
-  final List<WooCoupon>? delete;
 
   /// Creates a new WooCouponBatchResponse instance
   ///
@@ -145,6 +128,23 @@ class WooCouponBatchResponse {
                 .toList()
             : null,
       );
+  /// List of created coupons
+  ///
+  /// Contains the coupons that were successfully created, each with a
+  /// server-assigned ID and all other properties as returned by the API.
+  final List<WooCoupon>? create;
+
+  /// List of updated coupons
+  ///
+  /// Contains the coupons that were successfully updated, reflecting
+  /// the current state after the update operation.
+  final List<WooCoupon>? update;
+
+  /// List of deleted coupons
+  ///
+  /// Contains the coupons that were successfully deleted. These coupons
+  /// may have limited information depending on the API response.
+  final List<WooCoupon>? delete;
 
   /// Converts the WooCouponBatchResponse instance to JSON format
   ///

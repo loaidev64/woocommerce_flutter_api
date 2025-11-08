@@ -48,48 +48,6 @@ import 'package:woocommerce_flutter_api/woocommerce_flutter_api.dart';
 /// print('Active Plugins: ${status.activePlugins?.length}');
 /// ```
 class WooSystemStatus {
-  /// Environment information
-  ///
-  /// Contains detailed information about the server environment, including
-  /// PHP version, WordPress version, memory limits, server software, and
-  /// various PHP extensions and configurations.
-  final WooSystemStatusEnvironment? environment;
-
-  /// Database information
-  ///
-  /// Contains information about the WooCommerce database, including version,
-  /// table structure, connectivity status, and database-specific settings.
-  final WooSystemStatusDatabase? database;
-
-  /// Active plugins
-  ///
-  /// List of currently active plugins in the WordPress installation.
-  /// This helps identify potential conflicts and performance impacts.
-  final List<String>? activePlugins;
-
-  /// Theme information
-  ///
-  /// Contains details about the current WordPress theme, including version,
-  /// WooCommerce compatibility, and theme-specific settings.
-  final WooSystemStatusTheme? theme;
-
-  /// Settings information
-  ///
-  /// Contains WooCommerce-specific settings and configuration details,
-  /// including store settings, payment methods, and other configurations.
-  final WooSystemStatusSettings? settings;
-
-  /// Security information
-  ///
-  /// Contains security-related information, including potential vulnerabilities,
-  /// security settings, and recommendations for improving store security.
-  final WooSystemStatusSecurity? security;
-
-  /// WooCommerce pages
-  ///
-  /// List of WooCommerce-specific pages (shop, cart, checkout, my-account)
-  /// and their current status and accessibility.
-  final List<String>? pages;
 
   /// Creates a new WooSystemStatus instance
   ///
@@ -219,6 +177,96 @@ class WooSystemStatus {
         pages: json['pages'] != null ? List<String>.from(json['pages']) : null,
       );
 
+  /// Creates a fake WooSystemStatus instance for testing purposes
+  ///
+  /// This factory constructor generates a system status with random but realistic
+  /// data, making it useful for testing, development, and demonstration purposes.
+  /// The generated system status will have valid data for all fields.
+  ///
+  /// ## Generated Data
+  ///
+  /// The fake system status includes:
+  /// - Random environment information with realistic server details
+  /// - Random database information with realistic table structure
+  /// - Random list of active plugins
+  /// - Random theme information with realistic details
+  /// - Random settings information
+  /// - Random security information
+  /// - Random list of WooCommerce pages
+  ///
+  /// ## Returns
+  ///
+  /// A `WooSystemStatus` instance with randomly generated fake data.
+  ///
+  /// ## Example Usage
+  ///
+  /// ```dart
+  /// // Generate a fake system status for testing
+  /// final fakeStatus = WooSystemStatus.fake();
+  /// print('Fake status: ${fakeStatus.environment?.phpVersion}');
+  /// print('Active Plugins: ${fakeStatus.activePlugins?.length}');
+  /// print('Pages: ${fakeStatus.pages?.length}');
+  ///
+  /// // Use in tests
+  /// test('system status creation', () {
+  ///   final status = WooSystemStatus.fake();
+  ///   expect(status.environment, isNotNull);
+  ///   expect(status.database, isNotNull);
+  ///   expect(status.activePlugins, isNotNull);
+  /// });
+  /// ```
+  factory WooSystemStatus.fake() => WooSystemStatus(
+        environment: WooSystemStatusEnvironment.fake(),
+        database: WooSystemStatusDatabase.fake(),
+        activePlugins: FakeHelper.list(() => FakeHelper.word()),
+        theme: WooSystemStatusTheme.fake(),
+        settings: WooSystemStatusSettings.fake(),
+        security: WooSystemStatusSecurity.fake(),
+        pages: FakeHelper.list(() => FakeHelper.word()),
+      );
+  /// Environment information
+  ///
+  /// Contains detailed information about the server environment, including
+  /// PHP version, WordPress version, memory limits, server software, and
+  /// various PHP extensions and configurations.
+  final WooSystemStatusEnvironment? environment;
+
+  /// Database information
+  ///
+  /// Contains information about the WooCommerce database, including version,
+  /// table structure, connectivity status, and database-specific settings.
+  final WooSystemStatusDatabase? database;
+
+  /// Active plugins
+  ///
+  /// List of currently active plugins in the WordPress installation.
+  /// This helps identify potential conflicts and performance impacts.
+  final List<String>? activePlugins;
+
+  /// Theme information
+  ///
+  /// Contains details about the current WordPress theme, including version,
+  /// WooCommerce compatibility, and theme-specific settings.
+  final WooSystemStatusTheme? theme;
+
+  /// Settings information
+  ///
+  /// Contains WooCommerce-specific settings and configuration details,
+  /// including store settings, payment methods, and other configurations.
+  final WooSystemStatusSettings? settings;
+
+  /// Security information
+  ///
+  /// Contains security-related information, including potential vulnerabilities,
+  /// security settings, and recommendations for improving store security.
+  final WooSystemStatusSecurity? security;
+
+  /// WooCommerce pages
+  ///
+  /// List of WooCommerce-specific pages (shop, cart, checkout, my-account)
+  /// and their current status and accessibility.
+  final List<String>? pages;
+
   /// Converts the WooSystemStatus instance to JSON format
   ///
   /// This method serializes the system status data into a Map that can be sent
@@ -284,52 +332,4 @@ class WooSystemStatus {
         'security': security?.toJson(),
         'pages': pages,
       };
-
-  /// Creates a fake WooSystemStatus instance for testing purposes
-  ///
-  /// This factory constructor generates a system status with random but realistic
-  /// data, making it useful for testing, development, and demonstration purposes.
-  /// The generated system status will have valid data for all fields.
-  ///
-  /// ## Generated Data
-  ///
-  /// The fake system status includes:
-  /// - Random environment information with realistic server details
-  /// - Random database information with realistic table structure
-  /// - Random list of active plugins
-  /// - Random theme information with realistic details
-  /// - Random settings information
-  /// - Random security information
-  /// - Random list of WooCommerce pages
-  ///
-  /// ## Returns
-  ///
-  /// A `WooSystemStatus` instance with randomly generated fake data.
-  ///
-  /// ## Example Usage
-  ///
-  /// ```dart
-  /// // Generate a fake system status for testing
-  /// final fakeStatus = WooSystemStatus.fake();
-  /// print('Fake status: ${fakeStatus.environment?.phpVersion}');
-  /// print('Active Plugins: ${fakeStatus.activePlugins?.length}');
-  /// print('Pages: ${fakeStatus.pages?.length}');
-  ///
-  /// // Use in tests
-  /// test('system status creation', () {
-  ///   final status = WooSystemStatus.fake();
-  ///   expect(status.environment, isNotNull);
-  ///   expect(status.database, isNotNull);
-  ///   expect(status.activePlugins, isNotNull);
-  /// });
-  /// ```
-  factory WooSystemStatus.fake() => WooSystemStatus(
-        environment: WooSystemStatusEnvironment.fake(),
-        database: WooSystemStatusDatabase.fake(),
-        activePlugins: FakeHelper.list(() => FakeHelper.word()),
-        theme: WooSystemStatusTheme.fake(),
-        settings: WooSystemStatusSettings.fake(),
-        security: WooSystemStatusSecurity.fake(),
-        pages: FakeHelper.list(() => FakeHelper.word()),
-      );
 }

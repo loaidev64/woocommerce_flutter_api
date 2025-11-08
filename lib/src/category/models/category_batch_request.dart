@@ -91,22 +91,6 @@ import 'category.dart';
 /// final batchRequest = WooProductCategoryBatchRequest.fromJson(jsonData);
 /// ```
 class WooProductCategoryBatchRequest {
-  /// List of categories to create
-  ///
-  /// Each category in this list will be created as a new category in the store.
-  /// Categories in this list should not have an ID assigned.
-  final List<WooProductCategory>? create;
-
-  /// List of categories to update
-  ///
-  /// Each category in this list must have a valid ID and will be updated
-  /// with the provided values.
-  final List<WooProductCategory>? update;
-
-  /// List of category IDs to delete
-  ///
-  /// Each ID in this list represents a category that will be deleted from the store.
-  final List<int>? delete;
 
   /// Creates a new WooProductCategoryBatchRequest instance
   ///
@@ -179,6 +163,22 @@ class WooProductCategoryBatchRequest {
             ? (json['delete'] as List).cast<int>()
             : null,
       );
+  /// List of categories to create
+  ///
+  /// Each category in this list will be created as a new category in the store.
+  /// Categories in this list should not have an ID assigned.
+  final List<WooProductCategory>? create;
+
+  /// List of categories to update
+  ///
+  /// Each category in this list must have a valid ID and will be updated
+  /// with the provided values.
+  final List<WooProductCategory>? update;
+
+  /// List of category IDs to delete
+  ///
+  /// Each ID in this list represents a category that will be deleted from the store.
+  final List<int>? delete;
 
   /// Converts the WooProductCategoryBatchRequest instance to JSON format
   ///

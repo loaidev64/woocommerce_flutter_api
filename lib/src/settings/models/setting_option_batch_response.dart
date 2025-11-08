@@ -93,23 +93,6 @@ import 'setting_option.dart';
 /// final json = batchResponse.toJson();
 /// ```
 class WooSettingOptionBatchResponse {
-  /// List of created setting options
-  ///
-  /// Contains the setting options that were successfully created, each with a
-  /// server-assigned ID and all other properties as returned by the API.
-  final List<WooSettingOption>? create;
-
-  /// List of updated setting options
-  ///
-  /// Contains the setting options that were successfully updated, reflecting
-  /// the current state after the update operation.
-  final List<WooSettingOption>? update;
-
-  /// List of deleted setting options
-  ///
-  /// Contains the setting options that were successfully deleted. These options
-  /// may have limited information depending on the API response.
-  final List<WooSettingOption>? delete;
 
   /// Creates a new WooSettingOptionBatchResponse instance
   ///
@@ -178,6 +161,23 @@ class WooSettingOptionBatchResponse {
                 .toList()
             : null,
       );
+  /// List of created setting options
+  ///
+  /// Contains the setting options that were successfully created, each with a
+  /// server-assigned ID and all other properties as returned by the API.
+  final List<WooSettingOption>? create;
+
+  /// List of updated setting options
+  ///
+  /// Contains the setting options that were successfully updated, reflecting
+  /// the current state after the update operation.
+  final List<WooSettingOption>? update;
+
+  /// List of deleted setting options
+  ///
+  /// Contains the setting options that were successfully deleted. These options
+  /// may have limited information depending on the API response.
+  final List<WooSettingOption>? delete;
 
   /// Converts the WooSettingOptionBatchResponse instance to JSON format
   ///

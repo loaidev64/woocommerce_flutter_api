@@ -71,22 +71,6 @@ import 'customer.dart';
 /// final batchRequest = WooCustomerBatchRequest.fromJson(jsonData);
 /// ```
 class WooCustomerBatchRequest {
-  /// List of customers to create
-  ///
-  /// Each customer in this list will be created as a new customer in the store.
-  /// Customers in this list should not have an ID assigned.
-  final List<WooCustomer>? create;
-
-  /// List of customers to update
-  ///
-  /// Each customer in this list must have a valid ID and will be updated
-  /// with the provided values.
-  final List<WooCustomer>? update;
-
-  /// List of customer IDs to delete
-  ///
-  /// Each ID in this list represents a customer that will be deleted from the store.
-  final List<int>? delete;
 
   /// Creates a new WooCustomerBatchRequest instance
   ///
@@ -160,6 +144,22 @@ class WooCustomerBatchRequest {
             ? (json['delete'] as List).cast<int>()
             : null,
       );
+  /// List of customers to create
+  ///
+  /// Each customer in this list will be created as a new customer in the store.
+  /// Customers in this list should not have an ID assigned.
+  final List<WooCustomer>? create;
+
+  /// List of customers to update
+  ///
+  /// Each customer in this list must have a valid ID and will be updated
+  /// with the provided values.
+  final List<WooCustomer>? update;
+
+  /// List of customer IDs to delete
+  ///
+  /// Each ID in this list represents a customer that will be deleted from the store.
+  final List<int>? delete;
 
   /// Converts the WooCustomerBatchRequest instance to JSON format
   ///

@@ -50,63 +50,6 @@ import 'package:woocommerce_flutter_api/woocommerce_flutter_api.dart';
 /// print('Supports: ${gateway.methodSupports}');
 /// ```
 class WooPaymentGateway {
-  /// Payment gateway ID
-  ///
-  /// Unique identifier for the payment gateway (e.g., 'paypal', 'stripe', 'bacs').
-  /// This ID is used to reference the gateway in API calls and configuration.
-  final String? id;
-
-  /// Payment gateway title on checkout
-  ///
-  /// The display name shown to customers during checkout. This should be
-  /// user-friendly and clearly indicate the payment method.
-  final String? title;
-
-  /// Payment gateway description on checkout
-  ///
-  /// Additional information shown to customers about the payment method,
-  /// such as security features or processing time.
-  final String? description;
-
-  /// Payment gateway sort order
-  ///
-  /// Determines the display order of payment methods on the checkout page.
-  /// Lower numbers appear first in the list.
-  final int? order;
-
-  /// Payment gateway enabled status
-  ///
-  /// Controls whether the payment gateway is available to customers.
-  /// When false, the gateway is hidden from checkout options.
-  final bool? enabled;
-
-  /// Payment gateway method title
-  ///
-  /// The title used in the payment method selection during checkout.
-  /// This may differ from the main gateway title for branding purposes.
-  final String? methodTitle;
-
-  /// Payment gateway method description
-  ///
-  /// Detailed description of the payment method shown to customers
-  /// during the checkout process.
-  final String? methodDescription;
-
-  /// Supported features
-  ///
-  /// List of features supported by this payment gateway:
-  /// - 'products': Product-based payments
-  /// - 'refunds': Refund processing capability
-  /// - 'subscriptions': Subscription payment support
-  /// - 'pre-orders': Pre-order payment handling
-  /// - 'tokenization': Token-based payments
-  final List<String>? methodSupports;
-
-  /// Payment gateway settings
-  ///
-  /// Configuration settings for the payment gateway, including API keys,
-  /// processing options, and other customizable parameters.
-  final Map<String, WooPaymentGatewaySetting>? settings;
 
   /// Creates a new WooPaymentGateway instance
   ///
@@ -228,6 +171,118 @@ class WooPaymentGateway {
     );
   }
 
+  /// Creates a fake WooPaymentGateway instance for testing purposes
+  ///
+  /// This factory constructor generates a payment gateway with random but realistic
+  /// data, making it useful for testing, development, and demonstration purposes.
+  /// The generated payment gateway will have valid data for all fields.
+  ///
+  /// ## Generated Data
+  ///
+  /// The fake payment gateway includes:
+  /// - Random ID from word generator
+  /// - Random title from word generator
+  /// - Random description from sentence generator
+  /// - Random order from integer generator
+  /// - Random enabled status from boolean generator
+  /// - Random method title from sentence generator
+  /// - Random method description from sentence generator
+  /// - Random list of supported features
+  /// - Random settings map with multiple configuration options
+  ///
+  /// ## Returns
+  ///
+  /// A `WooPaymentGateway` instance with randomly generated fake data.
+  ///
+  /// ## Example Usage
+  ///
+  /// ```dart
+  /// // Generate a fake payment gateway for testing
+  /// final fakeGateway = WooPaymentGateway.fake();
+  /// print('Fake gateway: ${fakeGateway.title}');
+  /// print('ID: ${fakeGateway.id}');
+  /// print('Enabled: ${fakeGateway.enabled}');
+  ///
+  /// // Use in tests
+  /// test('payment gateway creation', () {
+  ///   final gateway = WooPaymentGateway.fake();
+  ///   expect(gateway.id, isNotNull);
+  ///   expect(gateway.title, isNotNull);
+  ///   expect(gateway.enabled, isA<bool>());
+  /// });
+  /// ```
+  factory WooPaymentGateway.fake() => WooPaymentGateway(
+        id: FakeHelper.word(),
+        title: FakeHelper.word(),
+        description: FakeHelper.sentence(),
+        order: FakeHelper.integer(),
+        enabled: FakeHelper.boolean(),
+        methodTitle: FakeHelper.sentence(),
+        methodDescription: FakeHelper.sentence(),
+        methodSupports: FakeHelper.list(() => FakeHelper.word()),
+        settings: {
+          for (var i = 0; i < FakeHelper.integer(max: 2); i++)
+            FakeHelper.word(): WooPaymentGatewaySetting.fake(),
+        },
+      );
+  /// Payment gateway ID
+  ///
+  /// Unique identifier for the payment gateway (e.g., 'paypal', 'stripe', 'bacs').
+  /// This ID is used to reference the gateway in API calls and configuration.
+  final String? id;
+
+  /// Payment gateway title on checkout
+  ///
+  /// The display name shown to customers during checkout. This should be
+  /// user-friendly and clearly indicate the payment method.
+  final String? title;
+
+  /// Payment gateway description on checkout
+  ///
+  /// Additional information shown to customers about the payment method,
+  /// such as security features or processing time.
+  final String? description;
+
+  /// Payment gateway sort order
+  ///
+  /// Determines the display order of payment methods on the checkout page.
+  /// Lower numbers appear first in the list.
+  final int? order;
+
+  /// Payment gateway enabled status
+  ///
+  /// Controls whether the payment gateway is available to customers.
+  /// When false, the gateway is hidden from checkout options.
+  final bool? enabled;
+
+  /// Payment gateway method title
+  ///
+  /// The title used in the payment method selection during checkout.
+  /// This may differ from the main gateway title for branding purposes.
+  final String? methodTitle;
+
+  /// Payment gateway method description
+  ///
+  /// Detailed description of the payment method shown to customers
+  /// during the checkout process.
+  final String? methodDescription;
+
+  /// Supported features
+  ///
+  /// List of features supported by this payment gateway:
+  /// - 'products': Product-based payments
+  /// - 'refunds': Refund processing capability
+  /// - 'subscriptions': Subscription payment support
+  /// - 'pre-orders': Pre-order payment handling
+  /// - 'tokenization': Token-based payments
+  final List<String>? methodSupports;
+
+  /// Payment gateway settings
+  ///
+  /// Configuration settings for the payment gateway, including API keys,
+  /// processing options, and other customizable parameters.
+  final Map<String, WooPaymentGatewaySetting>? settings;
+
   /// Converts the WooPaymentGateway instance to JSON format
   ///
   /// This method serializes the payment gateway data into a Map that can be sent
@@ -286,59 +341,4 @@ class WooPaymentGateway {
         'settings':
             settings?.map((key, value) => MapEntry(key, value.toJson())),
       };
-
-  /// Creates a fake WooPaymentGateway instance for testing purposes
-  ///
-  /// This factory constructor generates a payment gateway with random but realistic
-  /// data, making it useful for testing, development, and demonstration purposes.
-  /// The generated payment gateway will have valid data for all fields.
-  ///
-  /// ## Generated Data
-  ///
-  /// The fake payment gateway includes:
-  /// - Random ID from word generator
-  /// - Random title from word generator
-  /// - Random description from sentence generator
-  /// - Random order from integer generator
-  /// - Random enabled status from boolean generator
-  /// - Random method title from sentence generator
-  /// - Random method description from sentence generator
-  /// - Random list of supported features
-  /// - Random settings map with multiple configuration options
-  ///
-  /// ## Returns
-  ///
-  /// A `WooPaymentGateway` instance with randomly generated fake data.
-  ///
-  /// ## Example Usage
-  ///
-  /// ```dart
-  /// // Generate a fake payment gateway for testing
-  /// final fakeGateway = WooPaymentGateway.fake();
-  /// print('Fake gateway: ${fakeGateway.title}');
-  /// print('ID: ${fakeGateway.id}');
-  /// print('Enabled: ${fakeGateway.enabled}');
-  ///
-  /// // Use in tests
-  /// test('payment gateway creation', () {
-  ///   final gateway = WooPaymentGateway.fake();
-  ///   expect(gateway.id, isNotNull);
-  ///   expect(gateway.title, isNotNull);
-  ///   expect(gateway.enabled, isA<bool>());
-  /// });
-  /// ```
-  factory WooPaymentGateway.fake() => WooPaymentGateway(
-        id: FakeHelper.word(),
-        title: FakeHelper.word(),
-        description: FakeHelper.sentence(),
-        order: FakeHelper.integer(),
-        enabled: FakeHelper.boolean(),
-        methodTitle: FakeHelper.sentence(),
-        methodDescription: FakeHelper.sentence(),
-        methodSupports: FakeHelper.list(() => FakeHelper.word()),
-        settings: {
-          for (var i = 0; i < FakeHelper.integer(max: 2); i++)
-            FakeHelper.word(): WooPaymentGatewaySetting.fake(),
-        },
-      );
 }

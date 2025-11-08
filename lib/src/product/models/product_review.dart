@@ -4,6 +4,47 @@ import 'package:woocommerce_flutter_api/woocommerce_flutter_api.dart';
 ///
 /// Brief description of the model's purpose and usage for product reviews.
 class WooProductReview {
+
+  /// Creates a new WooProductReview instance.
+  WooProductReview({
+    this.id,
+    this.dateCreated,
+    this.dateCreatedGmt,
+    this.productId,
+    this.status = WooProductReviewStatus.approved,
+    this.reviewer,
+    this.reviewerEmail,
+    this.review,
+    this.rating,
+    this.verified,
+  });
+
+  /// Creates a WooProductReview instance from JSON data.
+  WooProductReview.fromJson(Map<String, dynamic> json)
+      : id = json['id'],
+        dateCreated = DateTime.tryParse(json['date_created']),
+        dateCreatedGmt = DateTime.tryParse(json['date_created_gmt']),
+        productId = json['product_id'],
+        status = WooProductReviewStatus.fromApi(json['status']),
+        reviewer = json['reviewer'],
+        reviewerEmail = json['reviewer_email'],
+        review = json['review'],
+        rating = json['rating'],
+        verified = json['verified'];
+
+  /// Creates a fake WooProductReview instance for testing purposes.
+  factory WooProductReview.fake([int? id]) => WooProductReview(
+        id: id ?? FakeHelper.integer(),
+        dateCreated: FakeHelper.datetime(),
+        dateCreatedGmt: FakeHelper.datetime(),
+        productId: FakeHelper.integer(),
+        status: WooProductReviewStatus.fake(),
+        reviewer: FakeHelper.firstName(),
+        reviewerEmail: FakeHelper.email(),
+        review: FakeHelper.sentence(),
+        rating: FakeHelper.integer(min: 0, max: 5),
+        verified: FakeHelper.boolean(),
+      );
   /// Unique identifier for the resource. Read-only.
   int? id;
 
@@ -34,33 +75,6 @@ class WooProductReview {
   /// Shows if the reviewer bought the product or not.
   bool? verified;
 
-  /// Creates a new WooProductReview instance.
-  WooProductReview({
-    this.id,
-    this.dateCreated,
-    this.dateCreatedGmt,
-    this.productId,
-    this.status = WooProductReviewStatus.approved,
-    this.reviewer,
-    this.reviewerEmail,
-    this.review,
-    this.rating,
-    this.verified,
-  });
-
-  /// Creates a WooProductReview instance from JSON data.
-  WooProductReview.fromJson(Map<String, dynamic> json)
-      : id = json['id'],
-        dateCreated = DateTime.tryParse(json['date_created']),
-        dateCreatedGmt = DateTime.tryParse(json['date_created_gmt']),
-        productId = json['product_id'],
-        status = WooProductReviewStatus.fromApi(json['status']),
-        reviewer = json['reviewer'],
-        reviewerEmail = json['reviewer_email'],
-        review = json['review'],
-        rating = json['rating'],
-        verified = json['verified'];
-
   /// Converts the WooProductReview instance to JSON format.
   Map<String, dynamic> toJson() => {
         'id': id,
@@ -87,18 +101,4 @@ class WooProductReview {
 
   @override
   int get hashCode => id.hashCode;
-
-  /// Creates a fake WooProductReview instance for testing purposes.
-  factory WooProductReview.fake([int? id]) => WooProductReview(
-        id: id ?? FakeHelper.integer(),
-        dateCreated: FakeHelper.datetime(),
-        dateCreatedGmt: FakeHelper.datetime(),
-        productId: FakeHelper.integer(),
-        status: WooProductReviewStatus.fake(),
-        reviewer: FakeHelper.firstName(),
-        reviewerEmail: FakeHelper.email(),
-        review: FakeHelper.sentence(),
-        rating: FakeHelper.integer(min: 0, max: 5),
-        verified: FakeHelper.boolean(),
-      );
 }

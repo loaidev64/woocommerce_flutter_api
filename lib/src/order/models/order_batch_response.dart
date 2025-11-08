@@ -63,23 +63,6 @@ import 'order.dart';
 /// final json = batchResponse.toJson();
 /// ```
 class WooOrderBatchResponse {
-  /// List of created orders
-  ///
-  /// Contains the orders that were successfully created, each with a
-  /// server-assigned ID and all other properties as returned by the API.
-  final List<WooOrder>? create;
-
-  /// List of updated orders
-  ///
-  /// Contains the orders that were successfully updated, reflecting
-  /// the current state after the update operation.
-  final List<WooOrder>? update;
-
-  /// List of deleted orders
-  ///
-  /// Contains the orders that were successfully deleted. These orders
-  /// may have limited information depending on the API response.
-  final List<WooOrder>? delete;
 
   /// Creates a new WooOrderBatchResponse instance
   ///
@@ -145,6 +128,23 @@ class WooOrderBatchResponse {
                 .toList()
             : null,
       );
+  /// List of created orders
+  ///
+  /// Contains the orders that were successfully created, each with a
+  /// server-assigned ID and all other properties as returned by the API.
+  final List<WooOrder>? create;
+
+  /// List of updated orders
+  ///
+  /// Contains the orders that were successfully updated, reflecting
+  /// the current state after the update operation.
+  final List<WooOrder>? update;
+
+  /// List of deleted orders
+  ///
+  /// Contains the orders that were successfully deleted. These orders
+  /// may have limited information depending on the API response.
+  final List<WooOrder>? delete;
 
   /// Converts the WooOrderBatchResponse instance to JSON format
   ///

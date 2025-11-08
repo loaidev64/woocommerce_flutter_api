@@ -74,22 +74,6 @@ import 'product_shipping_class.dart';
 /// final batchRequest = WooProductShippingClassBatchRequest.fromJson(jsonData);
 /// ```
 class WooProductShippingClassBatchRequest {
-  /// List of shipping classes to create
-  ///
-  /// Each shipping class in this list will be created as a new shipping class in the store.
-  /// Shipping classes in this list should not have an ID assigned.
-  final List<WooProductShippingClass>? create;
-
-  /// List of shipping classes to update
-  ///
-  /// Each shipping class in this list must have a valid ID and will be updated
-  /// with the provided values.
-  final List<WooProductShippingClass>? update;
-
-  /// List of shipping class IDs to delete
-  ///
-  /// Each ID in this list represents a shipping class that will be deleted from the store.
-  final List<int>? delete;
 
   /// Creates a new WooProductShippingClassBatchRequest instance
   ///
@@ -169,6 +153,22 @@ class WooProductShippingClassBatchRequest {
             ? (json['delete'] as List).cast<int>()
             : null,
       );
+  /// List of shipping classes to create
+  ///
+  /// Each shipping class in this list will be created as a new shipping class in the store.
+  /// Shipping classes in this list should not have an ID assigned.
+  final List<WooProductShippingClass>? create;
+
+  /// List of shipping classes to update
+  ///
+  /// Each shipping class in this list must have a valid ID and will be updated
+  /// with the provided values.
+  final List<WooProductShippingClass>? update;
+
+  /// List of shipping class IDs to delete
+  ///
+  /// Each ID in this list represents a shipping class that will be deleted from the store.
+  final List<int>? delete;
 
   /// Converts the WooProductShippingClassBatchRequest instance to JSON format
   ///

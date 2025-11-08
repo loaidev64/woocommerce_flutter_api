@@ -7,6 +7,61 @@ import 'package:woocommerce_flutter_api/src/order/models/tax.dart';
 /// Contains product information, quantities, pricing, and tax details for items
 /// in an order. Used for order processing and inventory management.
 class WooLineItem {
+
+  /// Creates a new WooLineItem instance.
+  WooLineItem({
+    this.id,
+    this.name,
+    this.productId,
+    this.variationId,
+    this.quantity,
+    this.taxClass,
+    this.subtotal,
+    this.subtotalTax,
+    this.total,
+    this.totalTax,
+    this.taxes,
+    this.metaData,
+    this.sku,
+    this.price,
+  });
+
+  /// Creates a WooLineItem instance from JSON data.
+  WooLineItem.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    name = json['name'];
+    productId = json['product_id'];
+    variationId = json['variation_id'];
+    quantity = json['quantity'];
+    taxClass = json['tax_class'];
+    subtotal = double.tryParse(json['subtotal']);
+    subtotalTax = double.tryParse(json['subtotal_tax']);
+    total = double.tryParse(json['total']);
+    totalTax = double.tryParse(json['total_tax']);
+    taxes = (json['taxes'] as List).map((i) => WooTax.fromJson(i)).toList();
+    metaData = (json['meta_data'] as List)
+        .map((i) => WooMetaData.fromJson(i))
+        .toList();
+    sku = json['sku'];
+    price = double.tryParse(json['price']);
+  }
+
+  factory WooLineItem.fake() => WooLineItem(
+        id: FakeHelper.integer(),
+        name: FakeHelper.word(),
+        productId: FakeHelper.integer(),
+        variationId: FakeHelper.integer(),
+        quantity: FakeHelper.integer(),
+        taxClass: FakeHelper.word(),
+        subtotal: FakeHelper.decimal(),
+        subtotalTax: FakeHelper.decimal(),
+        total: FakeHelper.decimal(),
+        totalTax: FakeHelper.decimal(),
+        taxes: FakeHelper.list(() => WooTax.fake()),
+        metaData: FakeHelper.list(() => WooMetaData.fake()),
+        sku: FakeHelper.word(),
+        price: FakeHelper.decimal(),
+      );
   /// Unique identifier for the line item.
   int? id;
 
@@ -49,44 +104,6 @@ class WooLineItem {
   /// Product unit price.
   double? price;
 
-  /// Creates a new WooLineItem instance.
-  WooLineItem({
-    this.id,
-    this.name,
-    this.productId,
-    this.variationId,
-    this.quantity,
-    this.taxClass,
-    this.subtotal,
-    this.subtotalTax,
-    this.total,
-    this.totalTax,
-    this.taxes,
-    this.metaData,
-    this.sku,
-    this.price,
-  });
-
-  /// Creates a WooLineItem instance from JSON data.
-  WooLineItem.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    name = json['name'];
-    productId = json['product_id'];
-    variationId = json['variation_id'];
-    quantity = json['quantity'];
-    taxClass = json['tax_class'];
-    subtotal = double.tryParse(json['subtotal']);
-    subtotalTax = double.tryParse(json['subtotal_tax']);
-    total = double.tryParse(json['total']);
-    totalTax = double.tryParse(json['total_tax']);
-    taxes = (json['taxes'] as List).map((i) => WooTax.fromJson(i)).toList();
-    metaData = (json['meta_data'] as List)
-        .map((i) => WooMetaData.fromJson(i))
-        .toList();
-    sku = json['sku'];
-    price = double.tryParse(json['price']);
-  }
-
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['id'] = id;
@@ -117,21 +134,4 @@ class WooLineItem {
   String toString() {
     return 'WooLineItem(id: $id, name: $name, productId: $productId, quantity: $quantity, total: $total)';
   }
-
-  factory WooLineItem.fake() => WooLineItem(
-        id: FakeHelper.integer(),
-        name: FakeHelper.word(),
-        productId: FakeHelper.integer(),
-        variationId: FakeHelper.integer(),
-        quantity: FakeHelper.integer(),
-        taxClass: FakeHelper.word(),
-        subtotal: FakeHelper.decimal(),
-        subtotalTax: FakeHelper.decimal(),
-        total: FakeHelper.decimal(),
-        totalTax: FakeHelper.decimal(),
-        taxes: FakeHelper.list(() => WooTax.fake()),
-        metaData: FakeHelper.list(() => WooMetaData.fake()),
-        sku: FakeHelper.word(),
-        price: FakeHelper.decimal(),
-      );
 }

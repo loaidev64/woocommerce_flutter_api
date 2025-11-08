@@ -4,14 +4,6 @@ import 'package:woocommerce_flutter_api/src/helpers/fake_helper.dart';
 ///
 /// Brief description of the model's purpose and usage for product downloads.
 class WooProductDownload {
-  /// File ID.
-  final String? id;
-
-  /// File name.
-  final String? name;
-
-  /// File URL.
-  final String? file;
 
   /// Creates a new WooProductDownload instance.
   WooProductDownload(this.id, this.name, this.file);
@@ -22,19 +14,27 @@ class WooProductDownload {
         name = json['name'],
         file = json['file'];
 
-  /// Converts the WooProductDownload instance to JSON format.
-  Map<String, dynamic> toJson() => {
-        'id': id,
-        'name': name,
-        'file': file,
-      };
-
   /// Creates a fake WooProductDownload instance for testing purposes.
   factory WooProductDownload.fake() => WooProductDownload(
         FakeHelper.integer().toString(),
         FakeHelper.word(),
         FakeHelper.url(),
       );
+  /// File ID.
+  final String? id;
+
+  /// File name.
+  final String? name;
+
+  /// File URL.
+  final String? file;
+
+  /// Converts the WooProductDownload instance to JSON format.
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'name': name,
+        'file': file,
+      };
 
   /// Returns a string representation of the WooProductDownload instance.
   ///

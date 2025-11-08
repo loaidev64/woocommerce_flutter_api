@@ -15,6 +15,7 @@
 /// - For production, set `useFaker: false` and provide real credentials
 /// - Always handle errors appropriately in production code
 /// - Consider implementing proper state management for larger applications
+library;
 
 import 'package:dio/dio.dart';
 import 'package:woocommerce_flutter_api/woocommerce_flutter_api.dart';
@@ -41,8 +42,6 @@ Future<void> setupExample() async {
     baseUrl: storeUrl,
     username: consumerKey,
     password: consumerSecret,
-    isDebug: true, // Enable debug logging
-    useFaker: false, // Use real data
   );
 
   print('✅ WooCommerce client initialized successfully');
@@ -58,7 +57,6 @@ Future<void> setupWithFakeData() async {
     baseUrl: 'https://example.com', // Not used when useFaker is true
     username: 'dev_key', // Not used when useFaker is true
     password: 'dev_secret', // Not used when useFaker is true
-    isDebug: true,
     useFaker: true, // This will return fake data for all API calls
   );
 
@@ -188,7 +186,6 @@ Future<void> searchProductsExample() async {
     // Search for products
     final searchResults = await woocommerce.getProducts(
       search: 'laptop',
-      perPage: 10,
       status: WooFilterStatus.publish,
     );
 
@@ -383,8 +380,6 @@ Future<void> fetchOrdersExample() async {
     final orders = await woocommerce.getOrders(
       perPage: 5,
       status: [WooOrderStatus.processing],
-      orderBy: WooOrderOrderBy.date,
-      order: WooSortOrder.desc,
     );
 
     print('✅ Fetched ${orders.length} orders:');
@@ -497,7 +492,6 @@ Future<void> errorHandlingExample() async {
     baseUrl: 'https://invalid-store.com', // Invalid URL
     username: 'invalid_key',
     password: 'invalid_secret',
-    useFaker: false, // Try real API call to demonstrate error handling
   );
 
   try {
