@@ -4,4 +4,6 @@ abstract class _ProductReviewEndpoints {
   static String get reviews => '/products/reviews';
 
   static String singleReview(int id) => '/products/reviews/$id';
+
+  static String batchProductReviews() => '/products/reviews/batch';
 }

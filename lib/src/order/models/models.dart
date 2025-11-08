@@ -1,6 +1,8 @@
 export 'billing.dart';
 export 'fee_line_tax.dart';
 export 'line_item.dart';
+export 'order_batch_request.dart';
+export 'order_batch_response.dart';
 export 'order_coupon_line.dart';
 export 'order_fee_line.dart';
 export 'order.dart';

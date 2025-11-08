@@ -395,4 +395,103 @@ extension WooCategoryApi on WooCommerce {
 
     return true;
   }
+
+  /// Performs batch operations on product categories (create, update, delete) in a single request.
+  ///
+  /// This method allows you to create, update, and delete multiple product categories
+  /// efficiently in a single API call, reducing the number of requests needed
+  /// for bulk operations.
+  /// https://woocommerce.github.io/woocommerce-rest-api-docs/#batch-update-product-categories
+  ///
+  /// ## Parameters
+  ///
+  /// * [request] - The batch request containing categories to create, update, and/or delete
+  ///   - `create`: List of `WooProductCategory` objects to create (should not have IDs)
+  ///   - `update`: List of `WooProductCategory` objects to update (must include valid IDs)
+  ///   - `delete`: List of category IDs (integers) to delete
+  /// * [useFaker] - When true, returns fake data for testing purposes
+  ///
+  /// ## Returns
+  ///
+  /// A `Future<WooProductCategoryBatchResponse>` containing the results of all batch operations:
+  /// - `create`: List of successfully created categories with server-assigned IDs
+  /// - `update`: List of successfully updated categories
+  /// - `delete`: List of successfully deleted categories
+  ///
+  /// ## Throws
+  ///
+  /// * `WooCommerceException` if the batch operation fails or validation errors occur
+  ///
+  /// ## Example Usage
+  ///
+  /// ```dart
+  /// // Create a batch request with multiple operations
+  /// final batchRequest = WooProductCategoryBatchRequest(
+  ///   create: [
+  ///     WooProductCategory(
+  ///       name: 'Electronics',
+  ///       description: 'Electronic products and gadgets',
+  ///       slug: 'electronics',
+  ///     ),
+  ///     WooProductCategory(
+  ///       name: 'Clothing',
+  ///       description: 'Apparel and accessories',
+  ///       slug: 'clothing',
+  ///     ),
+  ///   ],
+  ///   update: [
+  ///     existingCategory..name = 'Updated Electronics',
+  ///   ],
+  ///   delete: [123, 456],
+  /// );
+  ///
+  /// // Execute the batch operation
+  /// final response = await wooCommerce.batchUpdateCategories(batchRequest);
+  ///
+  /// // Process results
+  /// print('Created ${response.create?.length ?? 0} categories');
+  /// print('Updated ${response.update?.length ?? 0} categories');
+  /// print('Deleted ${response.delete?.length ?? 0} categories');
+  ///
+  /// // Access individual results
+  /// for (final category in response.create ?? []) {
+  ///   print('Created category: ${category.name} with ID: ${category.id}');
+  /// }
+  /// ```
+  ///
+  /// ## Batch Operations Best Practices
+  ///
+  /// - **Create operations**: Categories should not have IDs assigned
+  /// - **Update operations**: Categories must have valid IDs and will be updated with provided values
+  /// - **Delete operations**: Provide only the IDs of categories to delete
+  /// - **Mixed operations**: You can combine create, update, and delete in a single request
+  /// - **Hierarchical relationships**: When creating parent-child relationships, ensure parent categories are created first or reference existing parent IDs
+  /// - **Error handling**: If any operation fails, the entire batch may fail depending on API behavior
+  Future<WooProductCategoryBatchResponse> batchUpdateCategories(
+    WooProductCategoryBatchRequest request, {
+    bool? useFaker,
+  }) async {
+    final isUsingFaker = useFaker ?? this.useFaker;
+
+    if (isUsingFaker) {
+      return WooProductCategoryBatchResponse(
+        create: request.create
+            ?.map((category) => WooProductCategory.fake())
+            .toList(),
+        update: request.update,
+        delete: request.delete
+            ?.map((id) => WooProductCategory.fake())
+            .toList(),
+      );
+    }
+
+    final response = await dio.post(
+      _CategoryEndpoints.batchCategories(),
+      data: request.toJson(),
+    );
+
+    return WooProductCategoryBatchResponse.fromJson(
+      response.data as Map<String, dynamic>,
+    );
+  }
 }

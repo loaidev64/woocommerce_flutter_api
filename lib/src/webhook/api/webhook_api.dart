@@ -358,4 +358,167 @@ extension WooWebhookApi on WooCommerce {
     );
     return true;
   }
+
+  /// Performs batch operations on webhooks.
+  ///
+  /// This method allows you to create, update, and delete multiple webhooks
+  /// in a single API request, making bulk operations more efficient. This is particularly
+  /// useful for setting up multiple webhook subscriptions, managing webhook configurations
+  /// across different topics, or bulk status updates.
+  /// https://woocommerce.github.io/woocommerce-rest-api-docs/#batch-update-webhooks
+  ///
+  /// ## Parameters
+  ///
+  /// * [request] - The `WooWebhookBatchRequest` object containing
+  ///   the create, update, and delete operations to perform
+  /// * [useFaker] - When true, returns fake data for testing purposes
+  ///
+  /// ## Returns
+  ///
+  /// A `Future<WooWebhookBatchResponse>` containing the results of
+  /// all batch operations, including created, updated, and deleted webhooks.
+  ///
+  /// ## Throws
+  ///
+  /// * `WooCommerceException` if the request fails or access is denied
+  ///
+  /// ## Example Usage
+  ///
+  /// ```dart
+  /// // Create a batch request with multiple operations
+  /// final batchRequest = WooWebhookBatchRequest(
+  ///   create: [
+  ///     WooWebhook(
+  ///       name: 'Order Created Webhook',
+  ///       topic: 'order.created',
+  ///       deliveryUrl: 'https://your-app.com/webhooks/orders',
+  ///       secret: 'your-secret-key',
+  ///       status: WooWebhookStatus.active,
+  ///     ),
+  ///     WooWebhook(
+  ///       name: 'Product Updated Webhook',
+  ///       topic: 'product.updated',
+  ///       deliveryUrl: 'https://your-app.com/webhooks/products',
+  ///       secret: 'another-secret-key',
+  ///       status: WooWebhookStatus.active,
+  ///     ),
+  ///   ],
+  ///   update: [
+  ///     WooWebhook(
+  ///       id: 123,
+  ///       name: 'Updated Order Webhook',
+  ///       status: WooWebhookStatus.paused,
+  ///     ),
+  ///   ],
+  ///   delete: [456, 789],
+  /// );
+  ///
+  /// // Execute the batch operation
+  /// final response = await wooCommerce.batchUpdateWebhooks(batchRequest);
+  ///
+  /// // Process results
+  /// print('Created ${response.create?.length ?? 0} webhooks');
+  /// print('Updated ${response.update?.length ?? 0} webhooks');
+  /// print('Deleted ${response.delete?.length ?? 0} webhooks');
+  ///
+  /// // Access individual results
+  /// for (final webhook in response.create ?? []) {
+  ///   print('Created webhook: ${webhook.name} with ID: ${webhook.id}');
+  ///   print('Topic: ${webhook.topic}');
+  ///   print('Delivery URL: ${webhook.deliveryUrl}');
+  /// }
+  /// ```
+  ///
+  /// ## Webhook Topics Example
+  ///
+  /// ```dart
+  /// // Create webhooks for different event topics
+  /// final batchRequest = WooWebhookBatchRequest(
+  ///   create: [
+  ///     WooWebhook(
+  ///       name: 'Order Events',
+  ///       topic: 'order.created',
+  ///       deliveryUrl: 'https://your-app.com/webhooks/orders',
+  ///       secret: 'order-secret',
+  ///     ),
+  ///     WooWebhook(
+  ///       name: 'Customer Events',
+  ///       topic: 'customer.created',
+  ///       deliveryUrl: 'https://your-app.com/webhooks/customers',
+  ///       secret: 'customer-secret',
+  ///     ),
+  ///     WooWebhook(
+  ///       name: 'Product Events',
+  ///       topic: 'product.updated',
+  ///       deliveryUrl: 'https://your-app.com/webhooks/products',
+  ///       secret: 'product-secret',
+  ///     ),
+  ///   ],
+  /// );
+  ///
+  /// final response = await wooCommerce.batchUpdateWebhooks(batchRequest);
+  /// print('Created ${response.create?.length ?? 0} webhooks for different topics');
+  /// ```
+  ///
+  /// ## Batch Operations Best Practices
+  ///
+  /// - **Create operations**: Webhooks should not have IDs assigned
+  /// - **Update operations**: Webhooks must have valid IDs and will be updated with provided values
+  /// - **Delete operations**: Provide only the IDs of webhooks to delete
+  /// - **Mixed operations**: You can combine create, update, and delete in a single request
+  /// - **Webhook topics**: Use valid topic strings (e.g., 'order.created', 'product.updated')
+  /// - **Delivery URLs**: Must be valid HTTP or HTTPS URLs that can receive POST requests
+  /// - **Secret keys**: Use strong, unique secrets for HMAC-SHA256 signature verification
+  /// - **Status management**: Control webhook delivery with status (active, paused, disabled)
+  /// - **Error handling**: If any operation fails, the entire batch may fail depending on API behavior
+  ///
+  /// ## Webhook Topics
+  ///
+  /// Webhooks support various topics for different resource events:
+  ///
+  /// - **Orders**: `order.created`, `order.updated`, `order.deleted`, `order.restored`
+  /// - **Products**: `product.created`, `product.updated`, `product.deleted`, `product.restored`
+  /// - **Customers**: `customer.created`, `customer.updated`, `customer.deleted`
+  /// - **Coupons**: `coupon.created`, `coupon.updated`, `coupon.deleted`, `coupon.restored`
+  ///
+  /// ## Delivery URLs and Secret Keys
+  ///
+  /// - **Delivery URLs**: Must be valid HTTP or HTTPS endpoints that can receive POST requests
+  /// - **Secret Keys**: Optional but recommended for security. Used to generate HMAC-SHA256 signatures
+  /// - **Signature**: Sent in `X-WC-Webhook-Signature` header for payload verification
+  ///
+  /// Example webhook with secret:
+  ///
+  /// ```dart
+  /// WooWebhook(
+  ///   name: 'Secure Order Webhook',
+  ///   topic: 'order.created',
+  ///   deliveryUrl: 'https://your-app.com/webhooks/orders',
+  ///   secret: 'your-strong-secret-key-here',
+  ///   status: WooWebhookStatus.active,
+  /// )
+  /// ```
+  Future<WooWebhookBatchResponse> batchUpdateWebhooks(
+    WooWebhookBatchRequest request, {
+    bool? useFaker,
+  }) async {
+    final isUsingFaker = useFaker ?? this.useFaker;
+
+    if (isUsingFaker) {
+      return WooWebhookBatchResponse(
+        create: request.create?.map((webhook) => WooWebhook.fake()).toList(),
+        update: request.update,
+        delete: request.delete?.map((id) => WooWebhook.fake()).toList(),
+      );
+    }
+
+    final response = await dio.post(
+      _WebhookEndpoints.batchWebhooks(),
+      data: request.toJson(),
+    );
+
+    return WooWebhookBatchResponse.fromJson(
+      response.data as Map<String, dynamic>,
+    );
+  }
 }

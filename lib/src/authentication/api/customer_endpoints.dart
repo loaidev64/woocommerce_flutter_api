@@ -6,4 +6,6 @@ abstract class _CustomerEndpoints {
   static String singleCustomer(int id) => '/customers/$id';
 
   static String downloads(int id) => '/customers/$id/downloads';
+
+  static String batchCustomers() => '/customers/batch';
 }

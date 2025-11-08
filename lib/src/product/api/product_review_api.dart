@@ -291,4 +291,136 @@ extension WooProductReviewApi on WooCommerce {
 
     return WooProductReview.fromJson(response.data as Map<String, dynamic>);
   }
+
+  /// Performs batch operations on product reviews.
+  ///
+  /// This method allows you to create, update, and delete multiple product reviews
+  /// in a single API request, making bulk operations more efficient. This is particularly
+  /// useful for review moderation workflows, such as approving multiple pending reviews
+  /// or managing review status in bulk.
+  /// https://woocommerce.github.io/woocommerce-rest-api-docs/#batch-update-product-reviews
+  ///
+  /// ## Parameters
+  ///
+  /// * [request] - The `WooProductReviewBatchRequest` object containing
+  ///   the create, update, and delete operations to perform
+  /// * [useFaker] - When true, returns fake data for testing purposes
+  ///
+  /// ## Returns
+  ///
+  /// A `Future<WooProductReviewBatchResponse>` containing the results of
+  /// all batch operations, including created, updated, and deleted reviews.
+  ///
+  /// ## Throws
+  ///
+  /// * `WooCommerceException` if the request fails or access is denied
+  ///
+  /// ## Example Usage
+  ///
+  /// ```dart
+  /// // Create a batch request with multiple operations
+  /// final batchRequest = WooProductReviewBatchRequest(
+  ///   create: [
+  ///     WooProductReview(
+  ///       productId: 123,
+  ///       reviewer: 'John Doe',
+  ///       reviewerEmail: 'john@example.com',
+  ///       review: 'Great product! Highly recommended.',
+  ///       rating: 5,
+  ///       status: WooProductReviewStatus.approved,
+  ///     ),
+  ///     WooProductReview(
+  ///       productId: 456,
+  ///       reviewer: 'Jane Smith',
+  ///       reviewerEmail: 'jane@example.com',
+  ///       review: 'Good quality, fast shipping.',
+  ///       rating: 4,
+  ///       status: WooProductReviewStatus.hold,
+  ///     ),
+  ///   ],
+  ///   update: [
+  ///     WooProductReview(
+  ///       id: 789,
+  ///       status: WooProductReviewStatus.approved,
+  ///       review: 'Updated review text',
+  ///     ),
+  ///   ],
+  ///   delete: [101, 102],
+  /// );
+  ///
+  /// // Execute the batch operation
+  /// final response = await wooCommerce.batchUpdateProductReviews(batchRequest);
+  ///
+  /// // Process results
+  /// print('Created ${response.create?.length ?? 0} reviews');
+  /// print('Updated ${response.update?.length ?? 0} reviews');
+  /// print('Deleted ${response.delete?.length ?? 0} reviews');
+  ///
+  /// // Access individual results
+  /// for (final review in response.create ?? []) {
+  ///   print('Created review: ${review.reviewer} with ID: ${review.id}');
+  /// }
+  /// ```
+  ///
+  /// ## Review Moderation Workflow
+  ///
+  /// ```dart
+  /// // Approve multiple pending reviews
+  /// final pendingReviews = await wooCommerce.getProductReviews(
+  ///   status: WooProductReviewStatus.hold,
+  /// );
+  ///
+  /// final batchRequest = WooProductReviewBatchRequest(
+  ///   update: pendingReviews.map((review) => WooProductReview(
+  ///     id: review.id,
+  ///     status: WooProductReviewStatus.approved,
+  ///   )).toList(),
+  /// );
+  ///
+  /// final response = await wooCommerce.batchUpdateProductReviews(batchRequest);
+  /// print('Approved ${response.update?.length ?? 0} reviews');
+  /// ```
+  ///
+  /// ## Batch Operations Best Practices
+  ///
+  /// - **Create operations**: Reviews should not have IDs assigned
+  /// - **Update operations**: Reviews must have valid IDs and will be updated with provided values
+  /// - **Delete operations**: Provide only the IDs of reviews to delete
+  /// - **Mixed operations**: You can combine create, update, and delete in a single request
+  /// - **Status management**: Use update operations to change review status (approved, hold, spam, trash)
+  /// - **Error handling**: If any operation fails, the entire batch may fail depending on API behavior
+  ///
+  /// ## Review Status Management
+  ///
+  /// When creating or updating reviews, you can control their status:
+  ///
+  /// - `WooProductReviewStatus.approved` - Review is visible to customers
+  /// - `WooProductReviewStatus.hold` - Review is pending moderation
+  /// - `WooProductReviewStatus.spam` - Mark review as spam
+  /// - `WooProductReviewStatus.trash` - Move review to trash
+  /// - `WooProductReviewStatus.unspam` - Unmark review from spam
+  /// - `WooProductReviewStatus.untrash` - Restore review from trash
+  Future<WooProductReviewBatchResponse> batchUpdateProductReviews(
+    WooProductReviewBatchRequest request, {
+    bool? useFaker,
+  }) async {
+    final isUsingFaker = useFaker ?? this.useFaker;
+
+    if (isUsingFaker) {
+      return WooProductReviewBatchResponse(
+        create: request.create?.map((review) => WooProductReview.fake()).toList(),
+        update: request.update,
+        delete: request.delete?.map((id) => WooProductReview.fake(id)).toList(),
+      );
+    }
+
+    final response = await dio.post(
+      _ProductReviewEndpoints.batchProductReviews(),
+      data: request.toJson(),
+    );
+
+    return WooProductReviewBatchResponse.fromJson(
+      response.data as Map<String, dynamic>,
+    );
+  }
 }

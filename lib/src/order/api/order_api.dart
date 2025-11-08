@@ -527,4 +527,111 @@ extension WooOrderApi on WooCommerce {
 
     return (response.data as Map<String, String>)['message']!;
   }
+
+  /// Performs batch operations on orders (create, update, delete) in a single request.
+  ///
+  /// This method allows you to create, update, and delete multiple orders
+  /// efficiently in a single API call, reducing the number of requests needed
+  /// for bulk operations.
+  /// https://woocommerce.github.io/woocommerce-rest-api-docs/#batch-update-orders
+  ///
+  /// ## Parameters
+  ///
+  /// * [request] - The batch request containing orders to create, update, and/or delete
+  ///   - `create`: List of `WooOrder` objects to create (should have id: 0)
+  ///   - `update`: List of `WooOrder` objects to update (must include valid IDs)
+  ///   - `delete`: List of order IDs (integers) to delete
+  /// * [useFaker] - When true, returns fake data for testing purposes
+  ///
+  /// ## Returns
+  ///
+  /// A `Future<WooOrderBatchResponse>` containing the results of all batch operations:
+  /// - `create`: List of successfully created orders with server-assigned IDs
+  /// - `update`: List of successfully updated orders
+  /// - `delete`: List of successfully deleted orders
+  ///
+  /// ## Throws
+  ///
+  /// * `WooCommerceException` if the batch operation fails or validation errors occur
+  ///
+  /// ## Example Usage
+  ///
+  /// ```dart
+  /// // Create a batch request with multiple operations
+  /// final batchRequest = WooOrderBatchRequest(
+  ///   create: [
+  ///     WooOrder(
+  ///       id: 0,
+  ///       status: WooOrderStatus.pending,
+  ///       currency: WooOrderCurrency.usd,
+  ///       total: 99.99,
+  ///       customerId: 123,
+  ///       billing: WooBilling(
+  ///         firstName: 'John',
+  ///         lastName: 'Doe',
+  ///         email: 'john@example.com',
+  ///       ),
+  ///     ),
+  ///     WooOrder(
+  ///       id: 0,
+  ///       status: WooOrderStatus.pending,
+  ///       currency: WooOrderCurrency.usd,
+  ///       total: 149.99,
+  ///       customerId: 456,
+  ///     ),
+  ///   ],
+  ///   update: [
+  ///     existingOrder..status = WooOrderStatus.processing,
+  ///   ],
+  ///   delete: [789, 101112],
+  /// );
+  ///
+  /// // Execute the batch operation
+  /// final response = await wooCommerce.batchUpdateOrders(batchRequest);
+  ///
+  /// // Process results
+  /// print('Created ${response.create?.length ?? 0} orders');
+  /// print('Updated ${response.update?.length ?? 0} orders');
+  /// print('Deleted ${response.delete?.length ?? 0} orders');
+  ///
+  /// // Access individual results
+  /// for (final order in response.create ?? []) {
+  ///   print('Created order: ${order.number} with ID: ${order.id}');
+  /// }
+  /// ```
+  ///
+  /// ## Batch Operations Best Practices
+  ///
+  /// - **Create operations**: Orders should have id set to 0 (will be assigned by WooCommerce)
+  /// - **Update operations**: Orders must have valid IDs and will be updated with provided values
+  /// - **Delete operations**: Provide only the IDs of orders to delete
+  /// - **Mixed operations**: You can combine create, update, and delete in a single request
+  /// - **Error handling**: If any operation fails, the entire batch may fail depending on API behavior
+  Future<WooOrderBatchResponse> batchUpdateOrders(
+    WooOrderBatchRequest request, {
+    bool? useFaker,
+  }) async {
+    final isUsingFaker = useFaker ?? this.useFaker;
+
+    if (isUsingFaker) {
+      return WooOrderBatchResponse(
+        create: request.create
+            ?.map((order) => WooOrder.fake())
+            .toList(),
+        update: request.update,
+        delete: request.delete
+            ?.map((id) => WooOrder.fake())
+            .toList(),
+      );
+    }
+
+    final response = await dio.post(
+      _OrderEndpoints.batchOrders(),
+      data: request.toJson(),
+    );
+
+    return WooOrderBatchResponse.fromJson(
+      response.data as Map<String, dynamic>,
+    );
+  }
 }

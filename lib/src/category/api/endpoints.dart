@@ -4,4 +4,6 @@ abstract class _CategoryEndpoints {
   static String get categories => '/products/categories';
 
   static String singleCategory(int id) => '/products/categories/$id';
+
+  static String batchCategories() => '/products/categories/batch';
 }

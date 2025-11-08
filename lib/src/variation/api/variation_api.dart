@@ -304,4 +304,112 @@ extension WooVariationApi on WooCommerce {
 
     return WooProductVariation.fromJson(response.data as Map<String, dynamic>);
   }
+
+  /// Performs batch operations on product variations (create, update, delete) in a single request.
+  ///
+  /// This method allows you to create, update, and delete multiple product variations
+  /// efficiently in a single API call, reducing the number of requests needed
+  /// for bulk operations. All variations must belong to the same parent product.
+  /// https://woocommerce.github.io/woocommerce-rest-api-docs/#batch-update-product-variations
+  ///
+  /// ## Parameters
+  ///
+  /// * [productId] - The ID of the parent product that owns these variations
+  /// * [request] - The batch request containing variations to create, update, and/or delete
+  ///   - `create`: List of `WooProductVariation` objects to create (should not have IDs)
+  ///   - `update`: List of `WooProductVariation` objects to update (must include valid IDs)
+  ///   - `delete`: List of variation IDs (integers) to delete
+  /// * [useFaker] - When true, returns fake data for testing purposes
+  ///
+  /// ## Returns
+  ///
+  /// A `Future<WooProductVariationBatchResponse>` containing the results of all batch operations:
+  /// - `create`: List of successfully created variations with server-assigned IDs
+  /// - `update`: List of successfully updated variations
+  /// - `delete`: List of successfully deleted variations
+  ///
+  /// ## Throws
+  ///
+  /// * `WooCommerceException` if the batch operation fails or validation errors occur
+  ///
+  /// ## Example Usage
+  ///
+  /// ```dart
+  /// // Create a batch request with multiple operations
+  /// final batchRequest = WooProductVariationBatchRequest(
+  ///   create: [
+  ///     WooProductVariation(
+  ///       sku: 'T-SHIRT-RED-L',
+  ///       price: 25.99,
+  ///       regularPrice: 29.99,
+  ///       stockQuantity: 50,
+  ///       stockStatus: WooProductStockStatus.instock,
+  ///     ),
+  ///     WooProductVariation(
+  ///       sku: 'T-SHIRT-BLUE-L',
+  ///       price: 25.99,
+  ///       regularPrice: 29.99,
+  ///       stockQuantity: 30,
+  ///       stockStatus: WooProductStockStatus.instock,
+  ///     ),
+  ///   ],
+  ///   update: [
+  ///     existingVariation..price = 24.99,
+  ///   ],
+  ///   delete: [789, 101112],
+  /// );
+  ///
+  /// // Execute the batch operation
+  /// final response = await wooCommerce.batchUpdateProductVariations(
+  ///   123,
+  ///   batchRequest,
+  /// );
+  ///
+  /// // Process results
+  /// print('Created ${response.create?.length ?? 0} variations');
+  /// print('Updated ${response.update?.length ?? 0} variations');
+  /// print('Deleted ${response.delete?.length ?? 0} variations');
+  ///
+  /// // Access individual results
+  /// for (final variation in response.create ?? []) {
+  ///   print('Created variation: ${variation.sku} with ID: ${variation.id}');
+  /// }
+  /// ```
+  ///
+  /// ## Batch Operations Best Practices
+  ///
+  /// - **Product Scoping**: All variations in the batch must belong to the same parent product
+  /// - **Create operations**: Variations should not have IDs assigned
+  /// - **Update operations**: Variations must have valid IDs and will be updated with provided values
+  /// - **Delete operations**: Provide only the IDs of variations to delete
+  /// - **Mixed operations**: You can combine create, update, and delete in a single request
+  /// - **Error handling**: If any operation fails, the entire batch may fail depending on API behavior
+  Future<WooProductVariationBatchResponse> batchUpdateProductVariations(
+    int productId,
+    WooProductVariationBatchRequest request, {
+    bool? useFaker,
+  }) async {
+    final isUsingFaker = useFaker ?? this.useFaker;
+
+    if (isUsingFaker) {
+      return WooProductVariationBatchResponse(
+        create: request.create
+            ?.map((variation) => WooProductVariation.fake())
+            .toList(),
+        update: request.update,
+        delete: request.delete
+            ?.map((id) => WooProductVariation.fake())
+            .toList(),
+      );
+    }
+
+    final response = await dio.post(
+      _VariationEndpoints.batchVariations(productId),
+      data: request.toJson(),
+    );
+
+    return WooProductVariationBatchResponse.fromJson(
+      response.data as Map<String, dynamic>,
+    );
+  }
 }

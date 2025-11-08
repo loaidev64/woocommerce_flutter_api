@@ -356,4 +356,98 @@ extension WooProductShippingClassApi on WooCommerce {
     return WooProductShippingClass.fromJson(
         response.data as Map<String, dynamic>);
   }
+
+  /// Performs batch operations on product shipping classes.
+  ///
+  /// This method allows you to create, update, and delete multiple shipping classes
+  /// in a single API request, making bulk operations more efficient.
+  /// https://woocommerce.github.io/woocommerce-rest-api-docs/#batch-update-product-shipping-classes
+  ///
+  /// ## Parameters
+  ///
+  /// * [request] - The `WooProductShippingClassBatchRequest` object containing
+  ///   the create, update, and delete operations to perform
+  /// * [useFaker] - When true, returns fake data for testing purposes
+  ///
+  /// ## Returns
+  ///
+  /// A `Future<WooProductShippingClassBatchResponse>` containing the results of
+  /// all batch operations, including created, updated, and deleted shipping classes.
+  ///
+  /// ## Throws
+  ///
+  /// * `WooCommerceException` if the request fails or access is denied
+  ///
+  /// ## Example Usage
+  ///
+  /// ```dart
+  /// // Create a batch request with multiple operations
+  /// final batchRequest = WooProductShippingClassBatchRequest(
+  ///   create: [
+  ///     WooProductShippingClass(
+  ///       name: 'Express Shipping',
+  ///       slug: 'express-shipping',
+  ///       description: 'Fast delivery option',
+  ///     ),
+  ///     WooProductShippingClass(
+  ///       name: 'Standard Shipping',
+  ///       slug: 'standard-shipping',
+  ///       description: 'Regular delivery option',
+  ///     ),
+  ///   ],
+  ///   update: [
+  ///     WooProductShippingClass(
+  ///       id: 123,
+  ///       name: 'Updated Express Shipping',
+  ///       slug: 'updated-express-shipping',
+  ///       description: 'Updated fast delivery option',
+  ///     ),
+  ///   ],
+  ///   delete: [456, 789],
+  /// );
+  ///
+  /// // Execute the batch operation
+  /// final response = await wooCommerce.batchUpdateProductShippingClasses(batchRequest);
+  ///
+  /// // Process results
+  /// print('Created ${response.create?.length ?? 0} shipping classes');
+  /// print('Updated ${response.update?.length ?? 0} shipping classes');
+  /// print('Deleted ${response.delete?.length ?? 0} shipping classes');
+  ///
+  /// // Access individual results
+  /// for (final shippingClass in response.create ?? []) {
+  ///   print('Created shipping class: ${shippingClass.name} with ID: ${shippingClass.id}');
+  /// }
+  /// ```
+  ///
+  /// ## Batch Operations Best Practices
+  ///
+  /// - **Create operations**: Shipping classes should not have IDs assigned
+  /// - **Update operations**: Shipping classes must have valid IDs and will be updated with provided values
+  /// - **Delete operations**: Provide only the IDs of shipping classes to delete
+  /// - **Mixed operations**: You can combine create, update, and delete in a single request
+  /// - **Error handling**: If any operation fails, the entire batch may fail depending on API behavior
+  Future<WooProductShippingClassBatchResponse> batchUpdateProductShippingClasses(
+    WooProductShippingClassBatchRequest request, {
+    bool? useFaker,
+  }) async {
+    final isUsingFaker = useFaker ?? this.useFaker;
+
+    if (isUsingFaker) {
+      return WooProductShippingClassBatchResponse(
+        create: request.create?.map((shippingClass) => WooProductShippingClass.fake()).toList(),
+        update: request.update,
+        delete: request.delete?.map((id) => WooProductShippingClass.fake(id)).toList(),
+      );
+    }
+
+    final response = await dio.post(
+      _ProductShippingClassEndpoints.batchProductShippingClasses(),
+      data: request.toJson(),
+    );
+
+    return WooProductShippingClassBatchResponse.fromJson(
+      response.data as Map<String, dynamic>,
+    );
+  }
 }

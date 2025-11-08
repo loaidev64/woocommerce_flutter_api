@@ -6,6 +6,8 @@
 /// ## Exported Models
 ///
 /// * [WooProductVariation] - Main product variation model with all properties
+/// * [WooProductVariationBatchRequest] - Batch request model for variations
+/// * [WooProductVariationBatchResponse] - Batch response model for variations
 ///
 /// ## Usage
 ///
@@ -16,3 +18,5 @@
 /// final variation = WooProductVariation(sku: 'T-SHIRT-RED-L');
 /// ```
 export 'variation.dart';
+export 'variation_batch_request.dart';
+export 'variation_batch_response.dart';

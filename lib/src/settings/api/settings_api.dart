@@ -253,4 +253,185 @@ extension WooSettingsApi on WooCommerce {
 
     return WooSettingOption.fromJson(response.data);
   }
+
+  /// Performs batch operations on setting options.
+  ///
+  /// This method allows you to create, update, and delete multiple setting options
+  /// in a single API request, making bulk operations more efficient. This is particularly
+  /// useful for configuring multiple settings at once or managing settings across
+  /// different groups.
+  /// https://woocommerce.github.io/woocommerce-rest-api-docs/#batch-update-setting-options
+  ///
+  /// ## Parameters
+  ///
+  /// * [groupId] - The unique identifier of the settings group (e.g., 'general', 'products', 'shipping')
+  /// * [request] - The `WooSettingOptionBatchRequest` object containing
+  ///   the create, update, and delete operations to perform
+  /// * [useFaker] - When true, returns fake data for testing purposes
+  ///
+  /// ## Returns
+  ///
+  /// A `Future<WooSettingOptionBatchResponse>` containing the results of
+  /// all batch operations, including created, updated, and deleted setting options.
+  ///
+  /// ## Throws
+  ///
+  /// * `WooCommerceException` if the request fails or access is denied
+  ///
+  /// ## Important Notes
+  ///
+  /// - **Setting Option IDs**: Unlike other resources, setting option IDs are strings, not integers
+  /// - **Settings Groups**: Settings are organized by groups (e.g., 'general', 'products', 'shipping')
+  /// - **Group Scoping**: All operations in a batch request must belong to the same settings group
+  ///
+  /// ## Example Usage
+  ///
+  /// ```dart
+  /// // Create a batch request with multiple operations
+  /// final batchRequest = WooSettingOptionBatchRequest(
+  ///   create: [
+  ///     WooSettingOption(
+  ///       id: 'custom_setting_1',
+  ///       label: 'Custom Setting 1',
+  ///       description: 'First custom setting',
+  ///       value: 'value1',
+  ///       type: 'text',
+  ///       groupId: 'general',
+  ///     ),
+  ///     WooSettingOption(
+  ///       id: 'custom_setting_2',
+  ///       label: 'Custom Setting 2',
+  ///       description: 'Second custom setting',
+  ///       value: 'value2',
+  ///       type: 'text',
+  ///       groupId: 'general',
+  ///     ),
+  ///   ],
+  ///   update: [
+  ///     WooSettingOption(
+  ///       id: 'woocommerce_store_address',
+  ///       value: '123 Main St',
+  ///       groupId: 'general',
+  ///     ),
+  ///   ],
+  ///   delete: ['old_setting_1', 'old_setting_2'],
+  /// );
+  ///
+  /// // Execute the batch operation
+  /// final response = await wooCommerce.batchUpdateSettingOptions(
+  ///   'general',
+  ///   batchRequest,
+  /// );
+  ///
+  /// // Process results
+  /// print('Created ${response.create?.length ?? 0} settings');
+  /// print('Updated ${response.update?.length ?? 0} settings');
+  /// print('Deleted ${response.delete?.length ?? 0} settings');
+  ///
+  /// // Access individual results
+  /// for (final option in response.create ?? []) {
+  ///   print('Created setting: ${option.label} with ID: ${option.id}');
+  ///   print('Value: ${option.value}');
+  /// }
+  /// ```
+  ///
+  /// ## Settings Groups Example
+  ///
+  /// ```dart
+  /// // Update multiple settings in the general group
+  /// final batchRequest = WooSettingOptionBatchRequest(
+  ///   update: [
+  ///     WooSettingOption(
+  ///       id: 'woocommerce_store_address',
+  ///       value: '123 Main St',
+  ///       groupId: 'general',
+  ///     ),
+  ///     WooSettingOption(
+  ///       id: 'woocommerce_store_city',
+  ///       value: 'New York',
+  ///       groupId: 'general',
+  ///     ),
+  ///     WooSettingOption(
+  ///       id: 'woocommerce_store_postcode',
+  ///       value: '10001',
+  ///       groupId: 'general',
+  ///     ),
+  ///   ],
+  /// );
+  ///
+  /// final response = await wooCommerce.batchUpdateSettingOptions(
+  ///   'general',
+  ///   batchRequest,
+  /// );
+  /// print('Updated ${response.update?.length ?? 0} general settings');
+  /// ```
+  ///
+  /// ## Batch Operations Best Practices
+  ///
+  /// - **Create operations**: Setting options should have unique string IDs
+  /// - **Update operations**: Setting options must have valid string IDs and will be updated with provided values
+  /// - **Delete operations**: Provide only the string IDs of setting options to delete
+  /// - **Mixed operations**: You can combine create, update, and delete in a single request
+  /// - **Settings groups**: All operations must belong to the same settings group specified in the endpoint
+  /// - **Setting types**: Support various types (text, select, checkbox, number, email, url)
+  /// - **Error handling**: If any operation fails, the entire batch may fail depending on API behavior
+  ///
+  /// ## Settings Groups
+  ///
+  /// Settings are organized into groups for better organization:
+  ///
+  /// - **general**: Store name, currency, location, and basic settings
+  /// - **products**: Product catalog, inventory, and display settings
+  /// - **shipping**: Shipping zones, methods, and rate calculations
+  /// - **payments**: Payment gateway configurations and options
+  /// - **tax**: Tax calculation and display settings
+  ///
+  /// ## Setting Option IDs
+  ///
+  /// Unlike other WooCommerce resources, setting option IDs are strings, not integers.
+  /// This allows for more descriptive and meaningful identifiers like:
+  ///
+  /// - `woocommerce_store_address`
+  /// - `woocommerce_currency`
+  /// - `woocommerce_weight_unit`
+  ///
+  /// When creating or updating settings, always use string IDs.
+  Future<WooSettingOptionBatchResponse> batchUpdateSettingOptions(
+    String groupId,
+    WooSettingOptionBatchRequest request, {
+    bool? useFaker,
+  }) async {
+    final isUsingFaker = useFaker ?? this.useFaker;
+
+    if (isUsingFaker) {
+      return WooSettingOptionBatchResponse(
+        create: request.create?.map((option) => WooSettingOption.fake()).toList(),
+        update: request.update,
+        delete: request.delete?.map((id) {
+          final fakeOption = WooSettingOption.fake();
+          return WooSettingOption(
+            id: id,
+            label: fakeOption.label,
+            description: fakeOption.description,
+            value: fakeOption.value,
+            defaultValue: fakeOption.defaultValue,
+            tip: fakeOption.tip,
+            placeholder: fakeOption.placeholder,
+            type: fakeOption.type,
+            options: fakeOption.options,
+            groupId: groupId,
+          );
+        }).toList(),
+      );
+    }
+
+    final response = await dio.post(
+      _SettingsEndpoints.batchSettingOptions(groupId),
+      data: request.toJson(),
+    );
+
+    return WooSettingOptionBatchResponse.fromJson(
+      response.data as Map<String, dynamic>,
+    );
+  }
 }

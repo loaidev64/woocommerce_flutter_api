@@ -7,4 +7,6 @@ abstract class _OrderEndpoints {
 
   static String sendOrderDetails(int orderId) =>
       '/orders/$orderId/actions/send_order_details';
+
+  static String batchOrders() => '/orders/batch';
 }

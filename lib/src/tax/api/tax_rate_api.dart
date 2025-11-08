@@ -324,4 +324,158 @@ extension WooTaxRateApi on WooCommerce {
       },
     );
   }
+
+  /// Performs batch operations on tax rates.
+  ///
+  /// This method allows you to create, update, and delete multiple tax rates
+  /// in a single API request, making bulk operations more efficient. This is particularly
+  /// useful for managing tax configurations across multiple regions or updating
+  /// tax rates in bulk when rates change.
+  /// https://woocommerce.github.io/woocommerce-rest-api-docs/#batch-update-tax-rates
+  ///
+  /// ## Parameters
+  ///
+  /// * [request] - The `WooTaxRateBatchRequest` object containing
+  ///   the create, update, and delete operations to perform
+  /// * [useFaker] - When true, returns fake data for testing purposes
+  ///
+  /// ## Returns
+  ///
+  /// A `Future<WooTaxRateBatchResponse>` containing the results of
+  /// all batch operations, including created, updated, and deleted tax rates.
+  ///
+  /// ## Throws
+  ///
+  /// * `WooCommerceException` if the request fails or access is denied
+  ///
+  /// ## Example Usage
+  ///
+  /// ```dart
+  /// // Create a batch request with multiple operations
+  /// final batchRequest = WooTaxRateBatchRequest(
+  ///   create: [
+  ///     WooTaxRate(
+  ///       country: 'US',
+  ///       state: 'CA',
+  ///       rate: '8.25',
+  ///       name: 'California Sales Tax',
+  ///       priority: 1,
+  ///     ),
+  ///     WooTaxRate(
+  ///       country: 'US',
+  ///       state: 'NY',
+  ///       rate: '8.00',
+  ///       name: 'New York Sales Tax',
+  ///       priority: 1,
+  ///     ),
+  ///   ],
+  ///   update: [
+  ///     WooTaxRate(
+  ///       id: 123,
+  ///       rate: '9.25', // Updated rate
+  ///       name: 'Updated California Sales Tax',
+  ///     ),
+  ///   ],
+  ///   delete: [456, 789],
+  /// );
+  ///
+  /// // Execute the batch operation
+  /// final response = await wooCommerce.batchUpdateTaxRates(batchRequest);
+  ///
+  /// // Process results
+  /// print('Created ${response.create?.length ?? 0} tax rates');
+  /// print('Updated ${response.update?.length ?? 0} tax rates');
+  /// print('Deleted ${response.delete?.length ?? 0} tax rates');
+  ///
+  /// // Access individual results
+  /// for (final taxRate in response.create ?? []) {
+  ///   print('Created tax rate: ${taxRate.name} with ID: ${taxRate.id}');
+  ///   print('Rate: ${taxRate.rate}% for ${taxRate.country}/${taxRate.state}');
+  /// }
+  /// ```
+  ///
+  /// ## Geographical Targeting Example
+  ///
+  /// ```dart
+  /// // Create tax rates with specific geographical targeting
+  /// final batchRequest = WooTaxRateBatchRequest(
+  ///   create: [
+  ///     WooTaxRate(
+  ///       country: 'US',
+  ///       state: 'CA',
+  ///       cities: ['Los Angeles', 'San Francisco'],
+  ///       postcodes: ['90001', '90002'],
+  ///       rate: '9.50',
+  ///       name: 'California City Tax',
+  ///       priority: 1,
+  ///     ),
+  ///     WooTaxRate(
+  ///       country: 'US',
+  ///       state: 'NY',
+  ///       cities: ['New York'],
+  ///       rate: '8.875',
+  ///       name: 'New York City Tax',
+  ///       priority: 1,
+  ///     ),
+  ///   ],
+  /// );
+  ///
+  /// final response = await wooCommerce.batchUpdateTaxRates(batchRequest);
+  /// print('Created ${response.create?.length ?? 0} city-specific tax rates');
+  /// ```
+  ///
+  /// ## Batch Operations Best Practices
+  ///
+  /// - **Create operations**: Tax rates should not have IDs assigned
+  /// - **Update operations**: Tax rates must have valid IDs and will be updated with provided values
+  /// - **Delete operations**: Provide only the IDs of tax rates to delete
+  /// - **Mixed operations**: You can combine create, update, and delete in a single request
+  /// - **Geographical targeting**: Use country, state, city, and postcode fields for precise targeting
+  /// - **Priority management**: Set appropriate priority values when multiple rates could apply
+  /// - **Error handling**: If any operation fails, the entire batch may fail depending on API behavior
+  ///
+  /// ## Geographical Targeting
+  ///
+  /// Tax rates support flexible geographical targeting:
+  ///
+  /// - **Country**: Two-letter ISO 3166-1 alpha-2 code (e.g., 'US', 'CA', 'GB')
+  /// - **State**: State or province code within the country
+  /// - **City**: Single city name (deprecated) or list of cities (modern)
+  /// - **Postcode**: Single postal code (deprecated) or list of postcodes (modern)
+  ///
+  /// Use the modern `cities` and `postcodes` list fields for better flexibility:
+  ///
+  /// ```dart
+  /// WooTaxRate(
+  ///   country: 'US',
+  ///   state: 'CA',
+  ///   cities: ['Los Angeles', 'San Francisco', 'San Diego'],
+  ///   postcodes: ['90001', '90002', '94102'],
+  ///   rate: '9.50',
+  ///   name: 'California Major Cities Tax',
+  /// )
+  /// ```
+  Future<WooTaxRateBatchResponse> batchUpdateTaxRates(
+    WooTaxRateBatchRequest request, {
+    bool? useFaker,
+  }) async {
+    final isUsingFaker = useFaker ?? this.useFaker;
+
+    if (isUsingFaker) {
+      return WooTaxRateBatchResponse(
+        create: request.create?.map((taxRate) => WooTaxRate.fake()).toList(),
+        update: request.update,
+        delete: request.delete?.map((id) => WooTaxRate.fake(id)).toList(),
+      );
+    }
+
+    final response = await dio.post(
+      _TaxRateEndpoints.batchTaxRates(),
+      data: request.toJson(),
+    );
+
+    return WooTaxRateBatchResponse.fromJson(
+      response.data as Map<String, dynamic>,
+    );
+  }
 }

@@ -346,4 +346,109 @@ extension WooProductTagApi on WooCommerce {
 
     return WooProductTag.fromJson(response.data as Map<String, dynamic>);
   }
+
+  /// Performs batch operations on product tags (create, update, delete) in a single request.
+  ///
+  /// This method allows you to create, update, and delete multiple product tags
+  /// efficiently in a single API call, reducing the number of requests needed
+  /// for bulk operations.
+  /// https://woocommerce.github.io/woocommerce-rest-api-docs/#batch-update-product-tags
+  ///
+  /// ## Parameters
+  ///
+  /// * [request] - The batch request containing tags to create, update, and/or delete
+  ///   - `create`: List of `WooProductTag` objects to create (should have id: null)
+  ///   - `update`: List of `WooProductTag` objects to update (must include valid IDs)
+  ///   - `delete`: List of tag IDs (integers) to delete
+  /// * [useFaker] - When true, returns fake data for testing purposes
+  ///
+  /// ## Returns
+  ///
+  /// A `Future<WooProductTagBatchResponse>` containing the results of all batch operations:
+  /// - `create`: List of successfully created tags with server-assigned IDs
+  /// - `update`: List of successfully updated tags
+  /// - `delete`: List of successfully deleted tags
+  ///
+  /// ## Throws
+  ///
+  /// * `WooCommerceException` if the batch operation fails or validation errors occur
+  ///
+  /// ## Example Usage
+  ///
+  /// ```dart
+  /// // Create a batch request with multiple operations
+  /// final batchRequest = WooProductTagBatchRequest(
+  ///   create: [
+  ///     WooProductTag(
+  ///       null,
+  ///       'Electronics',
+  ///       'electronics',
+  ///       'Electronic products and gadgets',
+  ///     ),
+  ///     WooProductTag(
+  ///       null,
+  ///       'Clothing',
+  ///       'clothing',
+  ///       'Apparel and accessories',
+  ///     ),
+  ///   ],
+  ///   update: [
+  ///     WooProductTag(
+  ///       123,
+  ///       'Updated Electronics',
+  ///       'updated-electronics',
+  ///       'Updated description',
+  ///     ),
+  ///   ],
+  ///   delete: [456, 789],
+  /// );
+  ///
+  /// // Execute the batch operation
+  /// final response = await wooCommerce.batchUpdateProductTags(batchRequest);
+  ///
+  /// // Process results
+  /// print('Created ${response.create?.length ?? 0} tags');
+  /// print('Updated ${response.update?.length ?? 0} tags');
+  /// print('Deleted ${response.delete?.length ?? 0} tags');
+  ///
+  /// // Access individual results
+  /// for (final tag in response.create ?? []) {
+  ///   print('Created tag: ${tag.name} with ID: ${tag.id}');
+  /// }
+  /// ```
+  ///
+  /// ## Batch Operations Best Practices
+  ///
+  /// - **Create operations**: Tags should not have IDs assigned (use null for id)
+  /// - **Update operations**: Tags must have valid IDs and will be updated with provided values
+  /// - **Delete operations**: Provide only the IDs of tags to delete
+  /// - **Mixed operations**: You can combine create, update, and delete in a single request
+  /// - **Error handling**: If any operation fails, the entire batch may fail depending on API behavior
+  Future<WooProductTagBatchResponse> batchUpdateProductTags(
+    WooProductTagBatchRequest request, {
+    bool? useFaker,
+  }) async {
+    final isUsingFaker = useFaker ?? this.useFaker;
+
+    if (isUsingFaker) {
+      return WooProductTagBatchResponse(
+        create: request.create
+            ?.map((tag) => WooProductTag.fake())
+            .toList(),
+        update: request.update,
+        delete: request.delete
+            ?.map((id) => WooProductTag.fake(id))
+            .toList(),
+      );
+    }
+
+    final response = await dio.post(
+      _ProductTagEndpoints.batchProductTags(),
+      data: request.toJson(),
+    );
+
+    return WooProductTagBatchResponse.fromJson(
+      response.data as Map<String, dynamic>,
+    );
+  }
 }

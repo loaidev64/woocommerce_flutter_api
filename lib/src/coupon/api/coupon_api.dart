@@ -421,4 +421,103 @@ extension WooCouponApi on WooCommerce {
 
     return true;
   }
+
+  /// Performs batch operations on coupons (create, update, delete) in a single request.
+  ///
+  /// This method allows you to create, update, and delete multiple coupons
+  /// efficiently in a single API call, reducing the number of requests needed
+  /// for bulk operations.
+  /// https://woocommerce.github.io/woocommerce-rest-api-docs/#batch-update-coupons
+  ///
+  /// ## Parameters
+  ///
+  /// * [request] - The batch request containing coupons to create, update, and/or delete
+  ///   - `create`: List of `WooCoupon` objects to create (should not have IDs)
+  ///   - `update`: List of `WooCoupon` objects to update (must include valid IDs)
+  ///   - `delete`: List of coupon IDs (integers) to delete
+  /// * [useFaker] - When true, returns fake data for testing purposes
+  ///
+  /// ## Returns
+  ///
+  /// A `Future<WooCouponBatchResponse>` containing the results of all batch operations:
+  /// - `create`: List of successfully created coupons with server-assigned IDs
+  /// - `update`: List of successfully updated coupons
+  /// - `delete`: List of successfully deleted coupons
+  ///
+  /// ## Throws
+  ///
+  /// * `WooCommerceException` if the batch operation fails or validation errors occur
+  ///
+  /// ## Example Usage
+  ///
+  /// ```dart
+  /// // Create a batch request with multiple operations
+  /// final batchRequest = WooCouponBatchRequest(
+  ///   create: [
+  ///     WooCoupon(
+  ///       code: 'SAVE20',
+  ///       discountType: 'percent',
+  ///       amount: '20',
+  ///       description: '20% off your order',
+  ///     ),
+  ///     WooCoupon(
+  ///       code: 'FIXED10',
+  ///       discountType: 'fixed_cart',
+  ///       amount: '10.00',
+  ///       description: '$10 off your order',
+  ///     ),
+  ///   ],
+  ///   update: [
+  ///     existingCoupon.copyWith(
+  ///       amount: '25',
+  ///       description: 'Updated 25% off',
+  ///     ),
+  ///   ],
+  ///   delete: [123, 456],
+  /// );
+  ///
+  /// // Execute the batch operation
+  /// final response = await wooCommerce.batchUpdateCoupons(batchRequest);
+  ///
+  /// // Process results
+  /// print('Created ${response.create?.length ?? 0} coupons');
+  /// print('Updated ${response.update?.length ?? 0} coupons');
+  /// print('Deleted ${response.delete?.length ?? 0} coupons');
+  ///
+  /// // Access individual results
+  /// for (final coupon in response.create ?? []) {
+  ///   print('Created coupon: ${coupon.code} with ID: ${coupon.id}');
+  /// }
+  /// ```
+  ///
+  /// ## Batch Operations Best Practices
+  ///
+  /// - **Create operations**: Coupons should not have IDs assigned
+  /// - **Update operations**: Coupons must have valid IDs and will be updated with provided values
+  /// - **Delete operations**: Provide only the IDs of coupons to delete
+  /// - **Mixed operations**: You can combine create, update, and delete in a single request
+  /// - **Error handling**: If any operation fails, the entire batch may fail depending on API behavior
+  Future<WooCouponBatchResponse> batchUpdateCoupons(
+    WooCouponBatchRequest request, {
+    bool? useFaker,
+  }) async {
+    final isUsingFaker = useFaker ?? this.useFaker;
+
+    if (isUsingFaker) {
+      return WooCouponBatchResponse(
+        create: request.create?.map((coupon) => WooCoupon.fake()).toList(),
+        update: request.update,
+        delete: request.delete?.map((id) => WooCoupon.fake(id)).toList(),
+      );
+    }
+
+    final response = await dio.post(
+      _CouponEndpoints.batchCoupons(),
+      data: request.toJson(),
+    );
+
+    return WooCouponBatchResponse.fromJson(
+      response.data as Map<String, dynamic>,
+    );
+  }
 }

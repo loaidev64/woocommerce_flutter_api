@@ -596,4 +596,107 @@ extension WooProductApi on WooCommerce {
 
     return WooProduct.fromJson(response.data);
   }
+
+  /// Performs batch operations on products (create, update, delete) in a single request.
+  ///
+  /// This method allows you to create, update, and delete multiple products
+  /// efficiently in a single API call, reducing the number of requests needed
+  /// for bulk operations.
+  /// https://woocommerce.github.io/woocommerce-rest-api-docs/#batch-update-products
+  ///
+  /// ## Parameters
+  ///
+  /// * [request] - The batch request containing products to create, update, and/or delete
+  ///   - `create`: List of `WooProduct` objects to create (should not have IDs)
+  ///   - `update`: List of `WooProduct` objects to update (must include valid IDs)
+  ///   - `delete`: List of product IDs (integers) to delete
+  /// * [useFaker] - When true, returns fake data for testing purposes
+  ///
+  /// ## Returns
+  ///
+  /// A `Future<WooProductBatchResponse>` containing the results of all batch operations:
+  /// - `create`: List of successfully created products with server-assigned IDs
+  /// - `update`: List of successfully updated products
+  /// - `delete`: List of successfully deleted products
+  ///
+  /// ## Throws
+  ///
+  /// * `WooCommerceException` if the batch operation fails or validation errors occur
+  ///
+  /// ## Example Usage
+  ///
+  /// ```dart
+  /// // Create a batch request with multiple operations
+  /// final batchRequest = WooProductBatchRequest(
+  ///   create: [
+  ///     WooProduct(
+  ///       name: 'New Product 1',
+  ///       type: WooProductType.simple,
+  ///       price: 29.99,
+  ///       status: WooProductStatus.publish,
+  ///     ),
+  ///     WooProduct(
+  ///       name: 'New Product 2',
+  ///       type: WooProductType.simple,
+  ///       price: 49.99,
+  ///       status: WooProductStatus.publish,
+  ///     ),
+  ///   ],
+  ///   update: [
+  ///     existingProduct.copyWith(
+  ///       name: 'Updated Product Name',
+  ///       price: 39.99,
+  ///     ),
+  ///   ],
+  ///   delete: [123, 456],
+  /// );
+  ///
+  /// // Execute the batch operation
+  /// final response = await wooCommerce.batchUpdateProducts(batchRequest);
+  ///
+  /// // Process results
+  /// print('Created ${response.create?.length ?? 0} products');
+  /// print('Updated ${response.update?.length ?? 0} products');
+  /// print('Deleted ${response.delete?.length ?? 0} products');
+  ///
+  /// // Access individual results
+  /// for (final product in response.create ?? []) {
+  ///   print('Created product: ${product.name} with ID: ${product.id}');
+  /// }
+  /// ```
+  ///
+  /// ## Batch Operations Best Practices
+  ///
+  /// - **Create operations**: Products should not have IDs assigned
+  /// - **Update operations**: Products must have valid IDs and will be updated with provided values
+  /// - **Delete operations**: Provide only the IDs of products to delete
+  /// - **Mixed operations**: You can combine create, update, and delete in a single request
+  /// - **Error handling**: If any operation fails, the entire batch may fail depending on API behavior
+  Future<WooProductBatchResponse> batchUpdateProducts(
+    WooProductBatchRequest request, {
+    bool? useFaker,
+  }) async {
+    final isUsingFaker = useFaker ?? this.useFaker;
+
+    if (isUsingFaker) {
+      return WooProductBatchResponse(
+        create: request.create
+            ?.map((product) => WooProduct.fake())
+            .toList(),
+        update: request.update,
+        delete: request.delete
+            ?.map((id) => WooProduct.fake())
+            .toList(),
+      );
+    }
+
+    final response = await dio.post(
+      _ProductEndpoints.batchProducts(),
+      data: request.toJson(),
+    );
+
+    return WooProductBatchResponse.fromJson(
+      response.data as Map<String, dynamic>,
+    );
+  }
 }

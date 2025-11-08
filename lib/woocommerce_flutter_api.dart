@@ -59,6 +59,8 @@ export 'src/data/models/models.dart';
 export 'src/coupon/api/coupon_api.dart';
 export 'src/coupon/enums/coupon_sort.dart';
 export 'src/coupon/models/coupon.dart';
+export 'src/coupon/models/coupon_batch_request.dart';
+export 'src/coupon/models/coupon_batch_response.dart';
 
 // webhooks
 export 'src/webhook/api/webhook_api.dart';

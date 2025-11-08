@@ -60,4 +60,23 @@ abstract class _VariationEndpoints {
   /// ```
   static String singleVariation(int productId, int id) =>
       '/products/$productId/variations/$id';
+
+  /// Returns the endpoint for batch operations on product variations
+  ///
+  /// ## Parameters
+  ///
+  /// * [productId] - The ID of the parent product
+  ///
+  /// ## Returns
+  ///
+  /// A `String` containing the REST API endpoint path for batch operations.
+  ///
+  /// ## Example
+  ///
+  /// ```dart
+  /// final endpoint = _VariationEndpoints.batchVariations(123);
+  /// // Returns: '/products/123/variations/batch'
+  /// ```
+  static String batchVariations(int productId) =>
+      '/products/$productId/variations/batch';
 }

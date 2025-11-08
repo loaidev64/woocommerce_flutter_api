@@ -7,4 +7,7 @@ abstract class _SettingsEndpoints {
 
   static String singleSettingOption(String groupId, String optionId) =>
       '/settings/$groupId/$optionId';
+
+  static String batchSettingOptions(String groupId) =>
+      '/settings/$groupId/options/batch';
 }
