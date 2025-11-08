@@ -46,3 +46,19 @@
 
 - Enhanced documentation for WooCommerce API, adding detailed descriptions, usage examples, and JSON serialization for refund, report, tax, and variation models.
 - Added comprehensive API documentation with examples for all apis.
+
+# 1.6.0
+
+- Added batch update API for product shipping classes with `batchUpdateProductShippingClasses()` method.
+- Added batch update API for product reviews with `batchUpdateProductReviews()` method.
+- Added batch update API for tax rates with `batchUpdateTaxRates()` method.
+- Added batch update API for webhooks with `batchUpdateWebhooks()` method.
+- Added batch update API for settings options with `batchUpdateSettingOptions()` method.
+- Created batch request and response models for all new batch APIs:
+  - `WooProductShippingClassBatchRequest` and `WooProductShippingClassBatchResponse`
+  - `WooProductReviewBatchRequest` and `WooProductReviewBatchResponse`
+  - `WooTaxRateBatchRequest` and `WooTaxRateBatchResponse`
+  - `WooWebhookBatchRequest` and `WooWebhookBatchResponse`
+  - `WooSettingOptionBatchRequest` and `WooSettingOptionBatchResponse`
+- Enhanced batch API documentation with comprehensive usage examples, best practices, and workflow guides.
+- Improved API structure for bulk operations across multiple WooCommerce resources.
