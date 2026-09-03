@@ -123,7 +123,9 @@ class WooProductCategory {
     slug = json['slug'];
     parent = json['parent'];
     description = json['description'];
-    display = json['display'];
+    display = json['display'] != null
+        ? WooCategoryDisplay.fromString(json['display'] as String)
+        : null;
     image = json['image'] != null
         ? WooProductCategoryImage.fromJson(json['image'])
         : null;
@@ -232,7 +234,7 @@ class WooProductCategory {
     data['slug'] = slug;
     data['parent'] = parent;
     data['description'] = description;
-    data['display'] = display;
+    data['display'] = display?.name.replaceAll('_', '');
     if (image != null) {
       data['image'] = image!.toJson();
     }
