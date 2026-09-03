@@ -1,3 +1,11 @@
+## 1.7.0
+
+- Updated `flutter_secure_storage` to `^11.0.0` (WASM-compatible).
+- Bumped SDK constraint to `>=3.3.0` and Flutter constraint to `>=3.19.0` to align with the new dependency.
+- Resolved 18 `dangling_library_doc_comments` lints in `lib/src/variation/enums/enums.dart`.
+- Fixed 3 `comment_references` lints in `authentication_api.dart` and `customer_api.dart`.
+- Cleaned up `avoid_print` warnings in the example file.
+
 ## 1.0.0
 
 - Initial version.

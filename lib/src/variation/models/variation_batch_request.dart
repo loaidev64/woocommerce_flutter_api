@@ -74,7 +74,6 @@ import 'variation.dart';
 /// final batchRequest = WooProductVariationBatchRequest.fromJson(jsonData);
 /// ```
 class WooProductVariationBatchRequest {
-
   /// Creates a new WooProductVariationBatchRequest instance
   ///
   /// ## Required Parameters
@@ -147,6 +146,7 @@ class WooProductVariationBatchRequest {
             ? (json['delete'] as List).cast<int>()
             : null,
       );
+
   /// List of variations to create
   ///
   /// Each variation in this list will be created as a new variation for the parent product.
@@ -211,4 +211,3 @@ class WooProductVariationBatchRequest {
     return 'WooProductVariationBatchRequest(create: ${create?.length ?? 0}, update: ${update?.length ?? 0}, delete: ${delete?.length ?? 0})';
   }
 }
-

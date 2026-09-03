@@ -1,7 +1,6 @@
 import 'package:woocommerce_flutter_api/woocommerce_flutter_api.dart';
 
 class WooCustomerDownloadFile {
-
   WooCustomerDownloadFile({
     this.name,
     this.file,
@@ -16,6 +15,7 @@ class WooCustomerDownloadFile {
         name: FakeHelper.word(),
         file: FakeHelper.url(),
       );
+
   /// File name.
   String? name;
 

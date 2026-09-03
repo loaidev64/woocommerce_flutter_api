@@ -63,7 +63,6 @@ import 'coupon.dart';
 /// final json = batchResponse.toJson();
 /// ```
 class WooCouponBatchResponse {
-
   /// Creates a new WooCouponBatchResponse instance
   ///
   /// ## Required Parameters
@@ -128,6 +127,7 @@ class WooCouponBatchResponse {
                 .toList()
             : null,
       );
+
   /// List of created coupons
   ///
   /// Contains the coupons that were successfully created, each with a

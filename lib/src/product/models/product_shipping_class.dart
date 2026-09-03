@@ -4,7 +4,6 @@ import 'package:woocommerce_flutter_api/src/helpers/fake_helper.dart';
 ///
 /// Brief description of the model's purpose and usage for product shipping classes.
 class WooProductShippingClass {
-
   /// Creates a new WooProductShippingClass instance.
   WooProductShippingClass(
       this.id, this.name, this.slug, this.description, this.count);
@@ -25,6 +24,7 @@ class WooProductShippingClass {
         FakeHelper.sentence(),
         FakeHelper.integer(),
       );
+
   /// Unique identifier for the resource.
   final int? id;
 

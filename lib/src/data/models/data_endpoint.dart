@@ -38,7 +38,6 @@ import 'package:woocommerce_flutter_api/src/helpers/fake_helper.dart';
 /// final json = endpoint.toJson();
 /// ```
 class WooDataEndpoint {
-
   /// Creates a new WooDataEndpoint instance
   ///
   /// ## Parameters
@@ -107,6 +106,7 @@ class WooDataEndpoint {
         slug: FakeHelper.word(),
         description: FakeHelper.sentence(),
       );
+
   /// Unique slug identifier for the data endpoint
   ///
   /// This identifier is used to access specific data endpoints in the WooCommerce API.

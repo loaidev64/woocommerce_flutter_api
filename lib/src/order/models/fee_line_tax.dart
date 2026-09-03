@@ -6,7 +6,6 @@ import 'package:woocommerce_flutter_api/src/helpers/fake_helper.dart';
 /// Contains tax rate details, calculations, and amounts for taxes applied
 /// to fee lines. Used for tax tracking and order processing.
 class WooFeeLineTax {
-
   /// Creates a new WooFeeLineTax instance.
   WooFeeLineTax({
     this.id,
@@ -43,6 +42,7 @@ class WooFeeLineTax {
         shippingTaxTotal: FakeHelper.decimal(),
         metaData: FakeHelper.list(() => WooMetaData.fake()),
       );
+
   /// Unique identifier for the fee line tax item.
   final int? id;
 

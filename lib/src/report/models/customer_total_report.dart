@@ -4,7 +4,6 @@ import 'package:woocommerce_flutter_api/woocommerce_flutter_api.dart';
 ///
 /// Brief description of the model's purpose and usage.
 class WooCustomerTotalReport {
-
   /// Creates a new WooCustomerTotalReport instance.
   WooCustomerTotalReport({
     this.slug,
@@ -23,6 +22,7 @@ class WooCustomerTotalReport {
         name: FakeHelper.word(),
         total: FakeHelper.integer().toString(),
       );
+
   /// An alphanumeric identifier for the resource.
   String? slug;
 

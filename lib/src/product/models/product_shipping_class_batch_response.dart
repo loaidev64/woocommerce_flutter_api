@@ -63,7 +63,6 @@ import 'product_shipping_class.dart';
 /// final json = batchResponse.toJson();
 /// ```
 class WooProductShippingClassBatchResponse {
-
   /// Creates a new WooProductShippingClassBatchResponse instance
   ///
   /// ## Required Parameters
@@ -111,27 +110,28 @@ class WooProductShippingClassBatchResponse {
   /// final batchResponse = WooProductShippingClassBatchResponse.fromJson(jsonData);
   /// ```
   factory WooProductShippingClassBatchResponse.fromJson(
-      Map<String, dynamic> json) =>
+          Map<String, dynamic> json) =>
       WooProductShippingClassBatchResponse(
         create: json['create'] != null
             ? (json['create'] as List)
-                .map((item) =>
-                    WooProductShippingClass.fromJson(item as Map<String, dynamic>))
+                .map((item) => WooProductShippingClass.fromJson(
+                    item as Map<String, dynamic>))
                 .toList()
             : null,
         update: json['update'] != null
             ? (json['update'] as List)
-                .map((item) =>
-                    WooProductShippingClass.fromJson(item as Map<String, dynamic>))
+                .map((item) => WooProductShippingClass.fromJson(
+                    item as Map<String, dynamic>))
                 .toList()
             : null,
         delete: json['delete'] != null
             ? (json['delete'] as List)
-                .map((item) =>
-                    WooProductShippingClass.fromJson(item as Map<String, dynamic>))
+                .map((item) => WooProductShippingClass.fromJson(
+                    item as Map<String, dynamic>))
                 .toList()
             : null,
       );
+
   /// List of created shipping classes
   ///
   /// Contains the shipping classes that were successfully created, each with a
@@ -165,11 +165,14 @@ class WooProductShippingClassBatchResponse {
   /// ```
   Map<String, dynamic> toJson() => {
         if (create != null)
-          'create': create!.map((shippingClass) => shippingClass.toJson()).toList(),
+          'create':
+              create!.map((shippingClass) => shippingClass.toJson()).toList(),
         if (update != null)
-          'update': update!.map((shippingClass) => shippingClass.toJson()).toList(),
+          'update':
+              update!.map((shippingClass) => shippingClass.toJson()).toList(),
         if (delete != null)
-          'delete': delete!.map((shippingClass) => shippingClass.toJson()).toList(),
+          'delete':
+              delete!.map((shippingClass) => shippingClass.toJson()).toList(),
       };
 
   /// Returns a string representation of the WooProductShippingClassBatchResponse instance
@@ -197,4 +200,3 @@ class WooProductShippingClassBatchResponse {
     return 'WooProductShippingClassBatchResponse(create: ${create?.length ?? 0}, update: ${update?.length ?? 0}, delete: ${delete?.length ?? 0})';
   }
 }
-

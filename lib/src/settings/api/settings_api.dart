@@ -405,7 +405,8 @@ extension WooSettingsApi on WooCommerce {
 
     if (isUsingFaker) {
       return WooSettingOptionBatchResponse(
-        create: request.create?.map((option) => WooSettingOption.fake()).toList(),
+        create:
+            request.create?.map((option) => WooSettingOption.fake()).toList(),
         update: request.update,
         delete: request.delete?.map((id) {
           final fakeOption = WooSettingOption.fake();

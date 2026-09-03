@@ -6,7 +6,6 @@ import 'package:woocommerce_flutter_api/src/helpers/fake_helper.dart';
 /// Contains coupon information, discount amounts, and tax details for coupons
 /// applied to an order. Used for discount tracking and order processing.
 class WooOrderCouponLine {
-
   /// Creates a new WooOrderCouponLine instance.
   WooOrderCouponLine({
     this.id,
@@ -33,6 +32,7 @@ class WooOrderCouponLine {
         discountTax: FakeHelper.decimal(),
         metaData: FakeHelper.list(() => WooMetaData.fake()),
       );
+
   /// Unique identifier for the coupon line.
   int? id;
 

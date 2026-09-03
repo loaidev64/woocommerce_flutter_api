@@ -427,7 +427,8 @@ extension WooProductShippingClassApi on WooCommerce {
   /// - **Delete operations**: Provide only the IDs of shipping classes to delete
   /// - **Mixed operations**: You can combine create, update, and delete in a single request
   /// - **Error handling**: If any operation fails, the entire batch may fail depending on API behavior
-  Future<WooProductShippingClassBatchResponse> batchUpdateProductShippingClasses(
+  Future<WooProductShippingClassBatchResponse>
+      batchUpdateProductShippingClasses(
     WooProductShippingClassBatchRequest request, {
     bool? useFaker,
   }) async {
@@ -435,9 +436,13 @@ extension WooProductShippingClassApi on WooCommerce {
 
     if (isUsingFaker) {
       return WooProductShippingClassBatchResponse(
-        create: request.create?.map((shippingClass) => WooProductShippingClass.fake()).toList(),
+        create: request.create
+            ?.map((shippingClass) => WooProductShippingClass.fake())
+            .toList(),
         update: request.update,
-        delete: request.delete?.map((id) => WooProductShippingClass.fake(id)).toList(),
+        delete: request.delete
+            ?.map((id) => WooProductShippingClass.fake(id))
+            .toList(),
       );
     }
 

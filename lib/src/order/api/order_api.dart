@@ -615,13 +615,9 @@ extension WooOrderApi on WooCommerce {
 
     if (isUsingFaker) {
       return WooOrderBatchResponse(
-        create: request.create
-            ?.map((order) => WooOrder.fake())
-            .toList(),
+        create: request.create?.map((order) => WooOrder.fake()).toList(),
         update: request.update,
-        delete: request.delete
-            ?.map((id) => WooOrder.fake())
-            .toList(),
+        delete: request.delete?.map((id) => WooOrder.fake()).toList(),
       );
     }
 

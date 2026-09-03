@@ -103,7 +103,6 @@ import 'webhook.dart';
 /// final batchRequest = WooWebhookBatchRequest.fromJson(jsonData);
 /// ```
 class WooWebhookBatchRequest {
-
   /// Creates a new WooWebhookBatchRequest instance
   ///
   /// ## Required Parameters
@@ -166,20 +165,21 @@ class WooWebhookBatchRequest {
       WooWebhookBatchRequest(
         create: json['create'] != null
             ? (json['create'] as List)
-                .map((item) =>
-                    WooWebhook.fromJson(item as Map<String, dynamic>))
+                .map(
+                    (item) => WooWebhook.fromJson(item as Map<String, dynamic>))
                 .toList()
             : null,
         update: json['update'] != null
             ? (json['update'] as List)
-                .map((item) =>
-                    WooWebhook.fromJson(item as Map<String, dynamic>))
+                .map(
+                    (item) => WooWebhook.fromJson(item as Map<String, dynamic>))
                 .toList()
             : null,
         delete: json['delete'] != null
             ? (json['delete'] as List).cast<int>()
             : null,
       );
+
   /// List of webhooks to create
   ///
   /// Each webhook in this list will be created as a new webhook in the store.
@@ -248,4 +248,3 @@ class WooWebhookBatchRequest {
     return 'WooWebhookBatchRequest(create: ${create?.length ?? 0}, update: ${update?.length ?? 0}, delete: ${delete?.length ?? 0})';
   }
 }
-

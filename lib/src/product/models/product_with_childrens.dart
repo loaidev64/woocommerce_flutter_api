@@ -4,7 +4,6 @@ import 'package:woocommerce_flutter_api/woocommerce_flutter_api.dart';
 ///
 /// Brief description of the model's purpose and usage for products with children.
 class WooProductWithChildrens {
-
   //TODO:: add varitations if it can be added
 
   /// Creates a new WooProductWithChildrens instance.
@@ -72,6 +71,7 @@ class WooProductWithChildrens {
         groupedProducts: FakeHelper.list(() => WooProduct.fake()),
         upsellProducts: FakeHelper.list(() => WooProduct.fake()),
       );
+
   /// Main Product
   final WooProduct mainProduct;
 

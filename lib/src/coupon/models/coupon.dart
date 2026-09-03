@@ -35,13 +35,13 @@ import '../../helpers/fake_helper.dart';
 ///
 /// ```dart
 /// // Check if coupon is expired
-/// if (coupon.dateExpires != null && 
+/// if (coupon.dateExpires != null &&
 ///     coupon.dateExpires!.isBefore(DateTime.now())) {
 ///   print('Coupon has expired');
 /// }
 ///
 /// // Check usage limits
-/// if (coupon.usageLimit != null && 
+/// if (coupon.usageLimit != null &&
 ///     coupon.usageCount! >= coupon.usageLimit!) {
 ///   print('Coupon usage limit reached');
 /// }
@@ -59,7 +59,6 @@ import '../../helpers/fake_helper.dart';
 /// final coupon = WooCoupon.fromJson(jsonData);
 /// ```
 class WooCoupon {
-
   /// Creates a new WooCoupon instance
   ///
   /// ## Required Parameters
@@ -234,6 +233,7 @@ class WooCoupon {
         usedBy: FakeHelper.list(() => FakeHelper.word()),
         metaData: FakeHelper.list(() => WooMetaData.fake()),
       );
+
   /// Unique identifier for the coupon
   ///
   /// This ID is automatically assigned by WooCommerce when the coupon is created.

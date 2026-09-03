@@ -5,7 +5,7 @@ import 'package:woocommerce_flutter_api/woocommerce_flutter_api.dart';
 /// This class provides predefined webhook topic constants for WooCommerce webhooks.
 /// Webhook topics determine which events will trigger webhook delivery.
 /// https://woocommerce.github.io/woocommerce-rest-api-docs/#topics
-/// 
+///
 /// ## How Webhook Topics Work
 ///
 /// Webhook topics are strings that combine a resource (e.g., 'order', 'product')

@@ -56,7 +56,6 @@ import 'package:woocommerce_flutter_api/woocommerce_flutter_api.dart';
 /// final taxRate = WooTaxRate.fromJson(jsonData);
 /// ```
 class WooTaxRate {
-
   /// Creates a new WooTaxRate instance
   ///
   /// ## Required Parameters
@@ -180,6 +179,7 @@ class WooTaxRate {
         order: FakeHelper.integer(),
         taxClass: FakeHelper.word(),
       );
+
   /// Unique identifier for the resource. Read-only.
   ///
   /// The system-generated ID for this tax rate. This field is read-only

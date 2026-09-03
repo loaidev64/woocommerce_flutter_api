@@ -71,7 +71,6 @@ import 'customer.dart';
 /// final batchRequest = WooCustomerBatchRequest.fromJson(jsonData);
 /// ```
 class WooCustomerBatchRequest {
-
   /// Creates a new WooCustomerBatchRequest instance
   ///
   /// ## Required Parameters
@@ -144,6 +143,7 @@ class WooCustomerBatchRequest {
             ? (json['delete'] as List).cast<int>()
             : null,
       );
+
   /// List of customers to create
   ///
   /// Each customer in this list will be created as a new customer in the store.
@@ -208,4 +208,3 @@ class WooCustomerBatchRequest {
     return 'WooCustomerBatchRequest(create: ${create?.length ?? 0}, update: ${update?.length ?? 0}, delete: ${delete?.length ?? 0})';
   }
 }
-

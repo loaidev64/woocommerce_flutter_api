@@ -680,13 +680,9 @@ extension WooProductApi on WooCommerce {
 
     if (isUsingFaker) {
       return WooProductBatchResponse(
-        create: request.create
-            ?.map((product) => WooProduct.fake())
-            .toList(),
+        create: request.create?.map((product) => WooProduct.fake()).toList(),
         update: request.update,
-        delete: request.delete
-            ?.map((id) => WooProduct.fake())
-            .toList(),
+        delete: request.delete?.map((id) => WooProduct.fake()).toList(),
       );
     }
 

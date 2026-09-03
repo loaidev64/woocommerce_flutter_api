@@ -7,7 +7,6 @@ import 'package:woocommerce_flutter_api/src/order/models/tax.dart';
 /// Contains shipping method information, costs, and tax details for shipping
 /// methods used in an order. Used for shipping cost tracking and order processing.
 class WooShippingLine {
-
   /// Creates a new WooShippingLine instance.
   WooShippingLine(
       {this.id,
@@ -41,6 +40,7 @@ class WooShippingLine {
         taxes: FakeHelper.list(() => WooTax.fake()),
         metaData: FakeHelper.list(() => WooMetaData.fake()),
       );
+
   /// Unique identifier for the shipping line.
   int? id;
 

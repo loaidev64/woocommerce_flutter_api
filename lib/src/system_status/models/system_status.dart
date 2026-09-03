@@ -48,7 +48,6 @@ import 'package:woocommerce_flutter_api/woocommerce_flutter_api.dart';
 /// print('Active Plugins: ${status.activePlugins?.length}');
 /// ```
 class WooSystemStatus {
-
   /// Creates a new WooSystemStatus instance
   ///
   /// This constructor creates a system status object with the specified properties.
@@ -224,6 +223,7 @@ class WooSystemStatus {
         security: WooSystemStatusSecurity.fake(),
         pages: FakeHelper.list(() => FakeHelper.word()),
       );
+
   /// Environment information
   ///
   /// Contains detailed information about the server environment, including

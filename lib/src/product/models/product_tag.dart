@@ -4,7 +4,6 @@ import 'package:woocommerce_flutter_api/src/helpers/fake_helper.dart';
 ///
 /// Brief description of the model's purpose and usage for product tags.
 class WooProductTag {
-
   /// Creates a new WooProductTag instance.
   WooProductTag(this.id, this.name, this.slug, [this.description, this.count]);
 
@@ -24,6 +23,7 @@ class WooProductTag {
         FakeHelper.sentence(),
         FakeHelper.integer(),
       );
+
   /// Unique identifier for the resource.
   final int? id;
 

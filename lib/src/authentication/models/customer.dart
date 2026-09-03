@@ -1,7 +1,6 @@
 import 'package:woocommerce_flutter_api/woocommerce_flutter_api.dart';
 
 class WooCustomer {
-
   WooCustomer({
     this.id,
     this.dateCreated,
@@ -62,6 +61,7 @@ class WooCustomer {
         role: 'customer',
         shipping: WooShipping.fake(),
       );
+
   /// Unique identifier for the resource.
   int? id;
 

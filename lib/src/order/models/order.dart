@@ -123,7 +123,6 @@ import 'shipping.dart';
 /// final order = WooOrder.fromJson(jsonData);
 /// ```
 class WooOrder {
-
   /// Creates a new WooOrder instance
   ///
   /// ## Required Parameters
@@ -407,6 +406,7 @@ class WooOrder {
         refunds: FakeHelper.list(() => WooRefunds.fake()),
         setPaid: FakeHelper.boolean(),
       );
+
   /// Unique identifier for the order
   ///
   /// This ID is automatically assigned by WooCommerce when the order is created.

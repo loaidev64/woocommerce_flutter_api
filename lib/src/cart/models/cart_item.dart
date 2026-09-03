@@ -2,7 +2,6 @@ import 'package:faker/faker.dart';
 import 'package:woocommerce_flutter_api/woocommerce_flutter_api.dart';
 
 class WooCartItem {
-
   WooCartItem({
     this.key,
     this.id,
@@ -51,6 +50,7 @@ class WooCartItem {
         images: FakeHelper.list(() => WooProductImage.fake()),
         variations: FakeHelper.listOfIntegers(),
       );
+
   /// Cart Item Key.
   String? key;
 

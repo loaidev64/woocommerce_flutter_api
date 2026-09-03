@@ -24,7 +24,7 @@ import 'package:faker/faker.dart';
 enum WooOrderTaxStatus {
   /// Item is subject to tax calculations.
   taxable,
-  
+
   /// Item is not subject to tax calculations.
   none;
 

@@ -158,7 +158,7 @@ extension WooCustomernApi on WooCommerce {
     return WooCustomer.fromJson(response.data as Map<String, dynamic>);
   }
 
-  /// [force] Required to be true, as resource does not support trashing.
+  /// [useFaker] When `true`, returns fake data instead of performing the real delete request.
   ///
   /// [reassign] User ID to reassign posts to.
   Future<bool> deleteCustomer(
@@ -280,13 +280,9 @@ extension WooCustomernApi on WooCommerce {
 
     if (isUsingFaker) {
       return WooCustomerBatchResponse(
-        create: request.create
-            ?.map((customer) => WooCustomer.fake())
-            .toList(),
+        create: request.create?.map((customer) => WooCustomer.fake()).toList(),
         update: request.update,
-        delete: request.delete
-            ?.map((id) => WooCustomer.fake(id))
-            .toList(),
+        delete: request.delete?.map((id) => WooCustomer.fake(id)).toList(),
       );
     }
 

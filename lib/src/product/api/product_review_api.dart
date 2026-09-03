@@ -408,7 +408,8 @@ extension WooProductReviewApi on WooCommerce {
 
     if (isUsingFaker) {
       return WooProductReviewBatchResponse(
-        create: request.create?.map((review) => WooProductReview.fake()).toList(),
+        create:
+            request.create?.map((review) => WooProductReview.fake()).toList(),
         update: request.update,
         delete: request.delete?.map((id) => WooProductReview.fake(id)).toList(),
       );

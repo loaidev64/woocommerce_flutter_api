@@ -46,7 +46,6 @@ import 'package:woocommerce_flutter_api/src/helpers/fake_helper.dart';
 /// final json = method.toJson();
 /// ```
 class WooShippingMethod {
-
   /// Creates a new WooShippingMethod instance
   ///
   /// All parameters are optional and can be null. This constructor is typically
@@ -139,6 +138,7 @@ class WooShippingMethod {
         title: FakeHelper.sentence(),
         description: FakeHelper.sentence(),
       );
+
   /// Unique identifier for the shipping method
   ///
   /// This identifier is used by WooCommerce to distinguish between different

@@ -4,7 +4,6 @@ import 'package:woocommerce_flutter_api/woocommerce_flutter_api.dart';
 ///
 /// Brief description of the model's purpose and usage.
 class WooTaxClass {
-
   /// Creates a new WooTaxClass instance.
   WooTaxClass({
     this.slug,
@@ -20,6 +19,7 @@ class WooTaxClass {
         slug: FakeHelper.word(),
         name: FakeHelper.word(),
       );
+
   /// Unique identifier for the resource.
   String? slug;
 

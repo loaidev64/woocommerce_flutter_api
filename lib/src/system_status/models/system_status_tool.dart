@@ -1,7 +1,6 @@
 import 'package:woocommerce_flutter_api/src/helpers/fake_helper.dart';
 
 class WooSystemStatusTool {
-
   WooSystemStatusTool({
     this.id,
     this.name,

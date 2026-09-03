@@ -43,7 +43,6 @@ import 'package:woocommerce_flutter_api/src/helpers/fake_helper.dart';
 /// print('Type: ${option.type}');
 /// ```
 class WooSettingOption {
-
   /// Creates a new WooSettingOption instance
   ///
   /// This constructor creates a setting option with the specified properties.
@@ -218,6 +217,7 @@ class WooSettingOption {
         },
         groupId: FakeHelper.word(),
       );
+
   /// A unique identifier for the setting.
   ///
   /// This identifier is used to reference the setting in API calls and

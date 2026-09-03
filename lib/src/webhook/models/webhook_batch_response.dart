@@ -98,7 +98,6 @@ import 'webhook.dart';
 /// final json = batchResponse.toJson();
 /// ```
 class WooWebhookBatchResponse {
-
   /// Creates a new WooWebhookBatchResponse instance
   ///
   /// ## Required Parameters
@@ -149,23 +148,24 @@ class WooWebhookBatchResponse {
       WooWebhookBatchResponse(
         create: json['create'] != null
             ? (json['create'] as List)
-                .map((item) =>
-                    WooWebhook.fromJson(item as Map<String, dynamic>))
+                .map(
+                    (item) => WooWebhook.fromJson(item as Map<String, dynamic>))
                 .toList()
             : null,
         update: json['update'] != null
             ? (json['update'] as List)
-                .map((item) =>
-                    WooWebhook.fromJson(item as Map<String, dynamic>))
+                .map(
+                    (item) => WooWebhook.fromJson(item as Map<String, dynamic>))
                 .toList()
             : null,
         delete: json['delete'] != null
             ? (json['delete'] as List)
-                .map((item) =>
-                    WooWebhook.fromJson(item as Map<String, dynamic>))
+                .map(
+                    (item) => WooWebhook.fromJson(item as Map<String, dynamic>))
                 .toList()
             : null,
       );
+
   /// List of created webhooks
   ///
   /// Contains the webhooks that were successfully created, each with a
@@ -231,4 +231,3 @@ class WooWebhookBatchResponse {
     return 'WooWebhookBatchResponse(create: ${create?.length ?? 0}, update: ${update?.length ?? 0}, delete: ${delete?.length ?? 0})';
   }
 }
-

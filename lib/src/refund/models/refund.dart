@@ -53,7 +53,6 @@ import 'package:woocommerce_flutter_api/woocommerce_flutter_api.dart';
 /// final refund = WooRefund.fromJson(jsonData);
 /// ```
 class WooRefund extends WooOrderRefund {
-
   /// Creates a new WooRefund instance
   ///
   /// ## Required Parameters
@@ -181,6 +180,7 @@ class WooRefund extends WooOrderRefund {
         apiRestock: FakeHelper.boolean(),
         parentId: FakeHelper.integer(),
       );
+
   /// The ID of the order the refund is associated with.
   ///
   /// This field links the refund to its parent order, allowing you to track

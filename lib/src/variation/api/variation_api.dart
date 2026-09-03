@@ -397,9 +397,8 @@ extension WooVariationApi on WooCommerce {
             ?.map((variation) => WooProductVariation.fake())
             .toList(),
         update: request.update,
-        delete: request.delete
-            ?.map((id) => WooProductVariation.fake())
-            .toList(),
+        delete:
+            request.delete?.map((id) => WooProductVariation.fake()).toList(),
       );
     }
 

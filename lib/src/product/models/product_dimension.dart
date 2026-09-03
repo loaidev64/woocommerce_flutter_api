@@ -4,7 +4,6 @@ import 'package:woocommerce_flutter_api/src/helpers/fake_helper.dart';
 ///
 /// Brief description of the model's purpose and usage for product physical dimensions.
 class WooProductDimension {
-
   /// Creates a new WooProductDimension instance.
   const WooProductDimension({this.length, this.height, this.width});
 
@@ -20,6 +19,7 @@ class WooProductDimension {
         height: FakeHelper.integer().toString(),
         width: FakeHelper.integer().toString(),
       );
+
   /// Product length.
   final String? length;
 

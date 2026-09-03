@@ -83,7 +83,6 @@ import 'tax_rate.dart';
 /// final json = batchResponse.toJson();
 /// ```
 class WooTaxRateBatchResponse {
-
   /// Creates a new WooTaxRateBatchResponse instance
   ///
   /// ## Required Parameters
@@ -134,23 +133,24 @@ class WooTaxRateBatchResponse {
       WooTaxRateBatchResponse(
         create: json['create'] != null
             ? (json['create'] as List)
-                .map((item) =>
-                    WooTaxRate.fromJson(item as Map<String, dynamic>))
+                .map(
+                    (item) => WooTaxRate.fromJson(item as Map<String, dynamic>))
                 .toList()
             : null,
         update: json['update'] != null
             ? (json['update'] as List)
-                .map((item) =>
-                    WooTaxRate.fromJson(item as Map<String, dynamic>))
+                .map(
+                    (item) => WooTaxRate.fromJson(item as Map<String, dynamic>))
                 .toList()
             : null,
         delete: json['delete'] != null
             ? (json['delete'] as List)
-                .map((item) =>
-                    WooTaxRate.fromJson(item as Map<String, dynamic>))
+                .map(
+                    (item) => WooTaxRate.fromJson(item as Map<String, dynamic>))
                 .toList()
             : null,
       );
+
   /// List of created tax rates
   ///
   /// Contains the tax rates that were successfully created, each with a
@@ -216,4 +216,3 @@ class WooTaxRateBatchResponse {
     return 'WooTaxRateBatchResponse(create: ${create?.length ?? 0}, update: ${update?.length ?? 0}, delete: ${delete?.length ?? 0})';
   }
 }
-

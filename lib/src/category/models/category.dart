@@ -58,7 +58,6 @@ import 'category_links.dart';
 /// final category = WooProductCategory.fromJson(jsonData);
 /// ```
 class WooProductCategory {
-
   /// Creates a new WooProductCategory instance
   ///
   /// ## Required Parameters
@@ -160,6 +159,7 @@ class WooProductCategory {
         menuOrder: FakeHelper.integer(),
         count: FakeHelper.integer(),
       );
+
   /// Unique identifier for the category
   ///
   /// This ID is automatically assigned by WooCommerce when the category is created.

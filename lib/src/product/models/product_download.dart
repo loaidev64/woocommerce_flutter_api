@@ -4,7 +4,6 @@ import 'package:woocommerce_flutter_api/src/helpers/fake_helper.dart';
 ///
 /// Brief description of the model's purpose and usage for product downloads.
 class WooProductDownload {
-
   /// Creates a new WooProductDownload instance.
   WooProductDownload(this.id, this.name, this.file);
 
@@ -20,6 +19,7 @@ class WooProductDownload {
         FakeHelper.word(),
         FakeHelper.url(),
       );
+
   /// File ID.
   final String? id;
 

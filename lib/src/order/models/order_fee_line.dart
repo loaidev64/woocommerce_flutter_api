@@ -8,7 +8,6 @@ import 'package:woocommerce_flutter_api/src/order/models/fee_line_tax.dart';
 /// Contains fee information, amounts, and tax details for additional fees
 /// applied to an order. Used for fee tracking and order processing.
 class WooOrderFeeLine {
-
   /// Creates a new WooOrderFeeLine instance.
   WooOrderFeeLine({
     this.id,
@@ -46,6 +45,7 @@ class WooOrderFeeLine {
         taxes: FakeHelper.list(() => WooFeeLineTax.fake()),
         metaData: FakeHelper.list(() => WooMetaData.fake()),
       );
+
   /// Unique identifier for the fee line.
   int? id;
 

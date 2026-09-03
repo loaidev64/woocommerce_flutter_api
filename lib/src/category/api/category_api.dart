@@ -479,9 +479,7 @@ extension WooCategoryApi on WooCommerce {
             ?.map((category) => WooProductCategory.fake())
             .toList(),
         update: request.update,
-        delete: request.delete
-            ?.map((id) => WooProductCategory.fake())
-            .toList(),
+        delete: request.delete?.map((id) => WooProductCategory.fake()).toList(),
       );
     }
 

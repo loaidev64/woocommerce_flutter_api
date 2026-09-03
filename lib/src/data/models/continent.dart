@@ -40,7 +40,6 @@ import 'package:woocommerce_flutter_api/src/helpers/fake_helper.dart';
 /// final json = continent.toJson();
 /// ```
 class WooContinent {
-
   /// Creates a new WooContinent instance
   ///
   /// ## Parameters
@@ -117,6 +116,7 @@ class WooContinent {
         name: FakeHelper.country(),
         countries: FakeHelper.list(() => CountryInContinent.fake()),
       );
+
   /// Continent code
   ///
   /// The two-letter continent code used for geographical reference.
@@ -159,7 +159,6 @@ class WooContinent {
 }
 
 class CountryInContinent {
-
   CountryInContinent({
     this.code,
     this.currencyCode,
@@ -230,7 +229,6 @@ class CountryInContinent {
 }
 
 class StateInCountry {
-
   StateInCountry({this.code, this.name});
 
   factory StateInCountry.fromJson(Map<String, dynamic> json) => StateInCountry(

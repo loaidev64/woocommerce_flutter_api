@@ -63,7 +63,6 @@ import 'order.dart';
 /// final json = batchResponse.toJson();
 /// ```
 class WooOrderBatchResponse {
-
   /// Creates a new WooOrderBatchResponse instance
   ///
   /// ## Required Parameters
@@ -128,6 +127,7 @@ class WooOrderBatchResponse {
                 .toList()
             : null,
       );
+
   /// List of created orders
   ///
   /// Contains the orders that were successfully created, each with a
@@ -193,4 +193,3 @@ class WooOrderBatchResponse {
     return 'WooOrderBatchResponse(create: ${create?.length ?? 0}, update: ${update?.length ?? 0}, delete: ${delete?.length ?? 0})';
   }
 }
-

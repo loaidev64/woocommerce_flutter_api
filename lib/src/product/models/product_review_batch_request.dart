@@ -92,7 +92,6 @@ import 'product_review.dart';
 /// final batchRequest = WooProductReviewBatchRequest.fromJson(jsonData);
 /// ```
 class WooProductReviewBatchRequest {
-
   /// Creates a new WooProductReviewBatchRequest instance
   ///
   /// ## Required Parameters
@@ -171,6 +170,7 @@ class WooProductReviewBatchRequest {
             ? (json['delete'] as List).cast<int>()
             : null,
       );
+
   /// List of reviews to create
   ///
   /// Each review in this list will be created as a new review in the store.
@@ -238,4 +238,3 @@ class WooProductReviewBatchRequest {
     return 'WooProductReviewBatchRequest(create: ${create?.length ?? 0}, update: ${update?.length ?? 0}, delete: ${delete?.length ?? 0})';
   }
 }
-

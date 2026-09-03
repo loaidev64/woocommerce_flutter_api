@@ -7,7 +7,6 @@ import 'package:woocommerce_flutter_api/src/order/models/tax.dart';
 /// Contains product information, quantities, pricing, and tax details for items
 /// in an order. Used for order processing and inventory management.
 class WooLineItem {
-
   /// Creates a new WooLineItem instance.
   WooLineItem({
     this.id,
@@ -62,6 +61,7 @@ class WooLineItem {
         sku: FakeHelper.word(),
         price: FakeHelper.decimal(),
       );
+
   /// Unique identifier for the line item.
   int? id;
 

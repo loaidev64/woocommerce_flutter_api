@@ -106,7 +106,6 @@ import 'setting_option.dart';
 /// final batchRequest = WooSettingOptionBatchRequest.fromJson(jsonData);
 /// ```
 class WooSettingOptionBatchRequest {
-
   /// Creates a new WooSettingOptionBatchRequest instance
   ///
   /// ## Required Parameters
@@ -185,6 +184,7 @@ class WooSettingOptionBatchRequest {
             ? (json['delete'] as List).cast<String>()
             : null,
       );
+
   /// List of setting options to create
   ///
   /// Each setting option in this list will be created as a new option in the store.
@@ -254,4 +254,3 @@ class WooSettingOptionBatchRequest {
     return 'WooSettingOptionBatchRequest(create: ${create?.length ?? 0}, update: ${update?.length ?? 0}, delete: ${delete?.length ?? 0})';
   }
 }
-

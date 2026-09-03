@@ -73,7 +73,6 @@ import 'order.dart';
 /// final batchRequest = WooOrderBatchRequest.fromJson(jsonData);
 /// ```
 class WooOrderBatchRequest {
-
   /// Creates a new WooOrderBatchRequest instance
   ///
   /// ## Required Parameters
@@ -145,6 +144,7 @@ class WooOrderBatchRequest {
             ? (json['delete'] as List).cast<int>()
             : null,
       );
+
   /// List of orders to create
   ///
   /// Each order in this list will be created as a new order in the store.
@@ -209,4 +209,3 @@ class WooOrderBatchRequest {
     return 'WooOrderBatchRequest(create: ${create?.length ?? 0}, update: ${update?.length ?? 0}, delete: ${delete?.length ?? 0})';
   }
 }
-

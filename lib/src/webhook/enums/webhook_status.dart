@@ -1,4 +1,5 @@
-import 'package:woocommerce_flutter_api/woocommerce_flutter_api.dart' show WooWebhook, WooWebhookApi, WooWebhookTopic;
+import 'package:woocommerce_flutter_api/woocommerce_flutter_api.dart'
+    show WooWebhook, WooWebhookApi, WooWebhookTopic;
 
 /// WooCommerce Webhook Status Enumeration
 ///

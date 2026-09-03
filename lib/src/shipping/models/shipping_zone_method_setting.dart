@@ -1,7 +1,6 @@
 import 'package:woocommerce_flutter_api/src/helpers/fake_helper.dart';
 
 class WooShippingZoneMethodSetting {
-
   WooShippingZoneMethodSetting({
     this.id,
     this.label,

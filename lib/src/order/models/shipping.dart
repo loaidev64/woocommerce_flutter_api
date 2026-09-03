@@ -5,7 +5,6 @@ import 'package:woocommerce_flutter_api/woocommerce_flutter_api.dart';
 /// Contains customer shipping details including name, address, and company information.
 /// Used for order fulfillment and delivery purposes.
 class WooShipping {
-
   /// Creates a new WooShipping instance.
   WooShipping(
       {this.firstName,
@@ -42,6 +41,7 @@ class WooShipping {
         company: FakeHelper.company(),
         postcode: FakeHelper.zipCode(),
       );
+
   /// Recipient's first name.
   String? firstName;
 

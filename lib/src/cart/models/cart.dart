@@ -3,7 +3,6 @@ import 'package:woocommerce_flutter_api/src/helpers/fake_helper.dart';
 
 //TODO:: is not compatable with plugin yet
 class WooCart {
-
   WooCart({
     this.itemsCount,
     this.items,
@@ -32,6 +31,7 @@ class WooCart {
         totalPrice: FakeHelper.decimal(),
         items: FakeHelper.list(() => WooCartItem.fake()),
       );
+
   /// Count of items in cart.
   int? itemsCount;
 

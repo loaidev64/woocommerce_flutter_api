@@ -38,7 +38,6 @@ import 'package:woocommerce_flutter_api/src/helpers/fake_helper.dart';
 /// print('Has sub-groups: ${group.subGroups?.isNotEmpty ?? false}');
 /// ```
 class WooSettings {
-
   /// Creates a new WooSettings instance
   ///
   /// This constructor creates a settings group with the specified properties.
@@ -171,6 +170,7 @@ class WooSettings {
         parentId: FakeHelper.word(),
         subGroups: FakeHelper.list(() => FakeHelper.word()),
       );
+
   /// A unique identifier that can be used to link settings together.
   ///
   /// This identifier is used to reference the settings group in API calls

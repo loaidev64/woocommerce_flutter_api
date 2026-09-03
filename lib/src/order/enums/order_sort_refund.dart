@@ -21,19 +21,19 @@
 enum WooSortRefund {
   /// Sort by refund creation date.
   date,
-  
+
   /// Sort by refund modification date.
   modified,
-  
+
   /// Sort by refund ID.
   id,
-  
+
   /// Sort by inclusion order.
   include,
-  
+
   /// Sort by refund title.
   title,
-  
+
   /// Sort by refund slug.
   slug,
 }

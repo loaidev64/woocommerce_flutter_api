@@ -5,7 +5,6 @@ import 'package:woocommerce_flutter_api/src/helpers/fake_helper.dart';
 ///
 /// Brief description of the model's purpose and usage for product attributes.
 class WooProductItemAttribute {
-
   /// Creates a new WooProductItemAttribute instance.
   WooProductItemAttribute(this.id, this.name, this.position, this.visible,
       this.variation, this.options);
@@ -28,6 +27,7 @@ class WooProductItemAttribute {
         FakeHelper.boolean(),
         List.filled(Faker().randomGenerator.integer(10), FakeHelper.word()),
       );
+
   /// Attribute ID.
   final int? id;
 
@@ -69,7 +69,6 @@ class WooProductItemAttribute {
 ///
 /// Brief description of the model's purpose and usage for default product attributes.
 class WooProductDefaultAttribute {
-
   /// Creates a new WooProductDefaultAttribute instance.
   WooProductDefaultAttribute(this.id, this.name, this.option);
 
@@ -85,6 +84,7 @@ class WooProductDefaultAttribute {
         FakeHelper.word(),
         FakeHelper.word(),
       );
+
   /// Attribute ID.
   final int? id;
 

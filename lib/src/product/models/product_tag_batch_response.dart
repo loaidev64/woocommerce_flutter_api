@@ -63,7 +63,6 @@ import 'product_tag.dart';
 /// final json = batchResponse.toJson();
 /// ```
 class WooProductTagBatchResponse {
-
   /// Creates a new WooProductTagBatchResponse instance
   ///
   /// ## Required Parameters
@@ -131,6 +130,7 @@ class WooProductTagBatchResponse {
                 .toList()
             : null,
       );
+
   /// List of created tags
   ///
   /// Contains the tags that were successfully created, each with a
@@ -196,4 +196,3 @@ class WooProductTagBatchResponse {
     return 'WooProductTagBatchResponse(create: ${create?.length ?? 0}, update: ${update?.length ?? 0}, delete: ${delete?.length ?? 0})';
   }
 }
-

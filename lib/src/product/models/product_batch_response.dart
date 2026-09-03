@@ -63,7 +63,6 @@ import 'product.dart';
 /// final json = batchResponse.toJson();
 /// ```
 class WooProductBatchResponse {
-
   /// Creates a new WooProductBatchResponse instance
   ///
   /// ## Required Parameters
@@ -114,23 +113,24 @@ class WooProductBatchResponse {
       WooProductBatchResponse(
         create: json['create'] != null
             ? (json['create'] as List)
-                .map((item) =>
-                    WooProduct.fromJson(item as Map<String, dynamic>))
+                .map(
+                    (item) => WooProduct.fromJson(item as Map<String, dynamic>))
                 .toList()
             : null,
         update: json['update'] != null
             ? (json['update'] as List)
-                .map((item) =>
-                    WooProduct.fromJson(item as Map<String, dynamic>))
+                .map(
+                    (item) => WooProduct.fromJson(item as Map<String, dynamic>))
                 .toList()
             : null,
         delete: json['delete'] != null
             ? (json['delete'] as List)
-                .map((item) =>
-                    WooProduct.fromJson(item as Map<String, dynamic>))
+                .map(
+                    (item) => WooProduct.fromJson(item as Map<String, dynamic>))
                 .toList()
             : null,
       );
+
   /// List of created products
   ///
   /// Contains the products that were successfully created, each with a
@@ -196,4 +196,3 @@ class WooProductBatchResponse {
     return 'WooProductBatchResponse(create: ${create?.length ?? 0}, update: ${update?.length ?? 0}, delete: ${delete?.length ?? 0})';
   }
 }
-

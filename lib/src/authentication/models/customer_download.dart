@@ -1,7 +1,6 @@
 import 'package:woocommerce_flutter_api/woocommerce_flutter_api.dart';
 
 class WooCustomerDownload {
-
   WooCustomerDownload({
     this.downloadId,
     this.downloadUrl,
@@ -45,6 +44,7 @@ class WooCustomerDownload {
         accessExpiresGmt: FakeHelper.datetime(),
         file: WooCustomerDownloadFile.fake(),
       );
+
   /// Download ID (MD5).
   String? downloadId;
 

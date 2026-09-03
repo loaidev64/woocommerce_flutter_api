@@ -432,13 +432,9 @@ extension WooProductTagApi on WooCommerce {
 
     if (isUsingFaker) {
       return WooProductTagBatchResponse(
-        create: request.create
-            ?.map((tag) => WooProductTag.fake())
-            .toList(),
+        create: request.create?.map((tag) => WooProductTag.fake()).toList(),
         update: request.update,
-        delete: request.delete
-            ?.map((id) => WooProductTag.fake(id))
-            .toList(),
+        delete: request.delete?.map((id) => WooProductTag.fake(id)).toList(),
       );
     }
 

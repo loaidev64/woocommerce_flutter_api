@@ -50,7 +50,6 @@ import 'package:woocommerce_flutter_api/woocommerce_flutter_api.dart';
 /// print('Supports: ${gateway.methodSupports}');
 /// ```
 class WooPaymentGateway {
-
   /// Creates a new WooPaymentGateway instance
   ///
   /// This constructor creates a payment gateway with the specified properties.
@@ -225,6 +224,7 @@ class WooPaymentGateway {
             FakeHelper.word(): WooPaymentGatewaySetting.fake(),
         },
       );
+
   /// Payment gateway ID
   ///
   /// Unique identifier for the payment gateway (e.g., 'paypal', 'stripe', 'bacs').

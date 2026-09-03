@@ -45,7 +45,6 @@ import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 /// final response = await woocommerce.dio.get('/custom-endpoint');
 /// ```
 class WooCommerce {
-
   /// Creates a new WooCommerce API client instance.
   ///
   /// ## Required Parameters
@@ -100,6 +99,7 @@ class WooCommerce {
 
     if (interceptors != null) dio.interceptors.addAll(interceptors);
   }
+
   /// The Dio HTTP client instance used for making API requests.
   ///
   /// This instance is pre-configured with authentication headers and base URL.

@@ -14,13 +14,13 @@
 ///   print('This note is visible to customers');
 /// }
 /// ```
-enum WooOrderNoteType { 
+enum WooOrderNoteType {
   /// Any type of order note (includes both customer and internal notes).
-  any, 
-  
+  any,
+
   /// Customer-visible order notes.
-  customer, 
-  
+  customer,
+
   /// Internal order notes (admin only).
-  internal 
+  internal
 }

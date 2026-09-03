@@ -70,7 +70,6 @@ import 'variation.dart';
 /// final json = batchResponse.toJson();
 /// ```
 class WooProductVariationBatchResponse {
-
   /// Creates a new WooProductVariationBatchResponse instance
   ///
   /// ## Required Parameters
@@ -139,6 +138,7 @@ class WooProductVariationBatchResponse {
                 .toList()
             : null,
       );
+
   /// List of created variations
   ///
   /// Contains the variations that were successfully created, each with a
@@ -204,4 +204,3 @@ class WooProductVariationBatchResponse {
     return 'WooProductVariationBatchResponse(create: ${create?.length ?? 0}, update: ${update?.length ?? 0}, delete: ${delete?.length ?? 0})';
   }
 }
-

@@ -93,7 +93,6 @@ import 'setting_option.dart';
 /// final json = batchResponse.toJson();
 /// ```
 class WooSettingOptionBatchResponse {
-
   /// Creates a new WooSettingOptionBatchResponse instance
   ///
   /// ## Required Parameters
@@ -161,6 +160,7 @@ class WooSettingOptionBatchResponse {
                 .toList()
             : null,
       );
+
   /// List of created setting options
   ///
   /// Contains the setting options that were successfully created, each with a
@@ -226,4 +226,3 @@ class WooSettingOptionBatchResponse {
     return 'WooSettingOptionBatchResponse(create: ${create?.length ?? 0}, update: ${update?.length ?? 0}, delete: ${delete?.length ?? 0})';
   }
 }
-

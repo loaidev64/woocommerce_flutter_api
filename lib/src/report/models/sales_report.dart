@@ -51,7 +51,6 @@ import 'package:woocommerce_flutter_api/woocommerce_flutter_api.dart';
 /// final salesReport = WooSalesReport.fromJson(jsonData);
 /// ```
 class WooSalesReport {
-
   /// Creates a new WooSalesReport instance
   ///
   /// ## Required Parameters
@@ -161,6 +160,7 @@ class WooSalesReport {
         totalsGroupedBy: FakeHelper.word(),
         totals: FakeHelper.list(WooSalesReportTotals.fake),
       );
+
   /// Gross sales in the period. Read-only.
   ///
   /// The total revenue before any deductions such as taxes, shipping,
@@ -354,7 +354,6 @@ class WooSalesReport {
 /// final total = WooSalesReportTotals.fromJson(jsonData, dateKey);
 /// ```
 class WooSalesReportTotals {
-
   /// Creates a new WooSalesReportTotals instance
   ///
   /// ## Required Parameters
@@ -445,6 +444,7 @@ class WooSalesReportTotals {
         customers: FakeHelper.integer(),
         date: FakeHelper.datetime(),
       );
+
   /// The date of this total.
   ///
   /// The specific date or time period this data represents.

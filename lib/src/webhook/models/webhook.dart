@@ -67,7 +67,6 @@ import '../enums/webhook_topic.dart';
 /// - `X-WC-Webhook-ID`: Webhook's ID
 /// - `X-WC-Webhook-Delivery-ID`: Delivery log ID
 class WooWebhook {
-
   /// Creates a new WooWebhook instance
   ///
   /// ## Required Parameters
@@ -109,7 +108,10 @@ class WooWebhook {
   /// );
   /// ```
   WooWebhook({
-    required this.name, required this.topic, required this.deliveryUrl, this.id,
+    required this.name,
+    required this.topic,
+    required this.deliveryUrl,
+    this.id,
     this.status = WooWebhookStatus.active,
     this.resource,
     this.event,
@@ -232,6 +234,7 @@ class WooWebhook {
         deliveryUrl: FakeHelper.url(),
         secret: FakeHelper.code(),
       );
+
   /// Unique identifier for the webhook
   ///
   /// This ID is automatically assigned by WooCommerce when the webhook is created.

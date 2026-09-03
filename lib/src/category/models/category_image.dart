@@ -5,7 +5,6 @@ import 'package:woocommerce_flutter_api/src/helpers/fake_helper.dart';
 /// This class models the featured image for a product category with its metadata,
 /// URLs, and timestamps for creation and modification.
 class WooProductCategoryImage {
-
   /// Creates a new WooProductCategoryImage instance.
   ///
   /// ## Optional Parameters
@@ -81,6 +80,7 @@ class WooProductCategoryImage {
         name: FakeHelper.word(),
         alt: FakeHelper.word(),
       );
+
   /// Image ID.
   int? id;
 

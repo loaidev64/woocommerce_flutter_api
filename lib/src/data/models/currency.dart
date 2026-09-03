@@ -38,7 +38,6 @@ import 'package:woocommerce_flutter_api/src/helpers/fake_helper.dart';
 /// final json = currency.toJson();
 /// ```
 class WooCurrency {
-
   /// Creates a new WooCurrency instance
   ///
   /// ## Parameters
@@ -111,6 +110,7 @@ class WooCurrency {
         name: FakeHelper.word(),
         symbol: '\$',
       );
+
   /// ISO 4217 currency code
   ///
   /// The three-letter currency code as defined by ISO 4217 standard.

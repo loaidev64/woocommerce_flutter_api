@@ -43,7 +43,6 @@ import 'package:woocommerce_flutter_api/src/helpers/fake_helper.dart';
 /// final json = location.toJson();
 /// ```
 class WooShippingZoneLocation {
-
   /// Creates a new WooShippingZoneLocation instance
   ///
   /// ## Parameters
@@ -122,6 +121,7 @@ class WooShippingZoneLocation {
         type: FakeHelper.randomItem(
             const ['postcode', 'state', 'country', 'continent']),
       );
+
   /// Geographical location code
   ///
   /// The specific identifier for the geographical area. The format depends on

@@ -1,7 +1,6 @@
 import 'package:woocommerce_flutter_api/src/helpers/fake_helper.dart';
 
 class WooMetaData {
-
   WooMetaData(this.id, this.key, this.value);
 
   WooMetaData.fromJson(Map<String, dynamic> json)
@@ -14,6 +13,7 @@ class WooMetaData {
         FakeHelper.word(),
         FakeHelper.word(),
       );
+
   /// Meta ID.
   final int? id;
 

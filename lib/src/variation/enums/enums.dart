@@ -16,3 +16,4 @@
 ///
 /// // Note: Variation-specific enums will be added here as needed
 /// ```
+library;

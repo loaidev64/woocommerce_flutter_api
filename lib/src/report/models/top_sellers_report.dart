@@ -4,7 +4,6 @@ import 'package:woocommerce_flutter_api/woocommerce_flutter_api.dart';
 ///
 /// Brief description of the model's purpose and usage.
 class WooTopSellersReport {
-
   /// Creates a new WooTopSellersReport instance.
   WooTopSellersReport({
     this.title,
@@ -23,6 +22,7 @@ class WooTopSellersReport {
         productId: FakeHelper.integer(),
         quantity: FakeHelper.integer(),
       );
+
   /// Product title.
   String? title;
 

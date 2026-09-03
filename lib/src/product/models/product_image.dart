@@ -4,7 +4,6 @@ import 'package:woocommerce_flutter_api/src/helpers/fake_helper.dart';
 ///
 /// Brief description of the model's purpose and usage for product images.
 class WooProductImage {
-
   /// Creates a new WooProductImage instance.
   WooProductImage(this.id, this.src, this.name, this.alt, this.dateCreated,
       this.dateCreatedGMT, this.dateModified, this.dateModifiedGMT);
@@ -32,6 +31,7 @@ class WooProductImage {
         FakeHelper.datetime(),
         FakeHelper.datetime(),
       );
+
   /// Image ID.
   final int? id;
 

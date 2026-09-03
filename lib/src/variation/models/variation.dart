@@ -59,7 +59,6 @@ import 'package:woocommerce_flutter_api/src/product/models/models.dart';
 /// final variation = WooProductVariation.fromJson(jsonData);
 /// ```
 class WooProductVariation {
-
   /// Creates a new WooProductVariation instance
   ///
   /// ## Required Parameters
@@ -257,6 +256,7 @@ class WooProductVariation {
         dateOnSaleTo: FakeHelper.datetime(),
         dateOnSaleToGmt: FakeHelper.datetime(),
       );
+
   /// Unique identifier for the resource.
   int? id;
 

@@ -74,7 +74,6 @@ import 'product.dart';
 /// final batchRequest = WooProductBatchRequest.fromJson(jsonData);
 /// ```
 class WooProductBatchRequest {
-
   /// Creates a new WooProductBatchRequest instance
   ///
   /// ## Required Parameters
@@ -133,20 +132,21 @@ class WooProductBatchRequest {
       WooProductBatchRequest(
         create: json['create'] != null
             ? (json['create'] as List)
-                .map((item) =>
-                    WooProduct.fromJson(item as Map<String, dynamic>))
+                .map(
+                    (item) => WooProduct.fromJson(item as Map<String, dynamic>))
                 .toList()
             : null,
         update: json['update'] != null
             ? (json['update'] as List)
-                .map((item) =>
-                    WooProduct.fromJson(item as Map<String, dynamic>))
+                .map(
+                    (item) => WooProduct.fromJson(item as Map<String, dynamic>))
                 .toList()
             : null,
         delete: json['delete'] != null
             ? (json['delete'] as List).cast<int>()
             : null,
       );
+
   /// List of products to create
   ///
   /// Each product in this list will be created as a new product in the store.
@@ -211,4 +211,3 @@ class WooProductBatchRequest {
     return 'WooProductBatchRequest(create: ${create?.length ?? 0}, update: ${update?.length ?? 0}, delete: ${delete?.length ?? 0})';
   }
 }
-

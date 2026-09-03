@@ -44,7 +44,6 @@ import 'package:woocommerce_flutter_api/src/helpers/fake_helper.dart';
 /// final json = zone.toJson();
 /// ```
 class WooShippingZone {
-
   /// Creates a new WooShippingZone instance
   ///
   /// ## Required Parameters
@@ -71,7 +70,8 @@ class WooShippingZone {
   /// );
   /// ```
   WooShippingZone({
-    required this.name, this.id,
+    required this.name,
+    this.id,
     this.order,
   });
 
@@ -128,6 +128,7 @@ class WooShippingZone {
         name: FakeHelper.sentence(),
         order: FakeHelper.integer(),
       );
+
   /// Unique identifier for the shipping zone
   ///
   /// This ID is automatically assigned by WooCommerce when the zone is created.

@@ -5,5 +5,6 @@ abstract class _ProductShippingClassEndpoints {
 
   static String singleShippingClass(int id) => '/products/shipping_classes/$id';
 
-  static String batchProductShippingClasses() => '/products/shipping_classes/batch';
+  static String batchProductShippingClasses() =>
+      '/products/shipping_classes/batch';
 }

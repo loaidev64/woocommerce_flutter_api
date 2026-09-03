@@ -4,7 +4,6 @@ import 'package:woocommerce_flutter_api/woocommerce_flutter_api.dart';
 ///
 /// Brief description of the model's purpose and usage for product reviews.
 class WooProductReview {
-
   /// Creates a new WooProductReview instance.
   WooProductReview({
     this.id,
@@ -45,6 +44,7 @@ class WooProductReview {
         rating: FakeHelper.integer(min: 0, max: 5),
         verified: FakeHelper.boolean(),
       );
+
   /// Unique identifier for the resource. Read-only.
   int? id;
 

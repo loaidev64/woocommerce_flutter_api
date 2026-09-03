@@ -17,6 +17,8 @@
 /// - Consider implementing proper state management for larger applications
 library;
 
+// ignore_for_file: avoid_print
+
 import 'package:dio/dio.dart';
 import 'package:woocommerce_flutter_api/woocommerce_flutter_api.dart';
 

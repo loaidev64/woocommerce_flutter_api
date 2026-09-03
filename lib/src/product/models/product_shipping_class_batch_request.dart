@@ -74,7 +74,6 @@ import 'product_shipping_class.dart';
 /// final batchRequest = WooProductShippingClassBatchRequest.fromJson(jsonData);
 /// ```
 class WooProductShippingClassBatchRequest {
-
   /// Creates a new WooProductShippingClassBatchRequest instance
   ///
   /// ## Required Parameters
@@ -135,24 +134,25 @@ class WooProductShippingClassBatchRequest {
   /// final batchRequest = WooProductShippingClassBatchRequest.fromJson(jsonData);
   /// ```
   factory WooProductShippingClassBatchRequest.fromJson(
-      Map<String, dynamic> json) =>
+          Map<String, dynamic> json) =>
       WooProductShippingClassBatchRequest(
         create: json['create'] != null
             ? (json['create'] as List)
-                .map((item) =>
-                    WooProductShippingClass.fromJson(item as Map<String, dynamic>))
+                .map((item) => WooProductShippingClass.fromJson(
+                    item as Map<String, dynamic>))
                 .toList()
             : null,
         update: json['update'] != null
             ? (json['update'] as List)
-                .map((item) =>
-                    WooProductShippingClass.fromJson(item as Map<String, dynamic>))
+                .map((item) => WooProductShippingClass.fromJson(
+                    item as Map<String, dynamic>))
                 .toList()
             : null,
         delete: json['delete'] != null
             ? (json['delete'] as List).cast<int>()
             : null,
       );
+
   /// List of shipping classes to create
   ///
   /// Each shipping class in this list will be created as a new shipping class in the store.
@@ -186,9 +186,11 @@ class WooProductShippingClassBatchRequest {
   /// ```
   Map<String, dynamic> toJson() => {
         if (create != null)
-          'create': create!.map((shippingClass) => shippingClass.toJson()).toList(),
+          'create':
+              create!.map((shippingClass) => shippingClass.toJson()).toList(),
         if (update != null)
-          'update': update!.map((shippingClass) => shippingClass.toJson()).toList(),
+          'update':
+              update!.map((shippingClass) => shippingClass.toJson()).toList(),
         if (delete != null) 'delete': delete,
       };
 
@@ -217,4 +219,3 @@ class WooProductShippingClassBatchRequest {
     return 'WooProductShippingClassBatchRequest(create: ${create?.length ?? 0}, update: ${update?.length ?? 0}, delete: ${delete?.length ?? 0})';
   }
 }
-

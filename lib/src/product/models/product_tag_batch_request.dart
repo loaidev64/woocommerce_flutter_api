@@ -76,7 +76,6 @@ import 'product_tag.dart';
 /// final batchRequest = WooProductTagBatchRequest.fromJson(jsonData);
 /// ```
 class WooProductTagBatchRequest {
-
   /// Creates a new WooProductTagBatchRequest instance
   ///
   /// ## Required Parameters
@@ -145,6 +144,7 @@ class WooProductTagBatchRequest {
             ? (json['delete'] as List).cast<int>()
             : null,
       );
+
   /// List of tags to create
   ///
   /// Each tag in this list will be created as a new tag in the store.
@@ -209,4 +209,3 @@ class WooProductTagBatchRequest {
     return 'WooProductTagBatchRequest(create: ${create?.length ?? 0}, update: ${update?.length ?? 0}, delete: ${delete?.length ?? 0})';
   }
 }
-

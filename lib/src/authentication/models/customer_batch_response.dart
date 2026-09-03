@@ -63,7 +63,6 @@ import 'customer.dart';
 /// final json = batchResponse.toJson();
 /// ```
 class WooCustomerBatchResponse {
-
   /// Creates a new WooCustomerBatchResponse instance
   ///
   /// ## Required Parameters
@@ -131,6 +130,7 @@ class WooCustomerBatchResponse {
                 .toList()
             : null,
       );
+
   /// List of created customers
   ///
   /// Contains the customers that were successfully created, each with a
@@ -196,4 +196,3 @@ class WooCustomerBatchResponse {
     return 'WooCustomerBatchResponse(create: ${create?.length ?? 0}, update: ${update?.length ?? 0}, delete: ${delete?.length ?? 0})';
   }
 }
-

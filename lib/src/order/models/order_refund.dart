@@ -118,7 +118,6 @@ import 'package:woocommerce_flutter_api/woocommerce_flutter_api.dart';
 /// final refund = WooOrderRefund.fromJson(jsonData);
 /// ```
 class WooOrderRefund {
-
   /// Creates a new WooOrderRefund instance
   ///
   /// ## Required Parameters
@@ -278,6 +277,7 @@ class WooOrderRefund {
         apiRefund: FakeHelper.boolean(),
         apiRestock: FakeHelper.boolean(),
       );
+
   /// Unique identifier for the refund
   ///
   /// This ID is automatically assigned by WooCommerce when the refund is created.

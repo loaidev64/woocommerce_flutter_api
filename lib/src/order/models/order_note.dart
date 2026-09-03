@@ -5,10 +5,10 @@ import 'package:woocommerce_flutter_api/woocommerce_flutter_api.dart';
 /// Contains note information, author details, and visibility settings for notes
 /// added to an order. Used for order communication and tracking.
 class WooOrderNote {
-
   /// Creates a new WooOrderNote instance.
   WooOrderNote({
-    required this.note, this.id,
+    required this.note,
+    this.id,
     this.author,
     this.dateCreated,
     this.dateCreatedGmt,
@@ -36,6 +36,7 @@ class WooOrderNote {
         customerNote: FakeHelper.boolean(),
         addedByUser: FakeHelper.boolean(),
       );
+
   /// Unique identifier for the order note.
   int? id;
 

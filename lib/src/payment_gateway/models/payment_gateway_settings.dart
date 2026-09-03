@@ -44,7 +44,6 @@ import 'package:woocommerce_flutter_api/woocommerce_flutter_api.dart';
 /// print('Type: ${setting.type}');
 /// ```
 class WooPaymentGatewaySetting {
-
   /// Creates a new WooPaymentGatewaySetting instance
   ///
   /// This constructor creates a payment gateway setting with the specified properties.
@@ -201,6 +200,7 @@ class WooPaymentGatewaySetting {
         tip: FakeHelper.sentence(),
         placeholder: FakeHelper.word(),
       );
+
   /// Unique identifier for the setting
   ///
   /// This ID is used to reference the setting in API calls and configuration.

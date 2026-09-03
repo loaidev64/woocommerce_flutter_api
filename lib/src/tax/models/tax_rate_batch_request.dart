@@ -96,7 +96,6 @@ import 'tax_rate.dart';
 /// final batchRequest = WooTaxRateBatchRequest.fromJson(jsonData);
 /// ```
 class WooTaxRateBatchRequest {
-
   /// Creates a new WooTaxRateBatchRequest instance
   ///
   /// ## Required Parameters
@@ -159,20 +158,21 @@ class WooTaxRateBatchRequest {
       WooTaxRateBatchRequest(
         create: json['create'] != null
             ? (json['create'] as List)
-                .map((item) =>
-                    WooTaxRate.fromJson(item as Map<String, dynamic>))
+                .map(
+                    (item) => WooTaxRate.fromJson(item as Map<String, dynamic>))
                 .toList()
             : null,
         update: json['update'] != null
             ? (json['update'] as List)
-                .map((item) =>
-                    WooTaxRate.fromJson(item as Map<String, dynamic>))
+                .map(
+                    (item) => WooTaxRate.fromJson(item as Map<String, dynamic>))
                 .toList()
             : null,
         delete: json['delete'] != null
             ? (json['delete'] as List).cast<int>()
             : null,
       );
+
   /// List of tax rates to create
   ///
   /// Each tax rate in this list will be created as a new tax rate in the store.
@@ -240,4 +240,3 @@ class WooTaxRateBatchRequest {
     return 'WooTaxRateBatchRequest(create: ${create?.length ?? 0}, update: ${update?.length ?? 0}, delete: ${delete?.length ?? 0})';
   }
 }
-

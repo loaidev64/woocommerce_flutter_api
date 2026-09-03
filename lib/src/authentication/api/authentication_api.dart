@@ -134,8 +134,8 @@ extension WooAuthenticationApi on WooCommerce {
   /// ## Returns
   ///
   /// A [Future] that completes with a record containing:
-  /// - [userId]: The ID of the user requesting password reset.
-  /// - [code]: The reset code for completing the password reset.
+  /// - `userId`: The ID of the user requesting password reset.
+  /// - `code`: The reset code for completing the password reset.
   ///
   /// ## Throws
   ///

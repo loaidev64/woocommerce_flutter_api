@@ -78,7 +78,6 @@ import 'product_review.dart';
 /// final json = batchResponse.toJson();
 /// ```
 class WooProductReviewBatchResponse {
-
   /// Creates a new WooProductReviewBatchResponse instance
   ///
   /// ## Required Parameters
@@ -146,6 +145,7 @@ class WooProductReviewBatchResponse {
                 .toList()
             : null,
       );
+
   /// List of created reviews
   ///
   /// Contains the reviews that were successfully created, each with a
@@ -211,4 +211,3 @@ class WooProductReviewBatchResponse {
     return 'WooProductReviewBatchResponse(create: ${create?.length ?? 0}, update: ${update?.length ?? 0}, delete: ${delete?.length ?? 0})';
   }
 }
-

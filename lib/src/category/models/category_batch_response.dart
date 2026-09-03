@@ -63,7 +63,6 @@ import 'category.dart';
 /// final json = batchResponse.toJson();
 /// ```
 class WooProductCategoryBatchResponse {
-
   /// Creates a new WooProductCategoryBatchResponse instance
   ///
   /// ## Required Parameters
@@ -110,28 +109,28 @@ class WooProductCategoryBatchResponse {
   /// ```dart
   /// final batchResponse = WooProductCategoryBatchResponse.fromJson(jsonData);
   /// ```
-  factory WooProductCategoryBatchResponse.fromJson(
-          Map<String, dynamic> json) =>
+  factory WooProductCategoryBatchResponse.fromJson(Map<String, dynamic> json) =>
       WooProductCategoryBatchResponse(
         create: json['create'] != null
             ? (json['create'] as List)
-                .map((item) => WooProductCategory.fromJson(
-                    item as Map<String, dynamic>))
+                .map((item) =>
+                    WooProductCategory.fromJson(item as Map<String, dynamic>))
                 .toList()
             : null,
         update: json['update'] != null
             ? (json['update'] as List)
-                .map((item) => WooProductCategory.fromJson(
-                    item as Map<String, dynamic>))
+                .map((item) =>
+                    WooProductCategory.fromJson(item as Map<String, dynamic>))
                 .toList()
             : null,
         delete: json['delete'] != null
             ? (json['delete'] as List)
-                .map((item) => WooProductCategory.fromJson(
-                    item as Map<String, dynamic>))
+                .map((item) =>
+                    WooProductCategory.fromJson(item as Map<String, dynamic>))
                 .toList()
             : null,
       );
+
   /// List of created categories
   ///
   /// Contains the categories that were successfully created, each with a
@@ -197,4 +196,3 @@ class WooProductCategoryBatchResponse {
     return 'WooProductCategoryBatchResponse(create: ${create?.length ?? 0}, update: ${update?.length ?? 0}, delete: ${delete?.length ?? 0})';
   }
 }
-

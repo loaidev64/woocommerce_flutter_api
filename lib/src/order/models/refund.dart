@@ -5,7 +5,6 @@ import 'package:woocommerce_flutter_api/src/helpers/fake_helper.dart';
 /// Contains basic refund information including ID, reason, and total amount.
 /// Used for displaying refund summaries in order details.
 class WooRefunds {
-
   /// Creates a new WooRefunds instance.
   WooRefunds({this.id, this.reason, this.total});
 
@@ -21,6 +20,7 @@ class WooRefunds {
         reason: FakeHelper.sentence(),
         total: FakeHelper.decimal(),
       );
+
   /// Unique identifier for the refund.
   int? id;
 

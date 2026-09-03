@@ -91,7 +91,6 @@ import 'category.dart';
 /// final batchRequest = WooProductCategoryBatchRequest.fromJson(jsonData);
 /// ```
 class WooProductCategoryBatchRequest {
-
   /// Creates a new WooProductCategoryBatchRequest instance
   ///
   /// ## Required Parameters
@@ -149,20 +148,21 @@ class WooProductCategoryBatchRequest {
       WooProductCategoryBatchRequest(
         create: json['create'] != null
             ? (json['create'] as List)
-                .map((item) => WooProductCategory.fromJson(
-                    item as Map<String, dynamic>))
+                .map((item) =>
+                    WooProductCategory.fromJson(item as Map<String, dynamic>))
                 .toList()
             : null,
         update: json['update'] != null
             ? (json['update'] as List)
-                .map((item) => WooProductCategory.fromJson(
-                    item as Map<String, dynamic>))
+                .map((item) =>
+                    WooProductCategory.fromJson(item as Map<String, dynamic>))
                 .toList()
             : null,
         delete: json['delete'] != null
             ? (json['delete'] as List).cast<int>()
             : null,
       );
+
   /// List of categories to create
   ///
   /// Each category in this list will be created as a new category in the store.
@@ -227,4 +227,3 @@ class WooProductCategoryBatchRequest {
     return 'WooProductCategoryBatchRequest(create: ${create?.length ?? 0}, update: ${update?.length ?? 0}, delete: ${delete?.length ?? 0})';
   }
 }
-

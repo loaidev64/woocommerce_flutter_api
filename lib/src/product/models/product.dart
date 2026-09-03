@@ -123,7 +123,6 @@ import 'product_tag.dart';
 /// final product = WooProduct.fromJson(jsonData);
 /// ```
 class WooProduct {
-
   /// Creates a new WooProduct instance
   ///
   /// ## Required Parameters
@@ -505,6 +504,7 @@ class WooProduct {
         dateOnSaleTo: FakeHelper.datetime(),
         dateOnSaleToGmt: FakeHelper.datetime(),
       );
+
   /// Unique identifier for the product
   ///
   /// This ID is automatically assigned by WooCommerce when the product is created.
@@ -760,7 +760,8 @@ class WooProduct {
   final List<WooMetaData> metaData;
 
   @override
-  String toString() => '{id: $id}, {name: $name}, {price: $price}, {status: $status}';
+  String toString() =>
+      '{id: $id}, {name: $name}, {price: $price}, {status: $status}';
 
   @override
   bool operator ==(Object other) {

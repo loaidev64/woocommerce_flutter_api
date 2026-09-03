@@ -1,9 +1,9 @@
 import 'package:woocommerce_flutter_api/woocommerce_flutter_api.dart';
 
 class WooShippingZoneMethod {
-
   WooShippingZoneMethod({
-    required this.methodId, this.instanceId,
+    required this.methodId,
+    this.instanceId,
     this.title,
     this.order,
     this.enabled,

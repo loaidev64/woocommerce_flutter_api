@@ -38,7 +38,6 @@ import 'package:woocommerce_flutter_api/woocommerce_flutter_api.dart';
 /// final json = country.toJson();
 /// ```
 class WooCountry {
-
   /// Creates a new WooCountry instance
   ///
   /// ## Parameters
@@ -115,6 +114,7 @@ class WooCountry {
         name: FakeHelper.country(),
         states: FakeHelper.list(() => StateInCountry.fake()),
       );
+
   /// ISO 3166-1 alpha-2 country code
   ///
   /// The two-letter country code as defined by ISO 3166-1 standard.

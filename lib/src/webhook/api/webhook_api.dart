@@ -61,7 +61,7 @@ extension WooWebhookApi on WooCommerce {
   ///
   /// This method allows you to fetch webhooks with various filtering and sorting options.
   /// It's particularly useful for managing multiple webhooks or monitoring webhook status.
-  /// https://woocommerce.github.io/woocommerce-rest-api-docs/#list-all-webhooks 
+  /// https://woocommerce.github.io/woocommerce-rest-api-docs/#list-all-webhooks
   ///
   /// ## Parameters
   ///
@@ -186,7 +186,7 @@ extension WooWebhookApi on WooCommerce {
   ///
   /// This method fetches detailed information about a single webhook, including
   /// its configuration, status, and delivery settings.
-  /// https://woocommerce.github.io/woocommerce-rest-api-docs/#retrieve-a-webhook 
+  /// https://woocommerce.github.io/woocommerce-rest-api-docs/#retrieve-a-webhook
   ///
   /// ## Parameters
   ///
@@ -273,8 +273,8 @@ extension WooWebhookApi on WooCommerce {
   ///
   /// This method allows you to modify webhook configuration, including status,
   /// delivery URL, secret, and other settings. The webhook must have a valid ID.
-  /// https://woocommerce.github.io/woocommerce-rest-api-docs/#update-a-webhook 
-  /// 
+  /// https://woocommerce.github.io/woocommerce-rest-api-docs/#update-a-webhook
+  ///
   /// ## Parameters
   ///
   /// * [webhook] - The webhook object with updated configuration
@@ -317,8 +317,8 @@ extension WooWebhookApi on WooCommerce {
   ///
   /// This method permanently removes a webhook and all its associated data.
   /// Use with caution as this action cannot be undone.
-  /// https://woocommerce.github.io/woocommerce-rest-api-docs/#delete-a-webhook 
-  /// 
+  /// https://woocommerce.github.io/woocommerce-rest-api-docs/#delete-a-webhook
+  ///
   /// ## Parameters
   ///
   /// * [id] - The unique identifier of the webhook to delete
