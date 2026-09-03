@@ -1,3 +1,8 @@
+## 1.7.1
+
+- **Fix `WooProductImage` for product creation**: all four `DateTime` fields (`dateCreated`, `dateCreatedGMT`, `dateModified`, `dateModifiedGMT`) are now nullable and optional in the positional constructor. `fromJson` keeps them as `null` when missing, and `toJson` only emits them when present, so product creation payloads no longer trigger `400 Bad Request` from the WooCommerce API. Fixes #31.
+- **Fix `WooProductCategory.display` serialization**: `fromJson` now uses `WooCategoryDisplay.fromString` to convert the API string into the enum, and `toJson` writes `"default"` (without the trailing underscore) instead of the enum's `default_` name. Fixes #30.
+
 ## 1.7.0
 
 - Updated `flutter_secure_storage` to `^11.0.0` (WASM-compatible).

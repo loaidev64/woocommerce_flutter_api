@@ -3,19 +3,40 @@ import 'package:woocommerce_flutter_api/src/helpers/fake_helper.dart';
 /// Represents a product image with metadata and URLs.
 ///
 /// Brief description of the model's purpose and usage for product images.
+///
+/// ## Product creation note
+///
+/// When creating a product, the WooCommerce REST API only accepts
+/// `id`, `src`, `name` and `alt` inside the `images` array. The four
+/// date fields below are populated by the server on read and should
+/// be left `null` (the default) when constructing an image for a
+/// create request — otherwise the API returns `400 Bad Request`.
 class WooProductImage {
   /// Creates a new WooProductImage instance.
-  WooProductImage(this.id, this.src, this.name, this.alt, this.dateCreated,
-      this.dateCreatedGMT, this.dateModified, this.dateModifiedGMT);
+  ///
+  /// The four date parameters are optional. Omit them when building
+  /// a payload for product creation; the server will generate them.
+  /// Set them when deserializing a response.
+  WooProductImage(
+    this.id,
+    this.src,
+    this.name,
+    this.alt, [
+    this.dateCreated,
+    this.dateCreatedGMT,
+    this.dateModified,
+    this.dateModifiedGMT,
+  ]);
 
   /// Creates a WooProductImage instance from JSON data.
+  ///
+  /// Date fields that are missing or empty in [json] are kept as `null`.
   WooProductImage.fromJson(Map<String, dynamic> json)
       : id = json['id'],
-        // Note: Consider adding type checks or defaults if API might return null for non-nullable DateTime fields
-        dateCreated = DateTime.parse(json['date_created']),
-        dateCreatedGMT = DateTime.parse(json['date_created_gmt']),
-        dateModified = DateTime.parse(json['date_modified']),
-        dateModifiedGMT = DateTime.parse(json['date_modified_gmt']),
+        dateCreated = _parseDate(json['date_created']),
+        dateCreatedGMT = _parseDate(json['date_created_gmt']),
+        dateModified = _parseDate(json['date_modified']),
+        dateModifiedGMT = _parseDate(json['date_modified_gmt']),
         src = json['src'],
         name = json['name'],
         alt = json['alt'];
@@ -36,16 +57,16 @@ class WooProductImage {
   final int? id;
 
   /// The date the image was created, in the site's timezone.
-  final DateTime dateCreated;
+  final DateTime? dateCreated;
 
   /// The date the image was created, as GMT.
-  final DateTime dateCreatedGMT;
+  final DateTime? dateCreatedGMT;
 
   /// The date the image was last modified, in the site's timezone.
-  final DateTime dateModified;
+  final DateTime? dateModified;
 
   /// The date the image was last modified, as GMT.
-  final DateTime dateModifiedGMT;
+  final DateTime? dateModifiedGMT;
 
   /// Image URL.
   final String? src;
@@ -58,19 +79,25 @@ class WooProductImage {
 
   /// Converts this WooProductImage instance into a JSON encodable Map.
   ///
-  /// Note: When updating/creating products, typically only 'id' or 'src' is needed
-  /// within the 'images' list. Sending all fields might be unnecessary or ignored
-  /// by the specific WooCommerce API endpoint context. Check API docs for specifics.
+  /// Only emits date keys when they are non-null, so payloads for
+  /// product creation omit them entirely (the server assigns them).
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = {};
-    // Only include fields if they are not null, except for DateTime which are required
     if (id != null) {
       data['id'] = id;
     }
-    data['date_created'] = dateCreated.toIso8601String();
-    data['date_created_gmt'] = dateCreatedGMT.toIso8601String();
-    data['date_modified'] = dateModified.toIso8601String();
-    data['date_modified_gmt'] = dateModifiedGMT.toIso8601String();
+    if (dateCreated != null) {
+      data['date_created'] = dateCreated!.toIso8601String();
+    }
+    if (dateCreatedGMT != null) {
+      data['date_created_gmt'] = dateCreatedGMT!.toIso8601String();
+    }
+    if (dateModified != null) {
+      data['date_modified'] = dateModified!.toIso8601String();
+    }
+    if (dateModifiedGMT != null) {
+      data['date_modified_gmt'] = dateModifiedGMT!.toIso8601String();
+    }
     if (src != null) {
       data['src'] = src;
     }
@@ -88,7 +115,7 @@ class WooProductImage {
     return 'WooProductImage(id: $id, src: $src, name: $name, alt: $alt, dateCreated: $dateCreated, dateCreatedGMT: $dateCreatedGMT, dateModified: $dateModified, dateModifiedGMT: $dateModifiedGMT)';
   }
 
-  // Optional: Add copyWith method for easier updates
+  /// Returns a copy of this WooProductImage with the given fields replaced.
   WooProductImage copyWith({
     int? id,
     DateTime? dateCreated,
@@ -109,5 +136,10 @@ class WooProductImage {
       dateModified ?? this.dateModified,
       dateModifiedGMT ?? this.dateModifiedGMT,
     );
+  }
+
+  static DateTime? _parseDate(dynamic value) {
+    if (value is String && value.isNotEmpty) return DateTime.parse(value);
+    return null;
   }
 }
