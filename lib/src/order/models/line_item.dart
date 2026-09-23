@@ -1,13 +1,9 @@
-import 'package:woocommerce_flutter_api/src/base/models/metadata.dart';
-import 'package:woocommerce_flutter_api/src/helpers/fake_helper.dart';
-import 'package:woocommerce_flutter_api/src/order/models/tax.dart';
+import '../../base/models/metadata.dart';
+import '../../helpers/fake_helper.dart';
+import '../../json/woo_json.dart';
+import 'tax.dart';
 
-/// Represents a line item in a WooCommerce order.
-///
-/// Contains product information, quantities, pricing, and tax details for items
-/// in an order. Used for order processing and inventory management.
 class WooLineItem {
-  /// Creates a new WooLineItem instance.
   WooLineItem({
     this.id,
     this.name,
@@ -24,27 +20,22 @@ class WooLineItem {
     this.sku,
     this.price,
   });
-
-  /// Creates a WooLineItem instance from JSON data.
-  WooLineItem.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    name = json['name'];
-    productId = json['product_id'];
-    variationId = json['variation_id'];
-    quantity = json['quantity'];
-    taxClass = json['tax_class'];
-    subtotal = double.tryParse(json['subtotal']);
-    subtotalTax = double.tryParse(json['subtotal_tax']);
-    total = double.tryParse(json['total']);
-    totalTax = double.tryParse(json['total_tax']);
-    taxes = (json['taxes'] as List).map((i) => WooTax.fromJson(i)).toList();
-    metaData = (json['meta_data'] as List)
-        .map((i) => WooMetaData.fromJson(i))
-        .toList();
-    sku = json['sku'];
-    price = double.tryParse(json['price']);
-  }
-
+  factory WooLineItem.fromJson(Map<String, dynamic> json) => WooLineItem(
+        id: WooJson.readInt(json, 'id'),
+        name: WooJson.readString(json, 'name'),
+        productId: WooJson.readInt(json, 'product_id'),
+        variationId: WooJson.readInt(json, 'variation_id'),
+        quantity: WooJson.readInt(json, 'quantity'),
+        taxClass: WooJson.readString(json, 'tax_class'),
+        subtotal: WooJson.readDouble(json, 'subtotal'),
+        subtotalTax: WooJson.readDouble(json, 'subtotal_tax'),
+        total: WooJson.readDouble(json, 'total'),
+        totalTax: WooJson.readDouble(json, 'total_tax'),
+        taxes: WooJson.readList(json, 'taxes', WooTax.fromJson),
+        metaData: WooJson.readList(json, 'meta_data', WooMetaData.fromJson),
+        sku: WooJson.readString(json, 'sku'),
+        price: WooJson.readDouble(json, 'price'),
+      );
   factory WooLineItem.fake() => WooLineItem(
         id: FakeHelper.integer(),
         name: FakeHelper.word(),
@@ -61,75 +52,102 @@ class WooLineItem {
         sku: FakeHelper.word(),
         price: FakeHelper.decimal(),
       );
-
-  /// Unique identifier for the line item.
-  int? id;
-
-  /// Product name.
-  String? name;
-
-  /// Product ID.
-  int? productId;
-
-  /// Variation ID, if applicable.
-  int? variationId;
-
-  /// Quantity ordered.
-  int? quantity;
-
-  /// Tax class slug for the product.
-  String? taxClass;
-
-  /// Line subtotal before discounts.
-  double? subtotal;
-
-  /// Line subtotal tax before discounts.
-  double? subtotalTax;
-
-  /// Line total after discounts.
-  double? total;
-
-  /// Line total tax after discounts.
-  double? totalTax;
-
-  /// Tax details for the line item.
-  List<WooTax>? taxes;
-
-  /// Custom metadata for the line item.
-  List<WooMetaData>? metaData;
-
-  /// Product SKU.
-  String? sku;
-
-  /// Product unit price.
-  double? price;
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['id'] = id;
-    data['name'] = name;
-    data['product_id'] = productId;
-    data['variation_id'] = variationId;
-    data['quantity'] = quantity;
-    data['tax_class'] = taxClass;
-    data['subtotal'] = subtotal;
-    data['subtotal_tax'] = subtotalTax;
-    data['total'] = total;
-    data['total_tax'] = totalTax;
-    if (taxes != null) {
-      data['taxes'] = taxes!.map((v) => v.toJson()).toList();
-    }
-    if (metaData != null) {
-      data['meta_data'] = metaData!.map((v) => v.toJson()).toList();
-    }
-    data['sku'] = sku;
-    data['price'] = price;
-    return data;
-  }
-
-  /// Returns a string representation of the WooLineItem instance.
-  ///
-  /// Displays all main fields for debugging and logging purposes.
+  final int? id;
+  final String? name;
+  final int? productId;
+  final int? variationId;
+  final int? quantity;
+  final String? taxClass;
+  final double? subtotal;
+  final double? subtotalTax;
+  final double? total;
+  final double? totalTax;
+  final List<WooTax>? taxes;
+  final List<WooMetaData>? metaData;
+  final String? sku;
+  final double? price;
+  Map<String, dynamic> toJson() => <String, dynamic>{}
+    ..putIfPresent('id', id)
+    ..putIfPresent('name', name)
+    ..putIfPresent('product_id', productId)
+    ..putIfPresent('variation_id', variationId)
+    ..putIfPresent('quantity', quantity)
+    ..putIfPresent('tax_class', taxClass)
+    ..putIfPresent('subtotal', subtotal)
+    ..putIfPresent('subtotal_tax', subtotalTax)
+    ..putIfPresent('total', total)
+    ..putIfPresent('total_tax', totalTax)
+    ..putIfPresent('taxes', taxes?.map((v) => v.toJson()).toList())
+    ..putIfPresent('meta_data', metaData?.map((v) => v.toJson()).toList())
+    ..putIfPresent('sku', sku)
+    ..putIfPresent('price', price);
+  WooLineItem copyWith({
+    int? id,
+    String? name,
+    int? productId,
+    int? variationId,
+    int? quantity,
+    String? taxClass,
+    double? subtotal,
+    double? subtotalTax,
+    double? total,
+    double? totalTax,
+    List<WooTax>? taxes,
+    List<WooMetaData>? metaData,
+    String? sku,
+    double? price,
+  }) =>
+      WooLineItem(
+        id: id ?? this.id,
+        name: name ?? this.name,
+        productId: productId ?? this.productId,
+        variationId: variationId ?? this.variationId,
+        quantity: quantity ?? this.quantity,
+        taxClass: taxClass ?? this.taxClass,
+        subtotal: subtotal ?? this.subtotal,
+        subtotalTax: subtotalTax ?? this.subtotalTax,
+        total: total ?? this.total,
+        totalTax: totalTax ?? this.totalTax,
+        taxes: taxes ?? this.taxes,
+        metaData: metaData ?? this.metaData,
+        sku: sku ?? this.sku,
+        price: price ?? this.price,
+      );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is WooLineItem &&
+          other.id == id &&
+          other.name == name &&
+          other.productId == productId &&
+          other.variationId == variationId &&
+          other.quantity == quantity &&
+          other.taxClass == taxClass &&
+          other.subtotal == subtotal &&
+          other.subtotalTax == subtotalTax &&
+          other.total == total &&
+          other.totalTax == totalTax &&
+          WooJson.listEquals(other.taxes, taxes) &&
+          WooJson.listEquals(other.metaData, metaData) &&
+          other.sku == sku &&
+          other.price == price;
+  @override
+  int get hashCode => Object.hashAll([
+        id,
+        name,
+        productId,
+        variationId,
+        quantity,
+        taxClass,
+        subtotal,
+        subtotalTax,
+        total,
+        totalTax,
+        ...(taxes ?? const []),
+        ...(metaData ?? const []),
+        sku,
+        price,
+      ]);
   @override
   String toString() {
     return 'WooLineItem(id: $id, name: $name, productId: $productId, quantity: $quantity, total: $total)';

@@ -1,12 +1,8 @@
-import 'package:woocommerce_flutter_api/src/base/models/metadata.dart';
-import 'package:woocommerce_flutter_api/src/helpers/fake_helper.dart';
+import '../../base/models/metadata.dart';
+import '../../helpers/fake_helper.dart';
+import '../../json/woo_json.dart';
 
-/// Represents tax information for a WooCommerce order.
-///
-/// Contains tax rate details, calculations, and amounts for taxes applied
-/// to order items. Used for tax tracking and order processing.
 class WooTax {
-  /// Creates a new WooTax instance.
   WooTax({
     this.id,
     this.rateCode,
@@ -17,21 +13,16 @@ class WooTax {
     this.shippingTaxTotal,
     this.metaData,
   });
-
-  /// Creates a WooTax instance from JSON data.
   factory WooTax.fromJson(Map<String, dynamic> json) => WooTax(
-        id: json['id'],
-        rateCode: json['rate_code'],
-        rateId: json['rate_id'],
-        label: json['label'],
-        compound: bool.tryParse(json['compound']),
-        taxTotal: double.tryParse(json['tax_total']),
-        shippingTaxTotal: double.tryParse(json['shipping_tax_total']),
-        metaData: (json['meta_data'] as List)
-            .map((i) => WooMetaData.fromJson(i))
-            .toList(),
+        id: WooJson.readInt(json, 'id'),
+        rateCode: WooJson.readString(json, 'rate_code'),
+        rateId: WooJson.readString(json, 'rate_id'),
+        label: WooJson.readString(json, 'label'),
+        compound: WooJson.readBool(json, 'compound'),
+        taxTotal: WooJson.readDouble(json, 'tax_total'),
+        shippingTaxTotal: WooJson.readDouble(json, 'shipping_tax_total'),
+        metaData: WooJson.readList(json, 'meta_data', WooMetaData.fromJson),
       );
-
   factory WooTax.fake() => WooTax(
         id: FakeHelper.integer(),
         rateCode: FakeHelper.word(),
@@ -42,49 +33,66 @@ class WooTax {
         shippingTaxTotal: FakeHelper.decimal(),
         metaData: FakeHelper.list(() => WooMetaData.fake()),
       );
-
-  /// Unique identifier for the tax item.
   final int? id;
-
-  /// Tax rate code.
   final String? rateCode;
-
-  /// Tax rate identifier.
   final String? rateId;
-
-  /// Tax rate display label.
   final String? label;
-
-  /// Whether this is a compound tax rate.
   final bool? compound;
-
-  /// Tax total excluding shipping taxes.
   final double? taxTotal;
-
-  /// Shipping tax total.
   final double? shippingTaxTotal;
-
-  /// Custom metadata for the tax item.
   final List<WooMetaData>? metaData;
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['id'] = id;
-    data['rate_code'] = rateCode;
-    data['rate_id'] = rateId;
-    data['label'] = label;
-    data['compound'] = compound;
-    data['tax_total'] = taxTotal;
-    data['shipping_tax_total'] = shippingTaxTotal;
-    if (metaData != null) {
-      data['meta_data'] = metaData!.map((v) => v.toJson()).toList();
-    }
-    return data;
-  }
-
-  /// Returns a string representation of the WooTax instance.
-  ///
-  /// Displays all main fields for debugging and logging purposes.
+  Map<String, dynamic> toJson() => <String, dynamic>{}
+    ..putIfPresent('id', id)
+    ..putIfPresent('rate_code', rateCode)
+    ..putIfPresent('rate_id', rateId)
+    ..putIfPresent('label', label)
+    ..putIfPresent('compound', compound)
+    ..putIfPresent('tax_total', taxTotal)
+    ..putIfPresent('shipping_tax_total', shippingTaxTotal)
+    ..putIfPresent('meta_data', metaData?.map((v) => v.toJson()).toList());
+  WooTax copyWith({
+    int? id,
+    String? rateCode,
+    String? rateId,
+    String? label,
+    bool? compound,
+    double? taxTotal,
+    double? shippingTaxTotal,
+    List<WooMetaData>? metaData,
+  }) =>
+      WooTax(
+        id: id ?? this.id,
+        rateCode: rateCode ?? this.rateCode,
+        rateId: rateId ?? this.rateId,
+        label: label ?? this.label,
+        compound: compound ?? this.compound,
+        taxTotal: taxTotal ?? this.taxTotal,
+        shippingTaxTotal: shippingTaxTotal ?? this.shippingTaxTotal,
+        metaData: metaData ?? this.metaData,
+      );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is WooTax &&
+          other.id == id &&
+          other.rateCode == rateCode &&
+          other.rateId == rateId &&
+          other.label == label &&
+          other.compound == compound &&
+          other.taxTotal == taxTotal &&
+          other.shippingTaxTotal == shippingTaxTotal &&
+          WooJson.listEquals(other.metaData, metaData);
+  @override
+  int get hashCode => Object.hashAll([
+        id,
+        rateCode,
+        rateId,
+        label,
+        compound,
+        taxTotal,
+        shippingTaxTotal,
+        ...(metaData ?? const []),
+      ]);
   @override
   String toString() {
     return 'WooTax(id: $id, rateCode: $rateCode, label: $label, taxTotal: $taxTotal)';

@@ -1,123 +1,29 @@
-import 'package:woocommerce_flutter_api/woocommerce_flutter_api.dart';
-
+import '../../base/enums/context.dart';
+import '../../base/enums/sort.dart';
+import '../../base/models/woo_delete_result.dart';
+import '../../exceptions/woocommerce_exception.dart';
+import '../../pagination/woo_page.dart';
+import '../../woocommerce_flutter_api_base.dart';
+import '../enums/product_review_status.dart';
+import '../models/product_review.dart';
+import '../models/product_review_batch_request.dart';
+import '../models/product_review_batch_response.dart';
+import 'product_review_query.dart';
 part 'product_review_endpoints.dart';
 
-/// WooCommerce Product Review API Extension
-///
-/// This extension provides comprehensive product review management capabilities for WooCommerce stores.
-/// Product reviews allow customers to share their experiences with products, helping other customers
-/// make informed purchasing decisions and providing valuable feedback to store owners.
-///
-/// ## Product Review Overview
-///
-/// Product reviews are customer-generated content that includes ratings, comments, and feedback
-/// about products. They help build trust, improve SEO, and provide social proof for your products.
-///
-/// ## Key Features
-///
-/// - **Review Retrieval**: Get product reviews with extensive filtering and pagination
-/// - **Review Management**: Create, update, and delete product reviews
-/// - **Status Control**: Manage review approval and moderation
-/// - **Advanced Filtering**: Filter by product, reviewer, status, and date
-/// - **Rating System**: Support for star ratings and review scoring
-///
-/// ## Review Lifecycle
-///
-/// 1. **Submission**: Customer submits review with rating and comment
-/// 2. **Moderation**: Review is held for approval (if moderation is enabled)
-/// 3. **Approval**: Review is approved and becomes visible to customers
-/// 4. **Display**: Review appears on product pages and in listings
-///
-/// ## Example Usage
-///
-/// ```dart
-/// // Get all approved reviews
-/// final reviews = await wooCommerce.getProductReviews();
-///
-/// // Get reviews for a specific product
-/// final productReviews = await wooCommerce.getProductReviews(
-///   product: [123],
-///   status: WooProductReviewStatus.approved,
-/// );
-///
-/// // Get pending reviews for moderation
-/// final pendingReviews = await wooCommerce.getProductReviews(
-///   status: WooProductReviewStatus.hold,
-/// );
-/// ```
 extension WooProductReviewApi on WooCommerce {
-  /// Retrieves a list of product reviews from the WooCommerce store.
-  ///
-  /// This method supports extensive filtering and pagination options to help you
-  /// find exactly the reviews you need for moderation, display, or analysis.
-  /// https://woocommerce.github.io/woocommerce-rest-api-docs/#list-all-product-reviews
-  ///
-  /// ## Parameters
-  ///
-  /// * [context] - Scope under which the request is made; determines fields present in response.
-  ///   - `WooContext.view`: Returns basic review information (default)
-  ///   - `WooContext.edit`: Returns full review details including sensitive data
-  ///
-  /// * [page] - Current page of the collection (default: 1)
-  /// * [perPage] - Maximum number of items to return (default: 10, max: 100)
-  /// * [search] - Limit results to reviews matching a search string
-  /// * [after] - Limit response to reviews published after this date
-  /// * [before] - Limit response to reviews published before this date
-  /// * [exclude] - Exclude reviews with specific IDs from results
-  /// * [include] - Only include reviews with specific IDs
-  /// * [offset] - Offset the result set by a specific number of items
-  /// * [order] - Sort order: `WooSortOrder.asc` or `WooSortOrder.desc` (default: desc)
-  /// * [orderBy] - Sort by: `WooSortProductReview.date`, `WooSortProductReview.id`, etc. (default: dateGmt)
-  /// * [reviewer] - Filter by reviewer user IDs
-  /// * [reviewerExclude] - Exclude reviews from specific reviewer IDs
-  /// * [reviewerEmail] - Filter by reviewer email addresses
-  /// * [product] - Filter by product IDs
-  /// * [status] - Filter by review status (default: approved)
-  /// * [useFaker] - When true, returns fake data for testing purposes
-  ///
-  /// ## Returns
-  ///
-  /// A `Future<List<WooProductReview>>` containing the review objects.
-  ///
-  /// ## Throws
-  ///
-  /// * `WooCommerceException` if the request fails or access is denied
-  ///
-  /// ## Example Usage
-  ///
-  /// ```dart
-  /// // Get all approved reviews
-  /// final reviews = await wooCommerce.getProductReviews();
-  ///
-  /// // Get reviews for a specific product
-  /// final productReviews = await wooCommerce.getProductReviews(
-  ///   product: [123],
-  ///   status: WooProductReviewStatus.approved,
-  /// );
-  ///
-  /// // Get pending reviews for moderation
-  /// final pendingReviews = await wooCommerce.getProductReviews(
-  ///   status: WooProductReviewStatus.hold,
-  /// );
-  ///
-  /// // Search reviews by content
-  /// final searchResults = await wooCommerce.getProductReviews(
-  ///   search: 'excellent',
-  ///   perPage: 20,
-  /// );
-  /// ```
-  Future<List<WooProductReview>> getProductReviews({
+  Future<WooPage<WooProductReview>> getProductReviews({
     WooContext context = WooContext.view,
-    int page = 1,
-    int perPage = 10,
+    int? page,
+    int? perPage,
     String? search,
     DateTime? after,
     DateTime? before,
     List<int>? exclude,
     List<int>? include,
     int? offset,
-    WooSortOrder order = WooSortOrder.desc,
-    WooSortProductReview orderBy = WooSortProductReview.dateGmt,
+    WooSort order = WooSort.desc,
+    WooOrderBy orderBy = WooOrderBy.dateGmt,
     List<int>? reviewer,
     List<int>? reviewerExclude,
     List<String>? reviewerEmail,
@@ -126,302 +32,138 @@ extension WooProductReviewApi on WooCommerce {
     bool? useFaker,
   }) async {
     final isUsingFaker = useFaker ?? this.useFaker;
-
     if (isUsingFaker) {
-      return List.generate(perPage, (index) => WooProductReview.fake());
+      return WooPage(
+        items: List.generate(perPage ?? 10, (_) => WooProductReview.fake()),
+        page: page ?? 1,
+      );
     }
-
-    final response = await dio.get(
-      _ProductReviewEndpoints.reviews,
-      queryParameters: _resolveQueryParametersForGettingProductReviews(
-        context: context,
-        page: page,
-        perPage: perPage,
-        search: search,
-        after: after,
-        before: before,
-        exclude: exclude,
-        include: include,
-        offset: offset,
-        order: order,
-        orderBy: orderBy,
-        reviewer: reviewer,
-        reviewerExclude: reviewerExclude,
-        reviewerEmail: reviewerEmail,
-        product: product,
-        status: status,
-      ),
+    final query = WooProductReviewQuery(
+      context: context,
+      page: page,
+      perPage: perPage,
+      search: search,
+      after: after,
+      before: before,
+      exclude: exclude,
+      include: include,
+      offset: offset,
+      order: order,
+      orderBy: orderBy,
+      reviewer: reviewer,
+      reviewerExclude: reviewerExclude,
+      reviewerEmail: reviewerEmail,
+      product: product,
+      status: status,
     );
-
-    return (response.data as List)
-        .map((item) => WooProductReview.fromJson(item))
-        .toList();
-  }
-
-  Map<String, dynamic> _resolveQueryParametersForGettingProductReviews({
-    required WooContext context,
-    required int page,
-    required int perPage,
-    required String? search,
-    required DateTime? after,
-    required DateTime? before,
-    required List<int>? exclude,
-    required List<int>? include,
-    required int? offset,
-    required WooSortOrder order,
-    required WooSortProductReview orderBy,
-    required List<int>? reviewer,
-    required List<int>? reviewerExclude,
-    required List<String>? reviewerEmail,
-    required List<int>? product,
-    required WooProductReviewStatus status,
-  }) {
-    final map = <String, dynamic>{
-      'context': context.name,
-      'page': page,
-      'per_page': perPage,
-      'order': order.name,
-      'orderby': orderBy.name,
-      'status': status.name,
-    };
-
-    if (search != null) {
-      map['search'] = search;
-    }
-
-    if (after != null) {
-      map['after'] = after.toIso8601String();
-    }
-
-    if (before != null) {
-      map['before'] = before.toIso8601String();
-    }
-
-    if (exclude != null) {
-      map['exclude'] = exclude.join(',');
-    }
-
-    if (include != null) {
-      map['include'] = include.join(',');
-    }
-
-    if (offset != null) {
-      map['offset'] = offset;
-    }
-
-    if (reviewer != null) {
-      map['reviewer'] = reviewer.join(',');
-    }
-
-    if (reviewerExclude != null) {
-      map['reviewer_exclude'] = reviewerExclude.join(',');
-    }
-
-    if (reviewerEmail != null) {
-      map['reviewer_email'] = reviewerEmail.join(',');
-    }
-
-    if (product != null) {
-      map['product'] = product.join(',');
-    }
-
-    return map;
+    final response = await requestGet<List<dynamic>>(
+      _ProductReviewEndpoints.reviews,
+      queryParameters: query.toMap(),
+    );
+    final items = response.data
+            ?.whereType<Map<String, dynamic>>()
+            .map(WooProductReview.fromJson)
+            .toList() ??
+        const [];
+    return WooPage.parse(response: response, items: items, page: page ?? 1);
   }
 
   Future<WooProductReview> getProductReview(int id, {bool? useFaker}) async {
     final isUsingFaker = useFaker ?? this.useFaker;
-
     if (isUsingFaker) {
       return WooProductReview.fake();
     }
-
-    final response = await dio.get(
+    final response = await requestGet<Map<String, dynamic>>(
       _ProductReviewEndpoints.singleReview(id),
     );
-
-    return WooProductReview.fromJson(response.data as Map<String, dynamic>);
+    final data = response.data;
+    if (data is! Map<String, dynamic>) {
+      throw WooCommerceParseException(
+        message: 'Expected a review object for review $id',
+        statusCode: response.statusCode,
+        path: _ProductReviewEndpoints.singleReview(id),
+      );
+    }
+    return WooProductReview.fromJson(data);
   }
 
-  Future<WooProductReview> createProductReview(WooProductReview review,
-      {bool? useFaker}) async {
+  Future<WooProductReview> createProductReview(
+    WooProductReview review, {
+    bool? useFaker,
+  }) async {
     final isUsingFaker = useFaker ?? this.useFaker;
-
     if (isUsingFaker) {
-      return review;
+      return WooProductReview.fake();
     }
-
-    final response = await dio.post(
+    final response = await requestPost<Map<String, dynamic>>(
       _ProductReviewEndpoints.reviews,
       data: review.toJson(),
     );
-
-    return WooProductReview.fromJson(response.data as Map<String, dynamic>);
+    final data = response.data;
+    if (data is! Map<String, dynamic>) {
+      throw WooCommerceParseException(
+        message: 'Expected a review object in the create response',
+        statusCode: response.statusCode,
+        path: _ProductReviewEndpoints.reviews,
+      );
+    }
+    return WooProductReview.fromJson(data);
   }
 
-  Future<WooProductReview> updateProductReview(WooProductReview review,
-      {bool? useFaker}) async {
+  Future<WooProductReview> updateProductReview(
+    int id,
+    WooProductReview review, {
+    bool? useFaker,
+  }) async {
     final isUsingFaker = useFaker ?? this.useFaker;
-
     if (isUsingFaker) {
-      return review;
+      return WooProductReview.fake(id: id);
     }
-
-    final response = await dio.put(
-      _ProductReviewEndpoints.singleReview(review.id!),
+    final response = await requestPut<Map<String, dynamic>>(
+      _ProductReviewEndpoints.singleReview(id),
       data: review.toJson(),
     );
-
-    return WooProductReview.fromJson(response.data as Map<String, dynamic>);
-  }
-
-  Future<WooProductReview> deleteProductReview(int reviewId,
-      {bool? useFaker}) async {
-    final isUsingFaker = useFaker ?? this.useFaker;
-
-    if (isUsingFaker) {
-      return WooProductReview.fake(reviewId);
+    final data = response.data;
+    if (data is! Map<String, dynamic>) {
+      throw WooCommerceParseException(
+        message: 'Expected a review object in the update response',
+        statusCode: response.statusCode,
+        path: _ProductReviewEndpoints.singleReview(id),
+      );
     }
-
-    final response = await dio.delete(
-      _ProductReviewEndpoints.singleReview(reviewId),
-      queryParameters: {
-        'force': true,
-      },
-    );
-
-    return WooProductReview.fromJson(response.data as Map<String, dynamic>);
+    return WooProductReview.fromJson(data);
   }
 
-  /// Performs batch operations on product reviews.
-  ///
-  /// This method allows you to create, update, and delete multiple product reviews
-  /// in a single API request, making bulk operations more efficient. This is particularly
-  /// useful for review moderation workflows, such as approving multiple pending reviews
-  /// or managing review status in bulk.
-  /// https://woocommerce.github.io/woocommerce-rest-api-docs/#batch-update-product-reviews
-  ///
-  /// ## Parameters
-  ///
-  /// * [request] - The `WooProductReviewBatchRequest` object containing
-  ///   the create, update, and delete operations to perform
-  /// * [useFaker] - When true, returns fake data for testing purposes
-  ///
-  /// ## Returns
-  ///
-  /// A `Future<WooProductReviewBatchResponse>` containing the results of
-  /// all batch operations, including created, updated, and deleted reviews.
-  ///
-  /// ## Throws
-  ///
-  /// * `WooCommerceException` if the request fails or access is denied
-  ///
-  /// ## Example Usage
-  ///
-  /// ```dart
-  /// // Create a batch request with multiple operations
-  /// final batchRequest = WooProductReviewBatchRequest(
-  ///   create: [
-  ///     WooProductReview(
-  ///       productId: 123,
-  ///       reviewer: 'John Doe',
-  ///       reviewerEmail: 'john@example.com',
-  ///       review: 'Great product! Highly recommended.',
-  ///       rating: 5,
-  ///       status: WooProductReviewStatus.approved,
-  ///     ),
-  ///     WooProductReview(
-  ///       productId: 456,
-  ///       reviewer: 'Jane Smith',
-  ///       reviewerEmail: 'jane@example.com',
-  ///       review: 'Good quality, fast shipping.',
-  ///       rating: 4,
-  ///       status: WooProductReviewStatus.hold,
-  ///     ),
-  ///   ],
-  ///   update: [
-  ///     WooProductReview(
-  ///       id: 789,
-  ///       status: WooProductReviewStatus.approved,
-  ///       review: 'Updated review text',
-  ///     ),
-  ///   ],
-  ///   delete: [101, 102],
-  /// );
-  ///
-  /// // Execute the batch operation
-  /// final response = await wooCommerce.batchUpdateProductReviews(batchRequest);
-  ///
-  /// // Process results
-  /// print('Created ${response.create?.length ?? 0} reviews');
-  /// print('Updated ${response.update?.length ?? 0} reviews');
-  /// print('Deleted ${response.delete?.length ?? 0} reviews');
-  ///
-  /// // Access individual results
-  /// for (final review in response.create ?? []) {
-  ///   print('Created review: ${review.reviewer} with ID: ${review.id}');
-  /// }
-  /// ```
-  ///
-  /// ## Review Moderation Workflow
-  ///
-  /// ```dart
-  /// // Approve multiple pending reviews
-  /// final pendingReviews = await wooCommerce.getProductReviews(
-  ///   status: WooProductReviewStatus.hold,
-  /// );
-  ///
-  /// final batchRequest = WooProductReviewBatchRequest(
-  ///   update: pendingReviews.map((review) => WooProductReview(
-  ///     id: review.id,
-  ///     status: WooProductReviewStatus.approved,
-  ///   )).toList(),
-  /// );
-  ///
-  /// final response = await wooCommerce.batchUpdateProductReviews(batchRequest);
-  /// print('Approved ${response.update?.length ?? 0} reviews');
-  /// ```
-  ///
-  /// ## Batch Operations Best Practices
-  ///
-  /// - **Create operations**: Reviews should not have IDs assigned
-  /// - **Update operations**: Reviews must have valid IDs and will be updated with provided values
-  /// - **Delete operations**: Provide only the IDs of reviews to delete
-  /// - **Mixed operations**: You can combine create, update, and delete in a single request
-  /// - **Status management**: Use update operations to change review status (approved, hold, spam, trash)
-  /// - **Error handling**: If any operation fails, the entire batch may fail depending on API behavior
-  ///
-  /// ## Review Status Management
-  ///
-  /// When creating or updating reviews, you can control their status:
-  ///
-  /// - `WooProductReviewStatus.approved` - Review is visible to customers
-  /// - `WooProductReviewStatus.hold` - Review is pending moderation
-  /// - `WooProductReviewStatus.spam` - Mark review as spam
-  /// - `WooProductReviewStatus.trash` - Move review to trash
-  /// - `WooProductReviewStatus.unspam` - Unmark review from spam
-  /// - `WooProductReviewStatus.untrash` - Restore review from trash
+  Future<WooDeleteResult> deleteProductReview(int id, {bool? useFaker}) async {
+    final isUsingFaker = useFaker ?? this.useFaker;
+    if (isUsingFaker) {
+      return WooDeleteResult(id: id, deleted: true);
+    }
+    final response = await requestDelete<Map<String, dynamic>>(
+      _ProductReviewEndpoints.singleReview(id),
+      queryParameters: {'force': true},
+    );
+    return WooDeleteResult.fromJson(response.data!);
+  }
+
   Future<WooProductReviewBatchResponse> batchUpdateProductReviews(
     WooProductReviewBatchRequest request, {
     bool? useFaker,
   }) async {
     final isUsingFaker = useFaker ?? this.useFaker;
-
     if (isUsingFaker) {
       return WooProductReviewBatchResponse(
         create:
             request.create?.map((review) => WooProductReview.fake()).toList(),
         update: request.update,
-        delete: request.delete?.map((id) => WooProductReview.fake(id)).toList(),
+        delete:
+            request.delete?.map((id) => WooProductReview.fake(id: id)).toList(),
       );
     }
-
-    final response = await dio.post(
-      _ProductReviewEndpoints.batchProductReviews(),
+    final response = await requestPost<Map<String, dynamic>>(
+      _ProductReviewEndpoints.batchReviews(),
       data: request.toJson(),
     );
-
-    return WooProductReviewBatchResponse.fromJson(
-      response.data as Map<String, dynamic>,
-    );
+    return WooProductReviewBatchResponse.fromJson(response.data!);
   }
 }

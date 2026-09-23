@@ -1,53 +1,30 @@
-import 'package:woocommerce_flutter_api/woocommerce_flutter_api.dart';
+import '../../helpers/fake_helper.dart';
 
-/// Represents a product total report with basic information.
-///
-/// Brief description of the model's purpose and usage.
 class WooProductTotalReport {
-  /// Creates a new WooProductTotalReport instance.
-  WooProductTotalReport({
-    this.slug,
-    this.name,
-    this.total,
-  });
-
-  /// Creates a WooProductTotalReport instance from JSON data.
-  WooProductTotalReport.fromJson(Map<String, dynamic> json)
-      : slug = json['slug'],
-        name = json['name'],
-        total = json['total']?.toString();
-
+  WooProductTotalReport({this.slug, this.name, this.total});
+  factory WooProductTotalReport.fromJson(Map<String, dynamic> json) =>
+      WooProductTotalReport(
+        slug: json['slug']?.toString(),
+        name: json['name']?.toString(),
+        total: json['total']?.toString(),
+      );
   factory WooProductTotalReport.fake() => WooProductTotalReport(
         slug: FakeHelper.word(),
         name: FakeHelper.word(),
         total: FakeHelper.integer().toString(),
       );
-
-  /// An alphanumeric identifier for the resource.
-  String? slug;
-
-  /// Product type name.
-  String? name;
-
-  /// Amount of products.
-  String? total;
-
-  Map<String, dynamic> _toJson() => {
-        'slug': slug,
-        'name': name,
-        'total': total,
-      };
-
-  /// Returns a string representation of the WooProductTotalReport instance.
-  ///
-  /// Displays all main fields for debugging and logging purposes.
-  @override
-  String toString() => _toJson().toString();
-
+  final String? slug;
+  final String? name;
+  final String? total;
+  WooProductTotalReport copyWith({String? slug, String? name, String? total}) =>
+      WooProductTotalReport(
+        slug: slug ?? this.slug,
+        name: name ?? this.name,
+        total: total ?? this.total,
+      );
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
-
     return other is WooProductTotalReport &&
         other.slug == slug &&
         other.name == name &&
@@ -55,5 +32,8 @@ class WooProductTotalReport {
   }
 
   @override
-  int get hashCode => slug.hashCode ^ name.hashCode ^ total.hashCode;
+  int get hashCode => Object.hashAll([slug, name, total]);
+  @override
+  String toString() =>
+      'WooProductTotalReport(slug: $slug, name: $name, total: $total)';
 }

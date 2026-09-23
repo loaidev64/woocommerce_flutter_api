@@ -1,16 +1,12 @@
-import 'package:faker/faker.dart';
+import '../../helpers/fake_helper.dart';
+import '../../json/woo_json.dart';
 
-enum WooNotificationObjectType {
-  order;
+enum WooNotificationObjectType implements WooEnum {
+  order('order'),
+  unknown('unknown');
 
-  static WooNotificationObjectType fake() {
-    return values[Faker().randomGenerator.integer(values.length - 1)];
-  }
-
-  static WooNotificationObjectType fromString(String type) {
-    if (type == 'order') {
-      return WooNotificationObjectType.order;
-    }
-    return WooNotificationObjectType.order;
-  }
+  const WooNotificationObjectType(this.value);
+  @override
+  final String value;
+  static WooNotificationObjectType fake() => FakeHelper.randomItem(values);
 }

@@ -1,27 +1,39 @@
-import 'package:woocommerce_flutter_api/src/helpers/fake_helper.dart';
+import '../../helpers/fake_helper.dart';
+import '../../json/woo_json.dart';
 
 class WooMetaData {
-  WooMetaData(this.id, this.key, this.value);
-
-  WooMetaData.fromJson(Map<String, dynamic> json)
-      : id = json['id'],
-        key = json['key'],
-        value = json['value'].toString();
-
-  factory WooMetaData.fake() => WooMetaData(
-        FakeHelper.integer(),
-        FakeHelper.word(),
-        FakeHelper.word(),
+  const WooMetaData({this.id, this.key, this.value});
+  factory WooMetaData.fromJson(Map<String, dynamic> json) => WooMetaData(
+        id: WooJson.readInt(json, 'id'),
+        key: WooJson.readString(json, 'key'),
+        value: WooJson.readString(json, 'value') ?? '',
       );
-
-  /// Meta ID.
+  factory WooMetaData.fake() => WooMetaData(
+        id: FakeHelper.integer(),
+        key: FakeHelper.word(),
+        value: FakeHelper.word(),
+      );
   final int? id;
-
-  /// Meta key.
   final String? key;
-
-  /// Meta value.
-  final String value;
-
-  Map<String, dynamic> toJson() => {'id': id, 'key': key, 'value': value};
+  final String? value;
+  Map<String, dynamic> toJson() => <String, dynamic>{}
+    ..putIfPresent('id', id)
+    ..putIfPresent('key', key)
+    ..putIfPresent('value', value);
+  WooMetaData copyWith({int? id, String? key, String? value}) => WooMetaData(
+        id: id ?? this.id,
+        key: key ?? this.key,
+        value: value ?? this.value,
+      );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is WooMetaData &&
+          other.id == id &&
+          other.key == key &&
+          other.value == value;
+  @override
+  int get hashCode => Object.hashAll([id, key, value]);
+  @override
+  String toString() => 'WooMetaData(id: $id, key: $key, value: $value)';
 }

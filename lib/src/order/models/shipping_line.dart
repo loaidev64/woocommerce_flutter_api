@@ -1,36 +1,28 @@
-import 'package:woocommerce_flutter_api/src/base/models/metadata.dart';
-import 'package:woocommerce_flutter_api/src/helpers/fake_helper.dart';
-import 'package:woocommerce_flutter_api/src/order/models/tax.dart';
+import '../../base/models/metadata.dart';
+import '../../helpers/fake_helper.dart';
+import '../../json/woo_json.dart';
+import 'tax.dart';
 
-/// Represents a shipping line in a WooCommerce order.
-///
-/// Contains shipping method information, costs, and tax details for shipping
-/// methods used in an order. Used for shipping cost tracking and order processing.
 class WooShippingLine {
-  /// Creates a new WooShippingLine instance.
-  WooShippingLine(
-      {this.id,
-      this.methodTitle,
-      this.methodId,
-      this.total,
-      this.totalTax,
-      this.taxes,
-      this.metaData});
-
-  /// Creates a WooShippingLine instance from JSON data.
-  WooShippingLine.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    methodTitle = json['method_title'];
-    methodId = json['method_id'];
-    total = double.tryParse(json['total']);
-    totalTax = double.tryParse(json['total_tax']);
-
-    taxes = (json['taxes'] as List).map((i) => WooTax.fromJson(i)).toList();
-    metaData = (json['meta_data'] as List)
-        .map((i) => WooMetaData.fromJson(i))
-        .toList();
-  }
-
+  WooShippingLine({
+    this.id,
+    this.methodTitle,
+    this.methodId,
+    this.total,
+    this.totalTax,
+    this.taxes,
+    this.metaData,
+  });
+  factory WooShippingLine.fromJson(Map<String, dynamic> json) =>
+      WooShippingLine(
+        id: WooJson.readInt(json, 'id'),
+        methodTitle: WooJson.readString(json, 'method_title'),
+        methodId: WooJson.readString(json, 'method_id'),
+        total: WooJson.readDouble(json, 'total'),
+        totalTax: WooJson.readDouble(json, 'total_tax'),
+        taxes: WooJson.readList(json, 'taxes', WooTax.fromJson),
+        metaData: WooJson.readList(json, 'meta_data', WooMetaData.fromJson),
+      );
   factory WooShippingLine.fake() => WooShippingLine(
         id: FakeHelper.integer(),
         methodId: FakeHelper.integer().toString(),
@@ -40,47 +32,60 @@ class WooShippingLine {
         taxes: FakeHelper.list(() => WooTax.fake()),
         metaData: FakeHelper.list(() => WooMetaData.fake()),
       );
-
-  /// Unique identifier for the shipping line.
-  int? id;
-
-  /// Shipping method display name.
-  String? methodTitle;
-
-  /// Shipping method identifier.
-  String? methodId;
-
-  /// Line total after discounts.
-  double? total;
-
-  /// Line total tax after discounts.
-  double? totalTax;
-
-  /// Tax details for the shipping line.
-  List<WooTax>? taxes;
-
-  /// Custom metadata for the shipping line.
-  List<WooMetaData>? metaData;
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['id'] = id;
-    data['method_title'] = methodTitle;
-    data['method_id'] = methodId;
-    data['total'] = total;
-    data['total_tax'] = totalTax;
-    if (taxes != null) {
-      data['taxes'] = taxes!.map((v) => v.toJson()).toList();
-    }
-    if (metaData != null) {
-      data['meta_data'] = metaData!.map((v) => v.toJson()).toList();
-    }
-    return data;
-  }
-
-  /// Returns a string representation of the WooShippingLine instance.
-  ///
-  /// Displays all main fields for debugging and logging purposes.
+  final int? id;
+  final String? methodTitle;
+  final String? methodId;
+  final double? total;
+  final double? totalTax;
+  final List<WooTax>? taxes;
+  final List<WooMetaData>? metaData;
+  Map<String, dynamic> toJson() => <String, dynamic>{}
+    ..putIfPresent('id', id)
+    ..putIfPresent('method_title', methodTitle)
+    ..putIfPresent('method_id', methodId)
+    ..putIfPresent('total', total)
+    ..putIfPresent('total_tax', totalTax)
+    ..putIfPresent('taxes', taxes?.map((v) => v.toJson()).toList())
+    ..putIfPresent('meta_data', metaData?.map((v) => v.toJson()).toList());
+  WooShippingLine copyWith({
+    int? id,
+    String? methodTitle,
+    String? methodId,
+    double? total,
+    double? totalTax,
+    List<WooTax>? taxes,
+    List<WooMetaData>? metaData,
+  }) =>
+      WooShippingLine(
+        id: id ?? this.id,
+        methodTitle: methodTitle ?? this.methodTitle,
+        methodId: methodId ?? this.methodId,
+        total: total ?? this.total,
+        totalTax: totalTax ?? this.totalTax,
+        taxes: taxes ?? this.taxes,
+        metaData: metaData ?? this.metaData,
+      );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is WooShippingLine &&
+          other.id == id &&
+          other.methodTitle == methodTitle &&
+          other.methodId == methodId &&
+          other.total == total &&
+          other.totalTax == totalTax &&
+          WooJson.listEquals(other.taxes, taxes) &&
+          WooJson.listEquals(other.metaData, metaData);
+  @override
+  int get hashCode => Object.hashAll([
+        id,
+        methodTitle,
+        methodId,
+        total,
+        totalTax,
+        ...(taxes ?? const []),
+        ...(metaData ?? const []),
+      ]);
   @override
   String toString() {
     return 'WooShippingLine(id: $id, methodTitle: $methodTitle, methodId: $methodId, total: $total)';

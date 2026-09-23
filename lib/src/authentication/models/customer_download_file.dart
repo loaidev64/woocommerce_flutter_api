@@ -1,44 +1,35 @@
-import 'package:woocommerce_flutter_api/woocommerce_flutter_api.dart';
+import '../../helpers/fake_helper.dart';
+import '../../json/woo_json.dart';
 
 class WooCustomerDownloadFile {
-  WooCustomerDownloadFile({
-    this.name,
-    this.file,
-  });
-
-  WooCustomerDownloadFile.fromJson(Map<String, dynamic> json) {
-    name = json['name'];
-    file = json['file'];
-  }
-
+  WooCustomerDownloadFile({this.name, this.file});
+  factory WooCustomerDownloadFile.fromJson(Map<String, dynamic> json) =>
+      WooCustomerDownloadFile(
+        name: WooJson.readString(json, 'name'),
+        file: WooJson.readString(json, 'file'),
+      );
   factory WooCustomerDownloadFile.fake() => WooCustomerDownloadFile(
         name: FakeHelper.word(),
         file: FakeHelper.url(),
       );
-
-  /// File name.
-  String? name;
-
-  /// File URL.
-  String? file;
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['name'] = name;
-    data['file'] = file;
-    return data;
-  }
-
+  final String? name;
+  final String? file;
+  Map<String, dynamic> toJson() => <String, dynamic>{}
+    ..putIfPresent('name', name)
+    ..putIfPresent('file', file);
+  WooCustomerDownloadFile copyWith({String? name, String? file}) =>
+      WooCustomerDownloadFile(
+        name: name ?? this.name,
+        file: file ?? this.file,
+      );
   @override
-  String toString() => toJson().toString();
-
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is WooCustomerDownloadFile &&
+          other.name == name &&
+          other.file == file;
   @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-
-    return other is WooCustomerDownloadFile && other.name == name;
-  }
-
+  int get hashCode => Object.hashAll([name, file]);
   @override
-  int get hashCode => name.hashCode;
+  String toString() => 'WooCustomerDownloadFile(name: $name, file: $file)';
 }

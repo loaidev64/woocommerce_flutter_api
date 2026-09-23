@@ -1,6 +1,8 @@
 part of 'report_api.dart';
 
 abstract class _ReportEndpoints {
+  static String get reports => '/reports';
+
   static String get sales => '/reports/sales';
 
   static String get topSellers => '/reports/top_sellers';

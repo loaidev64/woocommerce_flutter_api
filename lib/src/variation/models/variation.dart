@@ -1,220 +1,115 @@
-import 'package:woocommerce_flutter_api/src/base/base.dart';
-import 'package:woocommerce_flutter_api/src/helpers/fake_helper.dart';
-import 'package:woocommerce_flutter_api/src/product/enums/enums.dart';
-import 'package:woocommerce_flutter_api/src/product/models/models.dart';
+import '../../base/models/metadata.dart';
+import '../../helpers/fake_helper.dart';
+import '../../json/woo_json.dart';
+import '../../product/enums/product_backorder.dart';
+import '../../product/enums/product_status.dart';
+import '../../product/enums/product_stock_status.dart';
+import '../../product/enums/product_tax_status.dart';
+import '../../product/models/product_dimension.dart';
+import '../../product/models/product_download.dart';
+import '../../product/models/product_image.dart';
+import '../../product/models/product_item_attribute.dart';
 
-/// WooCommerce Product Variation Model
-///
-/// Represents a product variation in WooCommerce, which is a specific version of a variable product
-/// with its own attributes, pricing, inventory, and other properties. Variations allow customers
-/// to choose different options like size, color, material, etc., for the same base product.
-///
-/// ## Key Features
-///
-/// - **Attribute Management**: Store and manage variation-specific attributes
-/// - **Pricing Control**: Set individual prices, sale prices, and sale periods
-/// - **Inventory Management**: Track stock levels, backorders, and stock status
-/// - **Download Support**: Handle downloadable products with download limits and expiry
-/// - **Shipping Configuration**: Set weight, dimensions, and shipping class
-/// - **Tax Configuration**: Configure tax status and tax class per variation
-///
-/// ## Usage Examples
-///
-/// ### Creating a Product Variation
-///
-/// ```dart
-/// final variation = WooProductVariation(
-///   sku: 'T-SHIRT-RED-L',
-///   price: 25.99,
-///   regularPrice: 29.99,
-///   salePrice: 25.99,
-///   stockQuantity: 50,
-///   stockStatus: WooProductStockStatus.instock,
-/// );
-/// ```
-///
-/// ### Working with Variation Data
-///
-/// ```dart
-/// // Check if variation is on sale
-/// if (variation.onSale == true) {
-///   print('Sale price: ${variation.salePrice}');
-/// }
-///
-/// // Check stock availability
-/// if (variation.stockStatus == WooProductStockStatus.instock) {
-///   print('Available quantity: ${variation.stockQuantity}');
-/// }
-/// ```
-///
-/// ## JSON Serialization
-///
-/// The class supports full JSON serialization for API communication:
-///
-/// ```dart
-/// // Convert to JSON for API requests
-/// final json = variation.toJson();
-///
-/// // Create from JSON response
-/// final variation = WooProductVariation.fromJson(jsonData);
-/// ```
 class WooProductVariation {
-  /// Creates a new WooProductVariation instance
-  ///
-  /// ## Required Parameters
-  ///
-  /// None - all parameters are optional for flexibility in creating variations.
-  ///
-  /// ## Optional Parameters
-  ///
-  /// * [id] - Unique identifier for the variation
-  /// * [sku] - Stock Keeping Unit identifier
-  /// * [price] - Current variation price
-  /// * [regularPrice] - Regular price before any discounts
-  /// * [salePrice] - Sale price when on sale
-  /// * [stockQuantity] - Available stock quantity
-  /// * [stockStatus] - Current stock status (instock, outofstock, onbackorder)
-  /// * [status] - Variation status (draft, pending, private, publish)
-  /// * [description] - Variation description
-  /// * [attributes] - List of variation attributes
-  /// * [image] - Variation image
-  /// * [dimensions] - Product dimensions (weight, length, width, height)
-  /// * [metaData] - Additional metadata
-  ///
-  /// ## Example Usage
-  ///
-  /// ```dart
-  /// final variation = WooProductVariation(
-  ///   sku: 'T-SHIRT-RED-L',
-  ///   price: 25.99,
-  ///   regularPrice: 29.99,
-  ///   stockQuantity: 50,
-  ///   stockStatus: WooProductStockStatus.instock,
-  /// );
-  /// ```
-  WooProductVariation(
-      {this.id,
-      this.dateCreated,
-      this.dateCreatedGmt,
-      this.dateModified,
-      this.dateModifiedGmt,
-      this.description,
-      this.permalink,
-      this.sku,
-      this.price,
-      this.attributes = const [],
-      this.regularPrice,
-      this.salePrice,
-      this.dateOnSaleFrom,
-      this.dateOnSaleFromGmt,
-      this.dateOnSaleTo,
-      this.dateOnSaleToGmt,
-      this.onSale,
-      this.status,
-      this.purchasable,
-      this.virtual,
-      this.downloadable,
-      this.downloads = const [],
-      this.downloadLimit,
-      this.downloadExpiry,
-      this.taxStatus,
-      this.taxClass,
-      this.manageStock,
-      this.stockQuantity,
-      this.stockStatus,
-      this.backorders,
-      this.backordersAllowed,
-      this.backordered,
-      this.weight,
-      this.shippingClass,
-      this.shippingClassId,
-      this.menuOrder,
-      this.dimensions = const WooProductDimension(),
-      this.metaData = const [],
-      this.image});
-
-  /// Creates a WooProductVariation instance from JSON data
-  ///
-  /// This factory constructor is used to deserialize variation data received
-  /// from the WooCommerce REST API.
-  ///
-  /// ## Parameters
-  ///
-  /// * [json] - A Map containing the variation data in JSON format
-  ///
-  /// ## Returns
-  ///
-  /// A `WooProductVariation` instance populated with data from the JSON.
-  ///
-  /// ## Example Usage
-  ///
-  /// ```dart
-  /// final variation = WooProductVariation.fromJson(jsonData);
-  /// ```
-  WooProductVariation.fromJson(Map<String, dynamic> json)
-      : id = json['id'],
-        permalink = json['permalink'],
-        status = json['status'],
-        description = json['description'],
-        dateCreated = DateTime.parse(json['date_created']),
-        dateCreatedGmt = DateTime.parse(json['date_modified_gmt']),
-        dateModified = DateTime.parse(json['date_modified']),
-        dateModifiedGmt = DateTime.parse(json['date_created_gmt']),
-        dateOnSaleFrom = DateTime.parse(json['date_on_sale_from']),
-        dateOnSaleFromGmt = DateTime.parse(json['date_on_sale_from_gmt']),
-        dateOnSaleTo = DateTime.parse(json['date_on_sale_to']),
-        dateOnSaleToGmt = DateTime.parse(json['date_on_sale_to_gmt']),
-        sku = json['sku'],
-        price = double.tryParse(json['price']),
-        regularPrice = double.tryParse(json['regular_price']),
-        salePrice = double.tryParse(json['sale_price']),
-        onSale = json['on_sale'],
-        purchasable = json['purchasable'],
-        virtual = json['virtual'],
-        downloadable = json['downloadable'],
-        downloads = (json['downloads'] as List)
-            .map((i) => WooProductDownload.fromJson(i))
-            .toList(),
-        downloadLimit = json['download_limit'],
-        downloadExpiry = json['download_expiry'],
-        taxStatus = json['tax_status'],
-        taxClass = json['tax_class'],
-        manageStock =
-            (json['manage_stock'] != null && json['manage_stock'] is bool)
-                ? json['manage_stock']
-                : false,
-        stockQuantity = json['stock_quantity'],
-        stockStatus = json['stock_status'],
-        backorders = json['backorders'],
-        backordersAllowed = json['backorders_allowed'],
-        backordered = json['backordered'],
-        weight = json['weight'],
-        image = WooProductImage.fromJson(json['image']),
-        dimensions = WooProductDimension.fromJson(json['dimensions']),
-        shippingClass = json['shipping_class'],
-        shippingClassId = json['shipping_class_id'],
-        menuOrder = json['menu_order'],
-        attributes = (json['attributes'] as List)
-            .map((i) => WooProductItemAttribute.fromJson(i))
-            .toList(),
-        metaData = (json['meta_data'] as List)
-            .map((i) => WooMetaData.fromJson(i))
-            .toList();
-
-  /// Creates a fake WooProductVariation instance for testing purposes
-  ///
-  /// This factory constructor generates a variation with random but realistic
-  /// data, making it useful for testing and development.
-  ///
-  /// ## Returns
-  ///
-  /// A `WooProductVariation` instance with randomly generated fake data.
-  ///
-  /// ## Example Usage
-  ///
-  /// ```dart
-  /// final fakeVariation = WooProductVariation.fake();
-  /// ```
+  WooProductVariation({
+    this.id,
+    this.dateCreated,
+    this.dateCreatedGmt,
+    this.dateModified,
+    this.dateModifiedGmt,
+    this.description,
+    this.permalink,
+    this.sku,
+    this.price,
+    this.attributes,
+    this.regularPrice,
+    this.salePrice,
+    this.dateOnSaleFrom,
+    this.dateOnSaleFromGmt,
+    this.dateOnSaleTo,
+    this.dateOnSaleToGmt,
+    this.onSale,
+    this.status,
+    this.purchasable,
+    this.virtual,
+    this.downloadable,
+    this.downloads,
+    this.downloadLimit,
+    this.downloadExpiry,
+    this.taxStatus,
+    this.taxClass,
+    this.manageStock,
+    this.stockQuantity,
+    this.stockStatus,
+    this.backorders,
+    this.backordersAllowed,
+    this.backordered,
+    this.weight,
+    this.shippingClass,
+    this.shippingClassId,
+    this.menuOrder,
+    this.dimensions,
+    this.metaData,
+    this.image,
+  });
+  factory WooProductVariation.fromJson(Map<String, dynamic> json) {
+    final imageJson = WooJson.readMap(json, 'image');
+    final dimensionsJson = WooJson.readMap(json, 'dimensions');
+    return WooProductVariation(
+      id: WooJson.readInt(json, 'id'),
+      dateCreated: WooJson.readDate(json, 'date_created'),
+      dateCreatedGmt: WooJson.readDate(json, 'date_created_gmt'),
+      dateModified: WooJson.readDate(json, 'date_modified'),
+      dateModifiedGmt: WooJson.readDate(json, 'date_modified_gmt'),
+      description: WooJson.readString(json, 'description'),
+      permalink: WooJson.readString(json, 'permalink'),
+      sku: WooJson.readString(json, 'sku'),
+      price: WooJson.readDouble(json, 'price'),
+      attributes: WooJson.readList(
+        json,
+        'attributes',
+        WooProductItemAttribute.fromJson,
+      ),
+      regularPrice: WooJson.readDouble(json, 'regular_price'),
+      salePrice: WooJson.readDouble(json, 'sale_price'),
+      dateOnSaleFrom: WooJson.readDate(json, 'date_on_sale_from'),
+      dateOnSaleFromGmt: WooJson.readDate(json, 'date_on_sale_from_gmt'),
+      dateOnSaleTo: WooJson.readDate(json, 'date_on_sale_to'),
+      dateOnSaleToGmt: WooJson.readDate(json, 'date_on_sale_to_gmt'),
+      onSale: WooJson.readBool(json, 'on_sale'),
+      status: WooJson.readEnum(json, 'status', WooProductStatus.values),
+      purchasable: WooJson.readBool(json, 'purchasable'),
+      virtual: WooJson.readBool(json, 'virtual'),
+      downloadable: WooJson.readBool(json, 'downloadable'),
+      downloads:
+          WooJson.readList(json, 'downloads', WooProductDownload.fromJson),
+      downloadLimit: WooJson.readInt(json, 'download_limit'),
+      downloadExpiry: WooJson.readInt(json, 'download_expiry'),
+      taxStatus:
+          WooJson.readEnum(json, 'tax_status', WooProductTaxStatus.values),
+      taxClass: WooJson.readString(json, 'tax_class'),
+      manageStock: WooJson.readBool(json, 'manage_stock'),
+      stockQuantity: WooJson.readInt(json, 'stock_quantity'),
+      stockStatus: WooJson.readEnum(
+        json,
+        'stock_status',
+        WooProductStockStatus.values,
+      ),
+      backorders:
+          WooJson.readEnum(json, 'backorders', WooProductBackorder.values),
+      backordersAllowed: WooJson.readBool(json, 'backorders_allowed'),
+      backordered: WooJson.readBool(json, 'backordered'),
+      weight: WooJson.readString(json, 'weight'),
+      shippingClass: WooJson.readString(json, 'shipping_class'),
+      shippingClassId: WooJson.readInt(json, 'shipping_class_id'),
+      menuOrder: WooJson.readInt(json, 'menu_order'),
+      dimensions: dimensionsJson == null
+          ? null
+          : WooProductDimension.fromJson(dimensionsJson),
+      metaData: WooJson.readList(json, 'meta_data', WooMetaData.fromJson),
+      image: imageJson == null ? null : WooProductImage.fromJson(imageJson),
+    );
+  }
   factory WooProductVariation.fake() => WooProductVariation(
         id: FakeHelper.integer(),
         permalink: FakeHelper.url(),
@@ -256,200 +151,253 @@ class WooProductVariation {
         dateOnSaleTo: FakeHelper.datetime(),
         dateOnSaleToGmt: FakeHelper.datetime(),
       );
-
-  /// Unique identifier for the resource.
-  int? id;
-
-  /// The date the variation was created, in the site's timezone.
-  DateTime? dateCreated;
-
-  /// The date the variation was created, as GMT.
-  DateTime? dateCreatedGmt;
-
-  /// The date the variation was last modified, in the site's timezone.
-  DateTime? dateModified;
-
-  /// The date the variation was last modified, as GMT.
-  DateTime? dateModifiedGmt;
-
-  /// Variation description.
-  String? description;
-
-  /// Variation URL.
-  String? permalink;
-
-  /// Unique identifier.
-  String? sku;
-
-  /// Current variation price.
-  double? price;
-
-  /// Variation regular price.
-  double? regularPrice;
-
-  /// Variation sale price.
-  double? salePrice;
-
-  /// Start date of sale price, in the site's timezone.
-  DateTime? dateOnSaleFrom;
-
-  /// Start date of sale price, as GMT.
-  DateTime? dateOnSaleFromGmt;
-
-  /// End date of sale price, in the site's timezone.
-  DateTime? dateOnSaleTo;
-
-  /// End date of sale price, as GMT.
-  DateTime? dateOnSaleToGmt;
-
-  /// Shows if the variation is on sale.
-  bool? onSale;
-
-  /// Variation status. Options: draft, pending, private and publish. Default is publish.
-  WooProductStatus? status;
-
-  /// Shows if the variation can be bought.
-  bool? purchasable;
-
-  /// If the variation is virtual. Default is false.
-  bool? virtual;
-
-  /// If the variation is downloadable. Default is false.
-  bool? downloadable;
-
-  /// If the variation is downloadable. Default is false.
-  List<WooProductDownload> downloads;
-
-  /// Number of times downloadable files can be downloaded after purchase. Default is -1.
-  int? downloadLimit;
-
-  /// Number of days until access to downloadable files expires. Default is -1.
-  int? downloadExpiry;
-
-  /// Tax status. Options: taxable, shipping and none. Default is taxable.
-  WooProductTaxStatus? taxStatus;
-
-  /// Tax class.
-  String? taxClass;
-
-  /// Stock management at variation level. Default is false.
-  bool? manageStock;
-
-  /// Stock quantity.
-  int? stockQuantity;
-
-  /// Controls the stock status of the product. Options: instock, outofstock, onbackorder. Default is instock.
-  WooProductStockStatus? stockStatus;
-
-  /// If managing stock, this controls if backorders are allowed. Options: no, notify and yes. Default is no.
-  WooProductBackorder? backorders;
-
-  /// Shows if backorders are allowed.
-  bool? backordersAllowed;
-
-  /// Shows if the variation is on backordered.
-  bool? backordered;
-
-  /// Variation weight.
-  String? weight;
-
-  /// Variation dimensions.
-  WooProductDimension dimensions;
-
-  /// Shipping class slug.
-  String? shippingClass;
-
-  /// Shipping class ID.
-  int? shippingClassId;
-
-  /// Variation image data.
-  WooProductImage? image;
-
-  /// List of attributes.
-  List<WooProductItemAttribute> attributes;
-
-  /// Menu order, used to custom sort products.
-  int? menuOrder;
-
-  /// Meta data.
-  List<WooMetaData> metaData;
-
-  /// Converts the WooProductVariation instance to JSON format
-  ///
-  /// This method serializes the variation data into a Map that can be sent
-  /// to the WooCommerce REST API.
-  ///
-  /// ## Returns
-  ///
-  /// A `Map<String, dynamic>` containing the variation data in JSON format.
-  ///
-  /// ## Example Usage
-  ///
-  /// ```dart
-  /// final jsonData = variation.toJson();
-  /// ```
-  Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'date_created': dateCreated?.toIso8601String(),
-      'date_created_gmt': dateCreatedGmt?.toIso8601String(),
-      'date_modified': dateModified?.toIso8601String(),
-      'date_modified_gmt': dateModifiedGmt?.toIso8601String(),
-      'description': description,
-      'permalink': permalink,
-      'sku': sku,
-      'price': price?.toString(),
-      'regular_price': regularPrice?.toString(),
-      'sale_price': salePrice?.toString(),
-      'date_on_sale_from': dateOnSaleFrom?.toIso8601String(),
-      'date_on_sale_from_gmt': dateOnSaleFromGmt?.toIso8601String(),
-      'date_on_sale_to': dateOnSaleTo?.toIso8601String(),
-      'date_on_sale_to_gmt': dateOnSaleToGmt?.toIso8601String(),
-      'on_sale': onSale,
-      'status': status?.name,
-      'purchasable': purchasable,
-      'virtual': virtual,
-      'downloadable': downloadable,
-      'downloads': downloads.map((download) => download.toJson()).toList(),
-      'download_limit': downloadLimit,
-      'download_expiry': downloadExpiry,
-      'tax_status': taxStatus?.name,
-      'tax_class': taxClass,
-      'manage_stock': manageStock,
-      'stock_quantity': stockQuantity,
-      'stock_status': stockStatus?.name,
-      'backorders': backorders?.name,
-      'backorders_allowed': backordersAllowed,
-      'backordered': backordered,
-      'weight': weight,
-      'dimensions': dimensions.toJson(),
-      'shipping_class': shippingClass,
-      'shipping_class_id': shippingClassId,
-      'image': image?.toJson(),
-      'attributes': attributes.map((attr) => attr.toJson()).toList(),
-      'menu_order': menuOrder,
-      'meta_data': metaData.map((meta) => meta.toJson()).toList(),
-    };
-  }
-
-  /// Returns a string representation of the WooProductVariation instance
-  ///
-  /// This method provides a human-readable representation of the variation,
-  /// displaying all main fields for debugging and logging purposes.
-  ///
-  /// ## Returns
-  ///
-  /// A `String` containing the variation's main field values in a readable format.
-  ///
-  /// ## Example Usage
-  ///
-  /// ```dart
-  /// final variation = WooProductVariation(sku: 'T-SHIRT-RED-L', price: 25.99);
-  /// print(variation.toString());
-  /// // Output: WooProductVariation(id: 1, sku: T-SHIRT-RED-L, price: 25.99, status: publish, stockStatus: instock)
-  /// ```
+  final int? id;
+  final DateTime? dateCreated;
+  final DateTime? dateCreatedGmt;
+  final DateTime? dateModified;
+  final DateTime? dateModifiedGmt;
+  final String? description;
+  final String? permalink;
+  final String? sku;
+  final double? price;
+  final List<WooProductItemAttribute>? attributes;
+  final double? regularPrice;
+  final double? salePrice;
+  final DateTime? dateOnSaleFrom;
+  final DateTime? dateOnSaleFromGmt;
+  final DateTime? dateOnSaleTo;
+  final DateTime? dateOnSaleToGmt;
+  final bool? onSale;
+  final WooProductStatus? status;
+  final bool? purchasable;
+  final bool? virtual;
+  final bool? downloadable;
+  final List<WooProductDownload>? downloads;
+  final int? downloadLimit;
+  final int? downloadExpiry;
+  final WooProductTaxStatus? taxStatus;
+  final String? taxClass;
+  final bool? manageStock;
+  final int? stockQuantity;
+  final WooProductStockStatus? stockStatus;
+  final WooProductBackorder? backorders;
+  final bool? backordersAllowed;
+  final bool? backordered;
+  final String? weight;
+  final String? shippingClass;
+  final int? shippingClassId;
+  final int? menuOrder;
+  final WooProductDimension? dimensions;
+  final List<WooMetaData>? metaData;
+  final WooProductImage? image;
+  Map<String, dynamic> toJson() => <String, dynamic>{}
+    ..putIfPresent('id', id)
+    ..putDate('date_created', dateCreated)
+    ..putDate('date_created_gmt', dateCreatedGmt)
+    ..putDate('date_modified', dateModified)
+    ..putDate('date_modified_gmt', dateModifiedGmt)
+    ..putIfPresent('description', description)
+    ..putIfPresent('permalink', permalink)
+    ..putIfPresent('sku', sku)
+    ..putIfPresent('price', price)
+    ..putIfPresent('regular_price', regularPrice)
+    ..putIfPresent('sale_price', salePrice)
+    ..putDate('date_on_sale_from', dateOnSaleFrom)
+    ..putDate('date_on_sale_from_gmt', dateOnSaleFromGmt)
+    ..putDate('date_on_sale_to', dateOnSaleTo)
+    ..putDate('date_on_sale_to_gmt', dateOnSaleToGmt)
+    ..putIfPresent('on_sale', onSale)
+    ..putEnum('status', status)
+    ..putIfPresent('purchasable', purchasable)
+    ..putIfPresent('virtual', virtual)
+    ..putIfPresent('downloadable', downloadable)
+    ..putIfPresent('downloads', downloads?.map((e) => e.toJson()).toList())
+    ..putIfPresent('download_limit', downloadLimit)
+    ..putIfPresent('download_expiry', downloadExpiry)
+    ..putEnum('tax_status', taxStatus)
+    ..putIfPresent('tax_class', taxClass)
+    ..putIfPresent('manage_stock', manageStock)
+    ..putIfPresent('stock_quantity', stockQuantity)
+    ..putEnum('stock_status', stockStatus)
+    ..putEnum('backorders', backorders)
+    ..putIfPresent('backorders_allowed', backordersAllowed)
+    ..putIfPresent('backordered', backordered)
+    ..putIfPresent('weight', weight)
+    ..putIfPresent('shipping_class', shippingClass)
+    ..putIfPresent('shipping_class_id', shippingClassId)
+    ..putIfPresent('menu_order', menuOrder)
+    ..putIfPresent('dimensions', dimensions?.toJson())
+    ..putIfPresent('meta_data', metaData?.map((e) => e.toJson()).toList())
+    ..putIfPresent('image', image?.toJson())
+    ..putIfPresent('attributes', attributes?.map((e) => e.toJson()).toList());
+  WooProductVariation copyWith({
+    int? id,
+    DateTime? dateCreated,
+    DateTime? dateCreatedGmt,
+    DateTime? dateModified,
+    DateTime? dateModifiedGmt,
+    String? description,
+    String? permalink,
+    String? sku,
+    double? price,
+    List<WooProductItemAttribute>? attributes,
+    double? regularPrice,
+    double? salePrice,
+    DateTime? dateOnSaleFrom,
+    DateTime? dateOnSaleFromGmt,
+    DateTime? dateOnSaleTo,
+    DateTime? dateOnSaleToGmt,
+    bool? onSale,
+    WooProductStatus? status,
+    bool? purchasable,
+    bool? virtual,
+    bool? downloadable,
+    List<WooProductDownload>? downloads,
+    int? downloadLimit,
+    int? downloadExpiry,
+    WooProductTaxStatus? taxStatus,
+    String? taxClass,
+    bool? manageStock,
+    int? stockQuantity,
+    WooProductStockStatus? stockStatus,
+    WooProductBackorder? backorders,
+    bool? backordersAllowed,
+    bool? backordered,
+    String? weight,
+    String? shippingClass,
+    int? shippingClassId,
+    int? menuOrder,
+    WooProductDimension? dimensions,
+    List<WooMetaData>? metaData,
+    WooProductImage? image,
+  }) =>
+      WooProductVariation(
+        id: id ?? this.id,
+        dateCreated: dateCreated ?? this.dateCreated,
+        dateCreatedGmt: dateCreatedGmt ?? this.dateCreatedGmt,
+        dateModified: dateModified ?? this.dateModified,
+        dateModifiedGmt: dateModifiedGmt ?? this.dateModifiedGmt,
+        description: description ?? this.description,
+        permalink: permalink ?? this.permalink,
+        sku: sku ?? this.sku,
+        price: price ?? this.price,
+        attributes: attributes ?? this.attributes,
+        regularPrice: regularPrice ?? this.regularPrice,
+        salePrice: salePrice ?? this.salePrice,
+        dateOnSaleFrom: dateOnSaleFrom ?? this.dateOnSaleFrom,
+        dateOnSaleFromGmt: dateOnSaleFromGmt ?? this.dateOnSaleFromGmt,
+        dateOnSaleTo: dateOnSaleTo ?? this.dateOnSaleTo,
+        dateOnSaleToGmt: dateOnSaleToGmt ?? this.dateOnSaleToGmt,
+        onSale: onSale ?? this.onSale,
+        status: status ?? this.status,
+        purchasable: purchasable ?? this.purchasable,
+        virtual: virtual ?? this.virtual,
+        downloadable: downloadable ?? this.downloadable,
+        downloads: downloads ?? this.downloads,
+        downloadLimit: downloadLimit ?? this.downloadLimit,
+        downloadExpiry: downloadExpiry ?? this.downloadExpiry,
+        taxStatus: taxStatus ?? this.taxStatus,
+        taxClass: taxClass ?? this.taxClass,
+        manageStock: manageStock ?? this.manageStock,
+        stockQuantity: stockQuantity ?? this.stockQuantity,
+        stockStatus: stockStatus ?? this.stockStatus,
+        backorders: backorders ?? this.backorders,
+        backordersAllowed: backordersAllowed ?? this.backordersAllowed,
+        backordered: backordered ?? this.backordered,
+        weight: weight ?? this.weight,
+        shippingClass: shippingClass ?? this.shippingClass,
+        shippingClassId: shippingClassId ?? this.shippingClassId,
+        menuOrder: menuOrder ?? this.menuOrder,
+        dimensions: dimensions ?? this.dimensions,
+        metaData: metaData ?? this.metaData,
+        image: image ?? this.image,
+      );
   @override
-  String toString() {
-    return 'WooProductVariation(id: $id, sku: $sku, price: $price, status: $status, stockStatus: $stockStatus)';
-  }
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is WooProductVariation &&
+          other.id == id &&
+          other.dateCreated == dateCreated &&
+          other.dateCreatedGmt == dateCreatedGmt &&
+          other.dateModified == dateModified &&
+          other.dateModifiedGmt == dateModifiedGmt &&
+          other.description == description &&
+          other.permalink == permalink &&
+          other.sku == sku &&
+          other.price == price &&
+          WooJson.listEquals(other.attributes, attributes) &&
+          other.regularPrice == regularPrice &&
+          other.salePrice == salePrice &&
+          other.dateOnSaleFrom == dateOnSaleFrom &&
+          other.dateOnSaleFromGmt == dateOnSaleFromGmt &&
+          other.dateOnSaleTo == dateOnSaleTo &&
+          other.dateOnSaleToGmt == dateOnSaleToGmt &&
+          other.onSale == onSale &&
+          other.status == status &&
+          other.purchasable == purchasable &&
+          other.virtual == virtual &&
+          other.downloadable == downloadable &&
+          WooJson.listEquals(other.downloads, downloads) &&
+          other.downloadLimit == downloadLimit &&
+          other.downloadExpiry == downloadExpiry &&
+          other.taxStatus == taxStatus &&
+          other.taxClass == taxClass &&
+          other.manageStock == manageStock &&
+          other.stockQuantity == stockQuantity &&
+          other.stockStatus == stockStatus &&
+          other.backorders == backorders &&
+          other.backordersAllowed == backordersAllowed &&
+          other.backordered == backordered &&
+          other.weight == weight &&
+          other.shippingClass == shippingClass &&
+          other.shippingClassId == shippingClassId &&
+          other.menuOrder == menuOrder &&
+          other.dimensions == dimensions &&
+          WooJson.listEquals(other.metaData, metaData) &&
+          other.image == image;
+  @override
+  int get hashCode => Object.hashAll([
+        id,
+        dateCreated,
+        dateCreatedGmt,
+        dateModified,
+        dateModifiedGmt,
+        description,
+        permalink,
+        sku,
+        price,
+        ...(attributes ?? const []),
+        regularPrice,
+        salePrice,
+        dateOnSaleFrom,
+        dateOnSaleFromGmt,
+        dateOnSaleTo,
+        dateOnSaleToGmt,
+        onSale,
+        status,
+        purchasable,
+        virtual,
+        downloadable,
+        ...(downloads ?? const []),
+        downloadLimit,
+        downloadExpiry,
+        taxStatus,
+        taxClass,
+        manageStock,
+        stockQuantity,
+        stockStatus,
+        backorders,
+        backordersAllowed,
+        backordered,
+        weight,
+        shippingClass,
+        shippingClassId,
+        menuOrder,
+        dimensions,
+        ...(metaData ?? const []),
+        image,
+      ]);
+  @override
+  String toString() => 'WooProductVariation(id: $id, sku: $sku, price: $price, '
+      'status: $status, stockStatus: $stockStatus)';
 }

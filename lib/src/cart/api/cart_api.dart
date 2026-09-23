@@ -1,42 +1,63 @@
-import 'package:woocommerce_flutter_api/woocommerce_flutter_api.dart';
-
+import 'package:meta/meta.dart';
+import '../../exceptions/woocommerce_exception.dart';
+import '../../helpers/local_storage_helper.dart';
+import '../models/cart.dart';
+import '../models/cart_item.dart';
+import '../../woocommerce_flutter_api_base.dart';
 part 'endpoints.dart';
 
 extension WooCartApi on WooCommerce {
-  ///
-  /// [useFaker], fakes the api request
+  @experimental
   Future<WooCart> getCart({
     bool? useFaker,
   }) async {
     final isUsingFaker = useFaker ?? this.useFaker;
-
     if (isUsingFaker) {
       return WooCart.fake();
     }
-
-    final response = await dio.get(_CartEndpoints.cart, queryParameters: {
-      'user_id': await LocalStorageHelper.getSecurityUserId(),
-    });
-
-    return WooCart.fromJson(response.data as Map<String, dynamic>);
+    final userId = await LocalStorageHelper.getSecurityUserId();
+    final response = await requestGet<Map<String, dynamic>>(
+      _CartEndpoints.cart,
+      queryParameters: {
+        if (userId != null) 'user_id': userId,
+      },
+    );
+    final data = response.data;
+    if (data == null) {
+      throw WooCommerceParseException(
+        message: 'Expected a cart object but the response body was empty',
+        statusCode: response.statusCode,
+        path: _CartEndpoints.cart,
+      );
+    }
+    return WooCart.fromJson(data);
   }
 
-  /// [items] the items of the cart
-  /// if the item has a quantity equal to 0 then it will be deleted from the cart
-  ///
-  /// [useFaker], fakes the api request
-  Future<WooCart> updateCart(List<WooCartItem> items, {bool? useFaker}) async {
+  @experimental
+  Future<WooCart> updateCart(
+    List<WooCartItem> items, {
+    bool? useFaker,
+  }) async {
     final isUsingFaker = useFaker ?? this.useFaker;
-
     if (isUsingFaker) {
       return WooCart.fake();
     }
-
-    final response = await dio.post(_CartEndpoints.cart, data: {
-      'products': items.map((item) => item.toJson()).toList(),
-      'user_id': await LocalStorageHelper.getSecurityUserId(),
-    });
-
-    return WooCart.fromJson(response.data as Map<String, dynamic>);
+    final userId = await LocalStorageHelper.getSecurityUserId();
+    final response = await requestPost<Map<String, dynamic>>(
+      _CartEndpoints.cart,
+      data: {
+        'products': items.map((item) => item.toJson()).toList(),
+        if (userId != null) 'user_id': userId,
+      },
+    );
+    final data = response.data;
+    if (data == null) {
+      throw WooCommerceParseException(
+        message: 'Expected a cart object but the response body was empty',
+        statusCode: response.statusCode,
+        path: _CartEndpoints.cart,
+      );
+    }
+    return WooCart.fromJson(data);
   }
 }

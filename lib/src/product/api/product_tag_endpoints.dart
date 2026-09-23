@@ -5,5 +5,5 @@ abstract class _ProductTagEndpoints {
 
   static String singleTag(int id) => '/products/tags/$id';
 
-  static String batchProductTags() => '/products/tags/batch';
+  static String batchTags() => '/products/tags/batch';
 }

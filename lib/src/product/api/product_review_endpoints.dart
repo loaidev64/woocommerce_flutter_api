@@ -5,5 +5,5 @@ abstract class _ProductReviewEndpoints {
 
   static String singleReview(int id) => '/products/reviews/$id';
 
-  static String batchProductReviews() => '/products/reviews/batch';
+  static String batchReviews() => '/products/reviews/batch';
 }

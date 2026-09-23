@@ -5,5 +5,5 @@ abstract class _TaxRateEndpoints {
 
   static String singleTax(int id) => '/taxes/$id';
 
-  static String batchTaxRates() => '/taxes/batch';
+  static String get batch => '/taxes/batch';
 }

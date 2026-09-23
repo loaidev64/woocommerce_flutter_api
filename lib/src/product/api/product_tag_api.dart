@@ -1,450 +1,159 @@
-import 'package:woocommerce_flutter_api/woocommerce_flutter_api.dart';
-
+import '../../base/enums/context.dart';
+import '../../base/enums/sort.dart';
+import '../../base/models/woo_delete_result.dart';
+import '../../exceptions/woocommerce_exception.dart';
+import '../../pagination/woo_page.dart';
+import '../../woocommerce_flutter_api_base.dart';
+import '../models/product_tag.dart';
+import '../models/product_tag_batch_request.dart';
+import '../models/product_tag_batch_response.dart';
+import 'product_tag_query.dart';
 part 'product_tag_endpoints.dart';
 
-/// WooCommerce Product Tag API Extension
-///
-/// This extension provides comprehensive product tag management capabilities for WooCommerce stores.
-/// It allows you to retrieve, create, update, and delete product tags, which are used to categorize
-/// and organize products for better discoverability and filtering.
-///
-/// ## Key Features
-///
-/// - **Retrieve Product Tags**: Get all product tags with extensive filtering options
-/// - **Get Single Product Tag**: Retrieve a specific product tag by ID
-/// - **Create Product Tags**: Add new product tags for product categorization
-/// - **Update Product Tags**: Modify existing product tag properties
-/// - **Delete Product Tags**: Remove product tags (with force deletion)
-///
-/// ## Example Usage
-///
-/// ```dart
-/// // Get all product tags
-/// final tags = await wooCommerce.getProductTags();
-///
-/// // Create a new product tag
-/// final tag = WooProductTag(
-///   name: 'Electronics',
-///   slug: 'electronics',
-///   description: 'Electronic products and devices',
-/// );
-/// final created = await wooCommerce.createProductTag(tag);
-/// ```
 extension WooProductTagApi on WooCommerce {
-  /// Retrieves a list of product tags from the WooCommerce store.
-  ///
-  /// This method supports extensive filtering and pagination options to help you
-  /// find exactly the product tags you need.
-  /// https://woocommerce.github.io/woocommerce-rest-api-docs/#list-all-product-tags
-  ///
-  /// ## Parameters
-  ///
-  /// * [context] - Scope under which the request is made; determines fields present in response.
-  ///   - `WooContext.view`: Returns basic tag information (default)
-  ///   - `WooContext.edit`: Returns full tag details including sensitive data
-  /// * [page] - Current page of the collection (default: 1)
-  /// * [perPage] - Maximum number of items to return (default: 10, max: 100)
-  /// * [search] - Limit results to tags matching a search string
-  /// * [exclude] - Ensure result set excludes specific tag IDs
-  /// * [include] - Limit result set to specific tag IDs
-  /// * [offset] - Offset the result set by a specific number of items
-  /// * [order] - Order sort attribute ascending or descending (default: asc)
-  /// * [orderBy] - Sort collection by resource attribute (default: name)
-  /// * [hideEmpty] - Whether to hide tags not assigned to any products (default: false)
-  /// * [product] - Limit result set to tags assigned to a specific product
-  /// * [slug] - Limit result set to tags with a specific slug
-  /// * [useFaker] - When true, returns fake data for testing purposes
-  ///
-  /// ## Returns
-  ///
-  /// A `Future<List<WooProductTag>>` containing the product tag objects.
-  ///
-  /// ## Throws
-  ///
-  /// * `WooCommerceException` if the request fails or access is denied
-  ///
-  /// ## Example Usage
-  ///
-  /// ```dart
-  /// // Get all product tags
-  /// final tags = await wooCommerce.getProductTags();
-  ///
-  /// // Search for tags with pagination
-  /// final searchResults = await wooCommerce.getProductTags(
-  ///   search: 'electronics',
-  ///   perPage: 20,
-  ///   page: 1,
-  /// );
-  ///
-  /// // Get tags for a specific product
-  /// final productTags = await wooCommerce.getProductTags(
-  ///   product: 123,
-  /// );
-  /// ```
-  Future<List<WooProductTag>> getProductTags({
+  Future<WooPage<WooProductTag>> getProductTags({
     WooContext context = WooContext.view,
-    int page = 1,
-    int perPage = 10,
+    int? page,
+    int? perPage,
     String? search,
     List<int>? exclude,
     List<int>? include,
     int? offset,
-    WooSortOrder order = WooSortOrder.asc,
-    WooSortProductTag orderBy = WooSortProductTag.name,
-    bool hideEmpty = false,
+    WooSort order = WooSort.asc,
+    WooOrderBy orderBy = WooOrderBy.name,
+    bool? hideEmpty,
     int? product,
     String? slug,
     bool? useFaker,
   }) async {
     final isUsingFaker = useFaker ?? this.useFaker;
-
     if (isUsingFaker) {
-      return List.generate(perPage, (index) => WooProductTag.fake());
+      return WooPage(
+        items: List.generate(perPage ?? 10, (_) => WooProductTag.fake()),
+        page: page ?? 1,
+      );
     }
-
-    final response = await dio.get(
-      _ProductTagEndpoints.tags,
-      queryParameters: _resolveQueryParametersForGettingProductTags(
-        context: context,
-        page: page,
-        perPage: perPage,
-        search: search,
-        exclude: exclude,
-        include: include,
-        offset: offset,
-        order: order,
-        orderBy: orderBy,
-        hideEmpty: hideEmpty,
-        product: product,
-        slug: slug,
-      ),
+    final query = WooProductTagQuery(
+      context: context,
+      page: page,
+      perPage: perPage,
+      search: search,
+      exclude: exclude,
+      include: include,
+      offset: offset,
+      order: order,
+      orderBy: orderBy,
+      hideEmpty: hideEmpty,
+      product: product,
+      slug: slug,
     );
-
-    return (response.data as List)
-        .map((item) => WooProductTag.fromJson(item))
-        .toList();
+    final response = await requestGet<List<dynamic>>(
+      _ProductTagEndpoints.tags,
+      queryParameters: query.toMap(),
+    );
+    final items = response.data
+            ?.whereType<Map<String, dynamic>>()
+            .map(WooProductTag.fromJson)
+            .toList() ??
+        const [];
+    return WooPage.parse(response: response, items: items, page: page ?? 1);
   }
 
-  Map<String, dynamic> _resolveQueryParametersForGettingProductTags({
-    required WooContext context,
-    required int page,
-    required int perPage,
-    required String? search,
-    required List<int>? exclude,
-    required List<int>? include,
-    required int? offset,
-    required WooSortOrder order,
-    required WooSortProductTag orderBy,
-    required bool hideEmpty,
-    required int? product,
-    required String? slug,
-  }) {
-    final map = {
-      'context': context.name,
-      'page': page,
-      'per_page': perPage,
-      'order': order.name,
-      'orderby': orderBy.name,
-      'hide_empty': hideEmpty,
-    };
-
-    if (search != null) {
-      map['search'] = search;
-    }
-
-    if (exclude != null) {
-      map['exclude'] = exclude.join(',');
-    }
-
-    if (include != null) {
-      map['include'] = include.join(',');
-    }
-
-    if (offset != null) {
-      map['offset'] = offset;
-    }
-
-    if (product != null) {
-      map['product'] = product;
-    }
-
-    if (slug != null) {
-      map['slug'] = slug;
-    }
-
-    return map;
-  }
-
-  /// Retrieves a specific product tag by its ID.
-  ///
-  /// This method fetches a single product tag associated with the given ID.
-  /// https://woocommerce.github.io/woocommerce-rest-api-docs/#retrieve-a-product-tag
-  ///
-  /// ## Parameters
-  ///
-  /// * [id] - The ID of the product tag to retrieve
-  /// * [useFaker] - When true, returns fake data for testing purposes
-  ///
-  /// ## Returns
-  ///
-  /// A `Future<WooProductTag>` containing the product tag object.
-  ///
-  /// ## Throws
-  ///
-  /// * `WooCommerceException` if the request fails or access is denied
-  ///
-  /// ## Example Usage
-  ///
-  /// ```dart
-  /// // Get a specific product tag
-  /// final tag = await wooCommerce.getProductTag(123);
-  /// ```
   Future<WooProductTag> getProductTag(int id, {bool? useFaker}) async {
     final isUsingFaker = useFaker ?? this.useFaker;
-
     if (isUsingFaker) {
       return WooProductTag.fake();
     }
-
-    final response = await dio.get(
+    final response = await requestGet<Map<String, dynamic>>(
       _ProductTagEndpoints.singleTag(id),
     );
-
-    return WooProductTag.fromJson(response.data as Map<String, dynamic>);
+    final data = response.data;
+    if (data is! Map<String, dynamic>) {
+      throw WooCommerceParseException(
+        message: 'Expected a tag object for tag $id',
+        statusCode: response.statusCode,
+        path: _ProductTagEndpoints.singleTag(id),
+      );
+    }
+    return WooProductTag.fromJson(data);
   }
 
-  /// Creates a new product tag.
-  ///
-  /// This method adds a new product tag to the WooCommerce store.
-  /// https://woocommerce.github.io/woocommerce-rest-api-docs/#create-a-product-tag
-  ///
-  /// ## Parameters
-  ///
-  /// * [tag] - The WooProductTag object containing the tag data
-  /// * [useFaker] - When true, returns fake data for testing purposes
-  ///
-  /// ## Returns
-  ///
-  /// A `Future<WooProductTag>` containing the created product tag object.
-  ///
-  /// ## Throws
-  ///
-  /// * `WooCommerceException` if the request fails or access is denied
-  ///
-  /// ## Example Usage
-  ///
-  /// ```dart
-  /// // Create a new product tag
-  /// final tag = WooProductTag(
-  ///   name: 'Electronics',
-  ///   slug: 'electronics',
-  ///   description: 'Electronic products and devices',
-  /// );
-  /// final created = await wooCommerce.createProductTag(tag);
-  /// ```
-  Future<WooProductTag> createProductTag(WooProductTag tag,
-      {bool? useFaker}) async {
+  Future<WooProductTag> createProductTag(
+    WooProductTag tag, {
+    bool? useFaker,
+  }) async {
     final isUsingFaker = useFaker ?? this.useFaker;
-
     if (isUsingFaker) {
-      return tag;
+      return WooProductTag.fake();
     }
-
-    final response = await dio.post(
+    final response = await requestPost<Map<String, dynamic>>(
       _ProductTagEndpoints.tags,
       data: tag.toJson(),
     );
-
-    return WooProductTag.fromJson(response.data as Map<String, dynamic>);
+    final data = response.data;
+    if (data is! Map<String, dynamic>) {
+      throw WooCommerceParseException(
+        message: 'Expected a tag object in the create response',
+        statusCode: response.statusCode,
+        path: _ProductTagEndpoints.tags,
+      );
+    }
+    return WooProductTag.fromJson(data);
   }
 
-  /// Updates an existing product tag.
-  ///
-  /// This method modifies an existing product tag in the WooCommerce store.
-  /// https://woocommerce.github.io/woocommerce-rest-api-docs/#update-a-product-tag
-  ///
-  /// ## Parameters
-  ///
-  /// * [tag] - The WooProductTag object containing the updated tag data
-  /// * [useFaker] - When true, returns fake data for testing purposes
-  ///
-  /// ## Returns
-  ///
-  /// A `Future<WooProductTag>` containing the updated product tag object.
-  ///
-  /// ## Throws
-  ///
-  /// * `WooCommerceException` if the request fails or access is denied
-  ///
-  /// ## Example Usage
-  ///
-  /// ```dart
-  /// // Update an existing product tag
-  /// final updatedTag = WooProductTag(
-  ///   id: 123,
-  ///   name: 'Premium Electronics',
-  ///   slug: 'premium-electronics',
-  ///   description: 'High-end electronic products and devices',
-  /// );
-  /// final updated = await wooCommerce.updateProductTag(updatedTag);
-  /// ```
-  Future<WooProductTag> updateProductTag(WooProductTag tag,
-      {bool? useFaker}) async {
+  Future<WooProductTag> updateProductTag(
+    int id,
+    WooProductTag tag, {
+    bool? useFaker,
+  }) async {
     final isUsingFaker = useFaker ?? this.useFaker;
-
     if (isUsingFaker) {
-      return tag;
+      return WooProductTag.fake(tagId: id);
     }
-
-    final response = await dio.put(
-      _ProductTagEndpoints.singleTag(tag.id!),
+    final response = await requestPut<Map<String, dynamic>>(
+      _ProductTagEndpoints.singleTag(id),
       data: tag.toJson(),
     );
-
-    return WooProductTag.fromJson(response.data as Map<String, dynamic>);
-  }
-
-  /// Deletes a specific product tag.
-  ///
-  /// This method permanently removes a product tag from the WooCommerce store.
-  /// Note: The force parameter is required to be true as product tags do not support trashing.
-  /// https://woocommerce.github.io/woocommerce-rest-api-docs/#delete-a-product-tag
-  ///
-  /// ## Parameters
-  ///
-  /// * [tagId] - The ID of the product tag to delete
-  /// * [useFaker] - When true, simulates successful deletion for testing purposes
-  ///
-  /// ## Returns
-  ///
-  /// A `Future<WooProductTag>` containing the deleted product tag object.
-  ///
-  /// ## Throws
-  ///
-  /// * `WooCommerceException` if the request fails or access is denied
-  ///
-  /// ## Example Usage
-  ///
-  /// ```dart
-  /// // Delete a product tag
-  /// final deleted = await wooCommerce.deleteProductTag(123);
-  /// if (deleted != null) {
-  ///   print('Product tag deleted successfully');
-  /// }
-  /// ```
-  Future<WooProductTag> deleteProductTag(int tagId, {bool? useFaker}) async {
-    final isUsingFaker = useFaker ?? this.useFaker;
-
-    if (isUsingFaker) {
-      return WooProductTag.fake(tagId);
+    final data = response.data;
+    if (data is! Map<String, dynamic>) {
+      throw WooCommerceParseException(
+        message: 'Expected a tag object in the update response',
+        statusCode: response.statusCode,
+        path: _ProductTagEndpoints.singleTag(id),
+      );
     }
-
-    final response = await dio
-        .delete(_ProductTagEndpoints.singleTag(tagId), queryParameters: {
-      'force': true,
-    });
-
-    return WooProductTag.fromJson(response.data as Map<String, dynamic>);
+    return WooProductTag.fromJson(data);
   }
 
-  /// Performs batch operations on product tags (create, update, delete) in a single request.
-  ///
-  /// This method allows you to create, update, and delete multiple product tags
-  /// efficiently in a single API call, reducing the number of requests needed
-  /// for bulk operations.
-  /// https://woocommerce.github.io/woocommerce-rest-api-docs/#batch-update-product-tags
-  ///
-  /// ## Parameters
-  ///
-  /// * [request] - The batch request containing tags to create, update, and/or delete
-  ///   - `create`: List of `WooProductTag` objects to create (should have id: null)
-  ///   - `update`: List of `WooProductTag` objects to update (must include valid IDs)
-  ///   - `delete`: List of tag IDs (integers) to delete
-  /// * [useFaker] - When true, returns fake data for testing purposes
-  ///
-  /// ## Returns
-  ///
-  /// A `Future<WooProductTagBatchResponse>` containing the results of all batch operations:
-  /// - `create`: List of successfully created tags with server-assigned IDs
-  /// - `update`: List of successfully updated tags
-  /// - `delete`: List of successfully deleted tags
-  ///
-  /// ## Throws
-  ///
-  /// * `WooCommerceException` if the batch operation fails or validation errors occur
-  ///
-  /// ## Example Usage
-  ///
-  /// ```dart
-  /// // Create a batch request with multiple operations
-  /// final batchRequest = WooProductTagBatchRequest(
-  ///   create: [
-  ///     WooProductTag(
-  ///       null,
-  ///       'Electronics',
-  ///       'electronics',
-  ///       'Electronic products and gadgets',
-  ///     ),
-  ///     WooProductTag(
-  ///       null,
-  ///       'Clothing',
-  ///       'clothing',
-  ///       'Apparel and accessories',
-  ///     ),
-  ///   ],
-  ///   update: [
-  ///     WooProductTag(
-  ///       123,
-  ///       'Updated Electronics',
-  ///       'updated-electronics',
-  ///       'Updated description',
-  ///     ),
-  ///   ],
-  ///   delete: [456, 789],
-  /// );
-  ///
-  /// // Execute the batch operation
-  /// final response = await wooCommerce.batchUpdateProductTags(batchRequest);
-  ///
-  /// // Process results
-  /// print('Created ${response.create?.length ?? 0} tags');
-  /// print('Updated ${response.update?.length ?? 0} tags');
-  /// print('Deleted ${response.delete?.length ?? 0} tags');
-  ///
-  /// // Access individual results
-  /// for (final tag in response.create ?? []) {
-  ///   print('Created tag: ${tag.name} with ID: ${tag.id}');
-  /// }
-  /// ```
-  ///
-  /// ## Batch Operations Best Practices
-  ///
-  /// - **Create operations**: Tags should not have IDs assigned (use null for id)
-  /// - **Update operations**: Tags must have valid IDs and will be updated with provided values
-  /// - **Delete operations**: Provide only the IDs of tags to delete
-  /// - **Mixed operations**: You can combine create, update, and delete in a single request
-  /// - **Error handling**: If any operation fails, the entire batch may fail depending on API behavior
+  Future<WooDeleteResult> deleteProductTag(int id, {bool? useFaker}) async {
+    final isUsingFaker = useFaker ?? this.useFaker;
+    if (isUsingFaker) {
+      return WooDeleteResult(id: id, deleted: true);
+    }
+    final response = await requestDelete<Map<String, dynamic>>(
+      _ProductTagEndpoints.singleTag(id),
+      queryParameters: {'force': true},
+    );
+    return WooDeleteResult.fromJson(response.data!);
+  }
+
   Future<WooProductTagBatchResponse> batchUpdateProductTags(
     WooProductTagBatchRequest request, {
     bool? useFaker,
   }) async {
     final isUsingFaker = useFaker ?? this.useFaker;
-
     if (isUsingFaker) {
       return WooProductTagBatchResponse(
         create: request.create?.map((tag) => WooProductTag.fake()).toList(),
         update: request.update,
-        delete: request.delete?.map((id) => WooProductTag.fake(id)).toList(),
+        delete:
+            request.delete?.map((id) => WooProductTag.fake(tagId: id)).toList(),
       );
     }
-
-    final response = await dio.post(
-      _ProductTagEndpoints.batchProductTags(),
+    final response = await requestPost<Map<String, dynamic>>(
+      _ProductTagEndpoints.batchTags(),
       data: request.toJson(),
     );
-
-    return WooProductTagBatchResponse.fromJson(
-      response.data as Map<String, dynamic>,
-    );
+    return WooProductTagBatchResponse.fromJson(response.data!);
   }
 }

@@ -1,49 +1,33 @@
-import 'package:woocommerce_flutter_api/woocommerce_flutter_api.dart';
+import '../../helpers/fake_helper.dart';
+import '../../json/woo_json.dart';
 
-/// Represents a tax class with basic information.
-///
-/// Brief description of the model's purpose and usage.
 class WooTaxClass {
-  /// Creates a new WooTaxClass instance.
-  WooTaxClass({
-    this.slug,
-    this.name,
-  });
-
-  /// Creates a WooTaxClass instance from JSON data.
-  WooTaxClass.fromJson(Map<String, dynamic> json)
-      : slug = json['slug'],
-        name = json['name'];
-
-  factory WooTaxClass.fake([int? id]) => WooTaxClass(
+  WooTaxClass({this.slug, this.name});
+  factory WooTaxClass.fromJson(Map<String, dynamic> json) => WooTaxClass(
+        slug: WooJson.readString(json, 'slug'),
+        name: WooJson.readString(json, 'name'),
+      );
+  factory WooTaxClass.fake() => WooTaxClass(
         slug: FakeHelper.word(),
         name: FakeHelper.word(),
       );
-
-  /// Unique identifier for the resource.
-  String? slug;
-
-  /// Tax class name.
-  String? name;
-
-  Map<String, dynamic> toJson() => {
-        'slug': slug,
-        'name': name,
-      };
-
-  /// Returns a string representation of the WooTaxClass instance.
-  ///
-  /// Displays all main fields for debugging and logging purposes.
-  @override
-  String toString() => toJson().toString();
-
+  final String? slug;
+  final String? name;
+  Map<String, dynamic> toJson() => <String, dynamic>{}
+    ..putIfPresent('slug', slug)
+    ..putIfPresent('name', name);
+  WooTaxClass copyWith({String? slug, String? name}) => WooTaxClass(
+        slug: slug ?? this.slug,
+        name: name ?? this.name,
+      );
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
-
     return other is WooTaxClass && other.slug == slug && other.name == name;
   }
 
   @override
-  int get hashCode => slug.hashCode ^ name.hashCode;
+  int get hashCode => Object.hashAll([slug, name]);
+  @override
+  String toString() => 'WooTaxClass(slug: $slug, name: $name)';
 }

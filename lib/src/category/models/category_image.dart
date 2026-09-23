@@ -1,75 +1,28 @@
-import 'package:woocommerce_flutter_api/src/helpers/fake_helper.dart';
+import '../../helpers/fake_helper.dart';
+import '../../json/woo_json.dart';
 
-/// Represents a WooCommerce product category image.
-///
-/// This class models the featured image for a product category with its metadata,
-/// URLs, and timestamps for creation and modification.
 class WooProductCategoryImage {
-  /// Creates a new WooProductCategoryImage instance.
-  ///
-  /// ## Optional Parameters
-  ///
-  /// * [id] - Unique identifier for the image
-  /// * [dateCreated] - Date the image was created (local timezone)
-  /// * [dateCreatedGmt] - Date the image was created (GMT)
-  /// * [dateModified] - Date the image was last modified (local timezone)
-  /// * [dateModifiedGmt] - Date the image was last modified (GMT)
-  /// * [src] - URL of the image
-  /// * [name] - Name of the image file
-  /// * [alt] - Alternative text for the image
-  WooProductCategoryImage(
-      {this.id,
-      this.dateCreated,
-      this.dateCreatedGmt,
-      this.dateModified,
-      this.dateModifiedGmt,
-      this.src,
-      this.name,
-      this.alt});
-
-  /// Creates a WooProductCategoryImage instance from JSON data.
-  ///
-  /// This factory constructor is used to deserialize image data received
-  /// from the WooCommerce REST API.
-  ///
-  /// ## Parameters
-  ///
-  /// * [json] - A Map containing the image data in JSON format
-  ///
-  /// ## Returns
-  ///
-  /// A `WooProductCategoryImage` instance populated with data from the JSON.
-  ///
-  /// ## Example Usage
-  ///
-  /// ```dart
-  /// final image = WooProductCategoryImage.fromJson(jsonData);
-  /// ```
-  WooProductCategoryImage.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    dateCreated = json['date_created'];
-    dateCreatedGmt = json['date_created_gmt'];
-    dateModified = json['date_modified'];
-    dateModifiedGmt = json['date_modified_gmt'];
-    src = (json['src'] != null && json['src'] is String) ? json['src'] : '';
-    name = json['name'];
-    alt = json['alt'];
-  }
-
-  /// Creates a fake WooProductCategoryImage instance for testing purposes
-  ///
-  /// This factory constructor generates an image with random but realistic
-  /// data, making it useful for testing and development.
-  ///
-  /// ## Returns
-  ///
-  /// A `WooProductCategoryImage` instance with randomly generated fake data.
-  ///
-  /// ## Example Usage
-  ///
-  /// ```dart
-  /// final fakeImage = WooProductCategoryImage.fake();
-  /// ```
+  WooProductCategoryImage({
+    this.id,
+    this.dateCreated,
+    this.dateCreatedGmt,
+    this.dateModified,
+    this.dateModifiedGmt,
+    this.src,
+    this.name,
+    this.alt,
+  });
+  factory WooProductCategoryImage.fromJson(Map<String, dynamic> json) =>
+      WooProductCategoryImage(
+        id: WooJson.readInt(json, 'id'),
+        dateCreated: WooJson.readDate(json, 'date_created'),
+        dateCreatedGmt: WooJson.readDate(json, 'date_created_gmt'),
+        dateModified: WooJson.readDate(json, 'date_modified'),
+        dateModifiedGmt: WooJson.readDate(json, 'date_modified_gmt'),
+        src: WooJson.readString(json, 'src') ?? '',
+        name: WooJson.readString(json, 'name'),
+        alt: WooJson.readString(json, 'alt'),
+      );
   factory WooProductCategoryImage.fake() => WooProductCategoryImage(
         id: FakeHelper.integer(),
         dateCreated: FakeHelper.datetime(),
@@ -80,80 +33,67 @@ class WooProductCategoryImage {
         name: FakeHelper.word(),
         alt: FakeHelper.word(),
       );
-
-  /// Image ID.
-  int? id;
-
-  /// The date the image was created, in the site's timezone.
-  DateTime? dateCreated;
-
-  /// The date the image was created, as GMT
-  DateTime? dateCreatedGmt;
-
-  /// The date the image was last modified, in the site's timezone.
-  DateTime? dateModified;
-
-  /// The date the image was last modified, as GMT.
-  DateTime? dateModifiedGmt;
-
-  /// Image URL.
-  String? src;
-
-  /// Image name.
-  String? name;
-
-  /// Image alternative text.
-  String? alt;
-
-  /// Converts the WooProductCategoryImage instance to JSON format
-  ///
-  /// This method serializes the image data into a Map that can be sent
-  /// to the WooCommerce REST API.
-  ///
-  /// ## Returns
-  ///
-  /// A `Map<String, dynamic>` containing the image data in JSON format.
-  ///
-  /// ## Example Usage
-  ///
-  /// ```dart
-  /// final jsonData = image.toJson();
-  /// ```
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['id'] = id;
-    data['date_created'] = dateCreated;
-    data['date_created_gmt'] = dateCreatedGmt;
-    data['date_modified'] = dateModified;
-    data['date_modified_gmt'] = dateModifiedGmt;
-    data['src'] = src;
-    data['name'] = name;
-    data['alt'] = alt;
-    return data;
-  }
-
-  /// Returns a string representation of the WooProductCategoryImage instance
-  ///
-  /// This method provides a human-readable representation of the image,
-  /// displaying all main fields for debugging and logging purposes.
-  ///
-  /// ## Returns
-  ///
-  /// A `String` containing the image's main field values in a readable format.
-  ///
-  /// ## Example Usage
-  ///
-  /// ```dart
-  /// final image = WooProductCategoryImage(
-  ///   id: 123,
-  ///   name: 'electronics.jpg',
-  ///   src: 'https://example.com/image.jpg',
-  /// );
-  /// print(image.toString());
-  /// // Output: WooProductCategoryImage(id: 123, name: electronics.jpg, src: https://example.com/image.jpg)
-  /// ```
+  final int? id;
+  final DateTime? dateCreated;
+  final DateTime? dateCreatedGmt;
+  final DateTime? dateModified;
+  final DateTime? dateModifiedGmt;
+  final String? src;
+  final String? name;
+  final String? alt;
+  Map<String, dynamic> toJson() => <String, dynamic>{}
+    ..putIfPresent('id', id)
+    ..putDate('date_created', dateCreated)
+    ..putDate('date_created_gmt', dateCreatedGmt)
+    ..putDate('date_modified', dateModified)
+    ..putDate('date_modified_gmt', dateModifiedGmt)
+    ..putIfPresent('src', src)
+    ..putIfPresent('name', name)
+    ..putIfPresent('alt', alt);
+  WooProductCategoryImage copyWith({
+    int? id,
+    DateTime? dateCreated,
+    DateTime? dateCreatedGmt,
+    DateTime? dateModified,
+    DateTime? dateModifiedGmt,
+    String? src,
+    String? name,
+    String? alt,
+  }) =>
+      WooProductCategoryImage(
+        id: id ?? this.id,
+        dateCreated: dateCreated ?? this.dateCreated,
+        dateCreatedGmt: dateCreatedGmt ?? this.dateCreatedGmt,
+        dateModified: dateModified ?? this.dateModified,
+        dateModifiedGmt: dateModifiedGmt ?? this.dateModifiedGmt,
+        src: src ?? this.src,
+        name: name ?? this.name,
+        alt: alt ?? this.alt,
+      );
   @override
-  String toString() {
-    return 'WooProductCategoryImage(id: $id, name: $name, src: $src)';
-  }
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is WooProductCategoryImage &&
+          other.id == id &&
+          other.dateCreated == dateCreated &&
+          other.dateCreatedGmt == dateCreatedGmt &&
+          other.dateModified == dateModified &&
+          other.dateModifiedGmt == dateModifiedGmt &&
+          other.src == src &&
+          other.name == name &&
+          other.alt == alt;
+  @override
+  int get hashCode => Object.hashAll([
+        id,
+        dateCreated,
+        dateCreatedGmt,
+        dateModified,
+        dateModifiedGmt,
+        src,
+        name,
+        alt,
+      ]);
+  @override
+  String toString() =>
+      'WooProductCategoryImage(id: $id, name: $name, src: $src)';
 }

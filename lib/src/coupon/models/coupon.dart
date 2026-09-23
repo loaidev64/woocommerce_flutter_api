@@ -1,96 +1,9 @@
 import '../../base/models/metadata.dart';
 import '../../helpers/fake_helper.dart';
+import '../../json/woo_json.dart';
+import '../enums/coupon_discount_type.dart';
 
-/// WooCommerce Coupon Model
-///
-/// This class represents a discount coupon in WooCommerce with comprehensive
-/// rules, restrictions, and usage tracking capabilities. Coupons can provide
-/// percentage or fixed amount discounts with various conditions and limitations.
-///
-/// ## Key Features
-///
-/// - **Flexible Discount Types**: Percentage, fixed cart, or fixed product discounts
-/// - **Usage Controls**: Limit total usage, per-user usage, and individual use restrictions
-/// - **Product/Category Targeting**: Apply to specific products or categories
-/// - **Amount Restrictions**: Set minimum and maximum order amounts
-/// - **Email Restrictions**: Limit usage to specific customer emails
-/// - **Expiration Support**: Set coupon expiration dates
-/// - **Free Shipping**: Enable free shipping when coupon is applied
-///
-/// ## Usage Examples
-///
-/// ### Creating a Coupon
-///
-/// ```dart
-/// final coupon = WooCoupon(
-///   code: 'SAVE20',
-///   discountType: 'percent',
-///   amount: '20',
-///   description: '20% off your order',
-///   usageLimit: 100,
-/// );
-/// ```
-///
-/// ### Working with Coupon Data
-///
-/// ```dart
-/// // Check if coupon is expired
-/// if (coupon.dateExpires != null &&
-///     coupon.dateExpires!.isBefore(DateTime.now())) {
-///   print('Coupon has expired');
-/// }
-///
-/// // Check usage limits
-/// if (coupon.usageLimit != null &&
-///     coupon.usageCount! >= coupon.usageLimit!) {
-///   print('Coupon usage limit reached');
-/// }
-/// ```
-///
-/// ## JSON Serialization
-///
-/// The class supports full JSON serialization for API communication:
-///
-/// ```dart
-/// // Convert to JSON for API requests
-/// final json = coupon.toJson();
-///
-/// // Create from JSON response
-/// final coupon = WooCoupon.fromJson(jsonData);
-/// ```
 class WooCoupon {
-  /// Creates a new WooCoupon instance
-  ///
-  /// ## Required Parameters
-  ///
-  /// None - all parameters are optional for maximum flexibility.
-  ///
-  /// ## Optional Parameters
-  ///
-  /// * [id] - Unique identifier for the coupon
-  /// * [code] - Coupon code that customers enter
-  /// * [amount] - Discount amount (percentage or fixed value)
-  /// * [discountType] - Type of discount (percent, fixed_cart, fixed_product)
-  /// * [description] - Description of the coupon
-  /// * [dateExpires] - Expiration date for the coupon
-  /// * [usageLimit] - Maximum number of times the coupon can be used
-  /// * [usageLimitPerUser] - Maximum uses per customer
-  /// * [minimumAmount] - Minimum order amount required
-  /// * [maximumAmount] - Maximum order amount allowed
-  /// * [freeShipping] - Whether the coupon enables free shipping
-  /// * [individualUse] - Whether the coupon can only be used individually
-  ///
-  /// ## Example Usage
-  ///
-  /// ```dart
-  /// final coupon = WooCoupon(
-  ///   code: 'SAVE20',
-  ///   discountType: 'percent',
-  ///   amount: '20',
-  ///   description: '20% off your order',
-  ///   usageLimit: 100,
-  /// );
-  /// ```
   WooCoupon({
     this.id,
     this.code,
@@ -120,99 +33,46 @@ class WooCoupon {
     this.usedBy,
     this.metaData,
   });
-
-  /// Creates a WooCoupon instance from JSON data
-  ///
-  /// This factory constructor is used to deserialize coupon data received
-  /// from the WooCommerce REST API.
-  ///
-  /// ## Parameters
-  ///
-  /// * [json] - A Map containing the coupon data in JSON format
-  ///
-  /// ## Returns
-  ///
-  /// A `WooCoupon` instance populated with data from the JSON.
-  ///
-  /// ## Example Usage
-  ///
-  /// ```dart
-  /// final coupon = WooCoupon.fromJson(jsonData);
-  /// ```
   factory WooCoupon.fromJson(Map<String, dynamic> json) => WooCoupon(
-        id: json['id'],
-        code: json['code'],
-        amount: json['amount'],
-        dateCreated: json['date_created'] != null
-            ? DateTime.parse(json['date_created'])
-            : null,
-        dateCreatedGmt: json['date_created_gmt'] != null
-            ? DateTime.parse(json['date_created_gmt'])
-            : null,
-        dateModified: json['date_modified'] != null
-            ? DateTime.parse(json['date_modified'])
-            : null,
-        dateModifiedGmt: json['date_modified_gmt'] != null
-            ? DateTime.parse(json['date_modified_gmt'])
-            : null,
-        discountType: json['discount_type'],
-        description: json['description'],
-        dateExpires: json['date_expires'] != null
-            ? DateTime.parse(json['date_expires'])
-            : null,
-        dateExpiresGmt: json['date_expires_gmt'] != null
-            ? DateTime.parse(json['date_expires_gmt'])
-            : null,
-        usageCount: json['usage_count'],
-        individualUse: json['individual_use'],
-        productIds: json['product_ids']?.cast<int>(),
-        excludedProductIds: json['excluded_product_ids']?.cast<int>(),
-        usageLimit: json['usage_limit'],
-        usageLimitPerUser: json['usage_limit_per_user'],
-        limitUsageToXItems: json['limit_usage_to_x_items'],
-        freeShipping: json['free_shipping'],
-        productCategories: json['product_categories']?.cast<int>(),
+        id: WooJson.readInt(json, 'id'),
+        code: WooJson.readString(json, 'code'),
+        amount: WooJson.readDouble(json, 'amount'),
+        dateCreated: WooJson.readDate(json, 'date_created'),
+        dateCreatedGmt: WooJson.readDate(json, 'date_created_gmt'),
+        dateModified: WooJson.readDate(json, 'date_modified'),
+        dateModifiedGmt: WooJson.readDate(json, 'date_modified_gmt'),
+        discountType: WooJson.readEnum(
+            json, 'discount_type', WooCouponDiscountType.values),
+        description: WooJson.readString(json, 'description'),
+        dateExpires: WooJson.readDate(json, 'date_expires'),
+        dateExpiresGmt: WooJson.readDate(json, 'date_expires_gmt'),
+        usageCount: WooJson.readInt(json, 'usage_count'),
+        individualUse: WooJson.readBool(json, 'individual_use'),
+        productIds: WooJson.readIntList(json, 'product_ids'),
+        excludedProductIds: WooJson.readIntList(json, 'excluded_product_ids'),
+        usageLimit: WooJson.readInt(json, 'usage_limit'),
+        usageLimitPerUser: WooJson.readInt(json, 'usage_limit_per_user'),
+        limitUsageToXItems: WooJson.readInt(json, 'limit_usage_to_x_items'),
+        freeShipping: WooJson.readBool(json, 'free_shipping'),
+        productCategories: WooJson.readIntList(json, 'product_categories'),
         excludedProductCategories:
-            json['excluded_product_categories']?.cast<int>(),
-        excludeSaleItems: json['exclude_sale_items'],
-        minimumAmount: json['minimum_amount'],
-        maximumAmount: json['maximum_amount'],
-        emailRestrictions: json['email_restrictions']?.cast<String>(),
-        usedBy: json['used_by']?.cast<String>(),
-        metaData: (json['meta_data'] as List?)
-            ?.map((i) => WooMetaData.fromJson(i))
-            .toList(),
+            WooJson.readIntList(json, 'excluded_product_categories'),
+        excludeSaleItems: WooJson.readBool(json, 'exclude_sale_items'),
+        minimumAmount: WooJson.readDouble(json, 'minimum_amount'),
+        maximumAmount: WooJson.readDouble(json, 'maximum_amount'),
+        emailRestrictions: _readStringList(json, 'email_restrictions'),
+        usedBy: _readStringList(json, 'used_by'),
+        metaData: WooJson.readList(json, 'meta_data', WooMetaData.fromJson),
       );
-
-  /// Creates a fake WooCoupon instance for testing purposes
-  ///
-  /// This factory constructor generates a coupon with random but realistic
-  /// data, making it useful for testing and development.
-  ///
-  /// ## Parameters
-  ///
-  /// * [id] - Optional specific ID to use for the fake coupon
-  ///
-  /// ## Returns
-  ///
-  /// A `WooCoupon` instance with randomly generated fake data.
-  ///
-  /// ## Example Usage
-  ///
-  /// ```dart
-  /// final fakeCoupon = WooCoupon.fake();
-  /// final fakeCouponWithId = WooCoupon.fake(123);
-  /// ```
-  factory WooCoupon.fake([int? id]) => WooCoupon(
+  factory WooCoupon.fake({int? id}) => WooCoupon(
         id: id ?? FakeHelper.integer(),
         code: FakeHelper.code(),
-        amount: FakeHelper.decimal().toString(),
+        amount: FakeHelper.decimal(),
         dateCreated: FakeHelper.datetime(),
         dateCreatedGmt: FakeHelper.datetime(),
         dateModified: FakeHelper.datetime(),
         dateModifiedGmt: FakeHelper.datetime(),
-        discountType:
-            FakeHelper.randomItem(['percent', 'fixed_cart', 'fixed_product']),
+        discountType: WooCouponDiscountType.fake(),
         description: FakeHelper.sentence(),
         dateExpires: FakeHelper.datetime(),
         dateExpiresGmt: FakeHelper.datetime(),
@@ -227,219 +87,200 @@ class WooCoupon {
         productCategories: FakeHelper.listOfIntegers(),
         excludedProductCategories: FakeHelper.listOfIntegers(),
         excludeSaleItems: FakeHelper.boolean(),
-        minimumAmount: FakeHelper.decimal().toString(),
-        maximumAmount: FakeHelper.decimal().toString(),
+        minimumAmount: FakeHelper.decimal(),
+        maximumAmount: FakeHelper.decimal(),
         emailRestrictions: FakeHelper.list(() => FakeHelper.word()),
         usedBy: FakeHelper.list(() => FakeHelper.word()),
         metaData: FakeHelper.list(() => WooMetaData.fake()),
       );
-
-  /// Unique identifier for the coupon
-  ///
-  /// This ID is automatically assigned by WooCommerce when the coupon is created.
-  final int? id;
-
-  /// Coupon code
-  ///
-  /// The code that customers enter to apply the discount.
-  /// Must be unique across all coupons.
-  final String? code;
-
-  /// Discount amount
-  ///
-  /// The amount of discount, either as a fixed value or percentage.
-  /// Should always be numeric, even for percentage discounts.
-  final String? amount;
-
-  /// Date and time when the coupon was created (local time)
-  ///
-  /// This timestamp reflects when the coupon was first created in the store's local timezone.
-  final DateTime? dateCreated;
-
-  /// Date and time when the coupon was created (GMT)
-  ///
-  /// This timestamp reflects when the coupon was first created in GMT/UTC timezone.
-  final DateTime? dateCreatedGmt;
-
-  /// Date and time when the coupon was last modified (local time)
-  ///
-  /// This timestamp reflects when the coupon was last updated in the store's local timezone.
-  final DateTime? dateModified;
-
-  /// Date and time when the coupon was last modified (GMT)
-  ///
-  /// This timestamp reflects when the coupon was last updated in GMT/UTC timezone.
-  final DateTime? dateModifiedGmt;
-
-  /// Type of discount
-  ///
-  /// - `percent`: Percentage discount
-  /// - `fixed_cart`: Fixed amount discount for entire cart
-  /// - `fixed_product`: Fixed amount discount per product
-  final String? discountType;
-
-  /// Coupon description
-  ///
-  /// Description of the coupon for administrative purposes.
-  final String? description;
-
-  /// Date and time when the coupon expires (local time)
-  ///
-  /// The coupon will no longer be valid after this date.
-  final DateTime? dateExpires;
-
-  /// Date and time when the coupon expires (GMT)
-  ///
-  /// The coupon will no longer be valid after this date in GMT/UTC timezone.
-  final DateTime? dateExpiresGmt;
-
-  /// Number of times the coupon has been used
-  ///
-  /// Tracks how many times this coupon has been applied to orders.
-  final int? usageCount;
-
-  /// Whether the coupon can only be used individually
-  ///
-  /// If true, the coupon cannot be combined with other coupons.
-  final bool? individualUse;
-
-  /// List of product IDs the coupon can be used on
-  ///
-  /// If specified, the coupon can only be applied to these specific products.
-  final List<int>? productIds;
-
-  /// List of product IDs the coupon cannot be used on
-  ///
-  /// If specified, the coupon cannot be applied to these products.
-  final List<int>? excludedProductIds;
-
-  /// Maximum number of times the coupon can be used in total
-  ///
-  /// Once this limit is reached, the coupon becomes invalid.
-  final int? usageLimit;
-
-  /// Maximum number of times the coupon can be used per customer
-  ///
-  /// Limits how many times each customer can use this coupon.
-  final int? usageLimitPerUser;
-
-  /// Maximum number of items the coupon can be applied to
-  ///
-  /// Limits the number of items in the cart that can use this coupon.
-  final int? limitUsageToXItems;
-
-  /// Whether this coupon enables free shipping
-  ///
-  /// If true, applying this coupon will make shipping free.
-  final bool? freeShipping;
-
-  /// List of category IDs the coupon applies to
-  ///
-  /// If specified, the coupon can only be applied to products in these categories.
-  final List<int>? productCategories;
-
-  /// List of category IDs the coupon does not apply to
-  ///
-  /// If specified, the coupon cannot be applied to products in these categories.
-  final List<int>? excludedProductCategories;
-
-  /// Whether the coupon excludes items on sale
-  ///
-  /// If true, the coupon will not be applied to items that are currently on sale.
-  final bool? excludeSaleItems;
-
-  /// Minimum order amount required to apply the coupon
-  ///
-  /// The cart total must be at least this amount for the coupon to be valid.
-  final String? minimumAmount;
-
-  /// Maximum order amount allowed when using the coupon
-  ///
-  /// The cart total cannot exceed this amount for the coupon to be valid.
-  final String? maximumAmount;
-
-  /// List of email addresses that can use this coupon
-  ///
-  /// If specified, only customers with these email addresses can use the coupon.
-  final List<String>? emailRestrictions;
-
-  /// List of users who have used this coupon
-  ///
-  /// Tracks which users or guest emails have applied this coupon.
-  final List<String>? usedBy;
-
-  /// Additional metadata related to the coupon
-  ///
-  /// Custom fields and additional data associated with the coupon.
-  final List<WooMetaData>? metaData;
-
-  /// Converts the WooCoupon instance to JSON format
-  ///
-  /// This method serializes the coupon data into a Map that can be sent
-  /// to the WooCommerce REST API.
-  ///
-  /// ## Returns
-  ///
-  /// A `Map<String, dynamic>` containing the coupon data in JSON format.
-  ///
-  /// ## Example Usage
-  ///
-  /// ```dart
-  /// final jsonData = coupon.toJson();
-  /// ```
-  Map<String, dynamic> toJson() => {
-        'id': id,
-        'code': code,
-        'amount': amount,
-        'date_created': dateCreated?.toIso8601String(),
-        'date_created_gmt': dateCreatedGmt?.toIso8601String(),
-        'date_modified': dateModified?.toIso8601String(),
-        'date_modified_gmt': dateModifiedGmt?.toIso8601String(),
-        'discount_type': discountType,
-        'description': description,
-        'date_expires': dateExpires?.toIso8601String(),
-        'date_expires_gmt': dateExpiresGmt?.toIso8601String(),
-        'usage_count': usageCount,
-        'individual_use': individualUse,
-        'product_ids': productIds,
-        'excluded_product_ids': excludedProductIds,
-        'usage_limit': usageLimit,
-        'usage_limit_per_user': usageLimitPerUser,
-        'limit_usage_to_x_items': limitUsageToXItems,
-        'free_shipping': freeShipping,
-        'product_categories': productCategories,
-        'excluded_product_categories': excludedProductCategories,
-        'exclude_sale_items': excludeSaleItems,
-        'minimum_amount': minimumAmount,
-        'maximum_amount': maximumAmount,
-        'email_restrictions': emailRestrictions,
-        'used_by': usedBy,
-        'meta_data': metaData?.map((meta) => meta.toJson()).toList(),
-      };
-
-  /// Returns a string representation of the WooCoupon instance
-  ///
-  /// This method provides a human-readable representation of the coupon,
-  /// displaying all main fields for debugging and logging purposes.
-  ///
-  /// ## Returns
-  ///
-  /// A `String` containing the coupon's main field values in a readable format.
-  ///
-  /// ## Example Usage
-  ///
-  /// ```dart
-  /// final coupon = WooCoupon(
-  ///   id: 123,
-  ///   code: 'SAVE20',
-  ///   discountType: 'percent',
-  ///   amount: '20',
-  /// );
-  /// print(coupon.toString());
-  /// // Output: WooCoupon(id: 123, code: SAVE20, discountType: percent, amount: 20, usageCount: 0)
-  /// ```
-  @override
-  String toString() {
-    return 'WooCoupon(id: $id, code: $code, discountType: $discountType, amount: $amount, usageCount: $usageCount)';
+  static List<String>? _readStringList(Map<String, dynamic> json, String key) {
+    final value = json[key];
+    if (value is! List) return null;
+    return [
+      for (final element in value)
+        if (element != null) element.toString()
+    ];
   }
+
+  final int? id;
+  final String? code;
+  final double? amount;
+  final DateTime? dateCreated;
+  final DateTime? dateCreatedGmt;
+  final DateTime? dateModified;
+  final DateTime? dateModifiedGmt;
+  final WooCouponDiscountType? discountType;
+  final String? description;
+  final DateTime? dateExpires;
+  final DateTime? dateExpiresGmt;
+  final int? usageCount;
+  final bool? individualUse;
+  final List<int>? productIds;
+  final List<int>? excludedProductIds;
+  final int? usageLimit;
+  final int? usageLimitPerUser;
+  final int? limitUsageToXItems;
+  final bool? freeShipping;
+  final List<int>? productCategories;
+  final List<int>? excludedProductCategories;
+  final bool? excludeSaleItems;
+  final double? minimumAmount;
+  final double? maximumAmount;
+  final List<String>? emailRestrictions;
+  final List<String>? usedBy;
+  final List<WooMetaData>? metaData;
+  Map<String, dynamic> toJson() => <String, dynamic>{}
+    ..putIfPresent('id', id)
+    ..putIfPresent('code', code)
+    ..putIfPresent('amount', amount)
+    ..putDate('date_created', dateCreated)
+    ..putDate('date_created_gmt', dateCreatedGmt)
+    ..putDate('date_modified', dateModified)
+    ..putDate('date_modified_gmt', dateModifiedGmt)
+    ..putEnum('discount_type', discountType)
+    ..putIfPresent('description', description)
+    ..putDate('date_expires', dateExpires)
+    ..putDate('date_expires_gmt', dateExpiresGmt)
+    ..putIfPresent('usage_count', usageCount)
+    ..putIfPresent('individual_use', individualUse)
+    ..putIfPresent('product_ids', productIds)
+    ..putIfPresent('excluded_product_ids', excludedProductIds)
+    ..putIfPresent('usage_limit', usageLimit)
+    ..putIfPresent('usage_limit_per_user', usageLimitPerUser)
+    ..putIfPresent('limit_usage_to_x_items', limitUsageToXItems)
+    ..putIfPresent('free_shipping', freeShipping)
+    ..putIfPresent('product_categories', productCategories)
+    ..putIfPresent('excluded_product_categories', excludedProductCategories)
+    ..putIfPresent('exclude_sale_items', excludeSaleItems)
+    ..putIfPresent('minimum_amount', minimumAmount)
+    ..putIfPresent('maximum_amount', maximumAmount)
+    ..putIfPresent('email_restrictions', emailRestrictions)
+    ..putIfPresent('used_by', usedBy)
+    ..putIfPresent(
+        'meta_data', metaData?.map((meta) => meta.toJson()).toList());
+  WooCoupon copyWith({
+    int? id,
+    String? code,
+    double? amount,
+    DateTime? dateCreated,
+    DateTime? dateCreatedGmt,
+    DateTime? dateModified,
+    DateTime? dateModifiedGmt,
+    WooCouponDiscountType? discountType,
+    String? description,
+    DateTime? dateExpires,
+    DateTime? dateExpiresGmt,
+    int? usageCount,
+    bool? individualUse,
+    List<int>? productIds,
+    List<int>? excludedProductIds,
+    int? usageLimit,
+    int? usageLimitPerUser,
+    int? limitUsageToXItems,
+    bool? freeShipping,
+    List<int>? productCategories,
+    List<int>? excludedProductCategories,
+    bool? excludeSaleItems,
+    double? minimumAmount,
+    double? maximumAmount,
+    List<String>? emailRestrictions,
+    List<String>? usedBy,
+    List<WooMetaData>? metaData,
+  }) =>
+      WooCoupon(
+        id: id ?? this.id,
+        code: code ?? this.code,
+        amount: amount ?? this.amount,
+        dateCreated: dateCreated ?? this.dateCreated,
+        dateCreatedGmt: dateCreatedGmt ?? this.dateCreatedGmt,
+        dateModified: dateModified ?? this.dateModified,
+        dateModifiedGmt: dateModifiedGmt ?? this.dateModifiedGmt,
+        discountType: discountType ?? this.discountType,
+        description: description ?? this.description,
+        dateExpires: dateExpires ?? this.dateExpires,
+        dateExpiresGmt: dateExpiresGmt ?? this.dateExpiresGmt,
+        usageCount: usageCount ?? this.usageCount,
+        individualUse: individualUse ?? this.individualUse,
+        productIds: productIds ?? this.productIds,
+        excludedProductIds: excludedProductIds ?? this.excludedProductIds,
+        usageLimit: usageLimit ?? this.usageLimit,
+        usageLimitPerUser: usageLimitPerUser ?? this.usageLimitPerUser,
+        limitUsageToXItems: limitUsageToXItems ?? this.limitUsageToXItems,
+        freeShipping: freeShipping ?? this.freeShipping,
+        productCategories: productCategories ?? this.productCategories,
+        excludedProductCategories:
+            excludedProductCategories ?? this.excludedProductCategories,
+        excludeSaleItems: excludeSaleItems ?? this.excludeSaleItems,
+        minimumAmount: minimumAmount ?? this.minimumAmount,
+        maximumAmount: maximumAmount ?? this.maximumAmount,
+        emailRestrictions: emailRestrictions ?? this.emailRestrictions,
+        usedBy: usedBy ?? this.usedBy,
+        metaData: metaData ?? this.metaData,
+      );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is WooCoupon &&
+          other.id == id &&
+          other.code == code &&
+          other.amount == amount &&
+          other.dateCreated == dateCreated &&
+          other.dateCreatedGmt == dateCreatedGmt &&
+          other.dateModified == dateModified &&
+          other.dateModifiedGmt == dateModifiedGmt &&
+          other.discountType == discountType &&
+          other.description == description &&
+          other.dateExpires == dateExpires &&
+          other.dateExpiresGmt == dateExpiresGmt &&
+          other.usageCount == usageCount &&
+          other.individualUse == individualUse &&
+          WooJson.listEquals(other.productIds, productIds) &&
+          WooJson.listEquals(other.excludedProductIds, excludedProductIds) &&
+          other.usageLimit == usageLimit &&
+          other.usageLimitPerUser == usageLimitPerUser &&
+          other.limitUsageToXItems == limitUsageToXItems &&
+          other.freeShipping == freeShipping &&
+          WooJson.listEquals(other.productCategories, productCategories) &&
+          WooJson.listEquals(
+              other.excludedProductCategories, excludedProductCategories) &&
+          other.excludeSaleItems == excludeSaleItems &&
+          other.minimumAmount == minimumAmount &&
+          other.maximumAmount == maximumAmount &&
+          WooJson.listEquals(other.emailRestrictions, emailRestrictions) &&
+          WooJson.listEquals(other.usedBy, usedBy) &&
+          WooJson.listEquals(other.metaData, metaData);
+  @override
+  int get hashCode => Object.hashAll([
+        id,
+        code,
+        amount,
+        dateCreated,
+        dateCreatedGmt,
+        dateModified,
+        dateModifiedGmt,
+        discountType,
+        description,
+        dateExpires,
+        dateExpiresGmt,
+        usageCount,
+        individualUse,
+        usageLimit,
+        usageLimitPerUser,
+        limitUsageToXItems,
+        freeShipping,
+        excludeSaleItems,
+        minimumAmount,
+        maximumAmount,
+        ...(productIds ?? const []),
+        ...(excludedProductIds ?? const []),
+        ...(productCategories ?? const []),
+        ...(excludedProductCategories ?? const []),
+        ...(emailRestrictions ?? const []),
+        ...(usedBy ?? const []),
+        ...(metaData ?? const []),
+      ]);
+  @override
+  String toString() =>
+      'WooCoupon(id: $id, code: $code, discountType: $discountType, '
+      'amount: $amount, usageCount: $usageCount)';
 }

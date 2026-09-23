@@ -1,107 +1,135 @@
 import 'package:faker/faker.dart';
-import 'package:woocommerce_flutter_api/src/helpers/fake_helper.dart';
+import '../../helpers/fake_helper.dart';
+import '../../json/woo_json.dart';
 
-/// Represents a product attribute with options and settings.
-///
-/// Brief description of the model's purpose and usage for product attributes.
 class WooProductItemAttribute {
-  /// Creates a new WooProductItemAttribute instance.
-  WooProductItemAttribute(this.id, this.name, this.position, this.visible,
-      this.variation, this.options);
-
-  /// Creates a WooProductItemAttribute instance from JSON data.
-  WooProductItemAttribute.fromJson(Map<String, dynamic> json)
-      : id = json['id'],
-        name = json['name'],
-        position = json['position'],
-        visible = json['visible'],
-        variation = json['variation'],
-        options = json['options'].cast<String>();
-
-  /// Creates a fake WooProductItemAttribute instance for testing purposes.
-  factory WooProductItemAttribute.fake() => WooProductItemAttribute(
-        FakeHelper.integer(),
-        FakeHelper.word(),
-        FakeHelper.integer(),
-        FakeHelper.boolean(),
-        FakeHelper.boolean(),
-        List.filled(Faker().randomGenerator.integer(10), FakeHelper.word()),
-      );
-
-  /// Attribute ID.
-  final int? id;
-
-  /// Attribute name.
-  final String? name;
-
-  /// Attribute position.
-  final int? position;
-
-  /// Define if the attribute is visible on the "Additional information" tab in the product's page. Default is false.
-  final bool? visible;
-
-  /// Define if the attribute can be used as variation. Default is false.
-  final bool? variation;
-
-  /// List of available term names of the attribute.
-  final List<String>? options;
-
-  /// Converts the WooProductItemAttribute instance to JSON format.
-  Map<String, dynamic> toJson() => {
-        'id': id,
-        'name': name,
-        'position': position,
-        'visible': visible,
-        'variation': variation,
-        'options': options,
-      };
-
-  /// Returns a string representation of the WooProductItemAttribute instance.
-  ///
-  /// Displays all main fields for debugging and logging purposes.
-  @override
-  String toString() {
-    return 'WooProductItemAttribute(id: $id, name: $name, position: $position, visible: $visible, variation: $variation, options: $options)';
+  WooProductItemAttribute({
+    this.id,
+    this.name,
+    this.position,
+    this.visible,
+    this.variation,
+    this.options,
+  });
+  factory WooProductItemAttribute.fromJson(Map<String, dynamic> json) {
+    final rawOptions = json['options'];
+    return WooProductItemAttribute(
+      id: WooJson.readInt(json, 'id'),
+      name: WooJson.readString(json, 'name'),
+      position: WooJson.readInt(json, 'position'),
+      visible: WooJson.readBool(json, 'visible'),
+      variation: WooJson.readBool(json, 'variation'),
+      options: rawOptions is List
+          ? [
+              for (final option in rawOptions)
+                if (option != null) option.toString()
+            ]
+          : null,
+    );
   }
+  factory WooProductItemAttribute.fake() => WooProductItemAttribute(
+        id: FakeHelper.integer(),
+        name: FakeHelper.word(),
+        position: FakeHelper.integer(),
+        visible: FakeHelper.boolean(),
+        variation: FakeHelper.boolean(),
+        options:
+            List.filled(Faker().randomGenerator.integer(10), FakeHelper.word()),
+      );
+  final int? id;
+  final String? name;
+  final int? position;
+  final bool? visible;
+  final bool? variation;
+  final List<String>? options;
+  Map<String, dynamic> toJson() => <String, dynamic>{}
+    ..putIfPresent('id', id)
+    ..putIfPresent('name', name)
+    ..putIfPresent('position', position)
+    ..putIfPresent('visible', visible)
+    ..putIfPresent('variation', variation)
+    ..putIfPresent('options', options);
+  WooProductItemAttribute copyWith({
+    int? id,
+    String? name,
+    int? position,
+    bool? visible,
+    bool? variation,
+    List<String>? options,
+  }) =>
+      WooProductItemAttribute(
+        id: id ?? this.id,
+        name: name ?? this.name,
+        position: position ?? this.position,
+        visible: visible ?? this.visible,
+        variation: variation ?? this.variation,
+        options: options ?? this.options,
+      );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is WooProductItemAttribute &&
+          other.id == id &&
+          other.name == name &&
+          other.position == position &&
+          other.visible == visible &&
+          other.variation == variation &&
+          WooJson.listEquals(other.options, options);
+  @override
+  int get hashCode => Object.hashAll([
+        id,
+        name,
+        position,
+        visible,
+        variation,
+        ...(options ?? const []),
+      ]);
+  @override
+  String toString() =>
+      'WooProductItemAttribute(id: $id, name: $name, position: $position, '
+      'visible: $visible, variation: $variation, options: $options)';
 }
 
-/// Represents a default product attribute with selected option.
-///
-/// Brief description of the model's purpose and usage for default product attributes.
 class WooProductDefaultAttribute {
-  /// Creates a new WooProductDefaultAttribute instance.
-  WooProductDefaultAttribute(this.id, this.name, this.option);
-
-  /// Creates a WooProductDefaultAttribute instance from JSON data.
-  WooProductDefaultAttribute.fromJson(Map<String, dynamic> json)
-      : id = json['id'],
-        name = json['name'],
-        option = json['option'];
-
-  /// Creates a fake WooProductDefaultAttribute instance for testing purposes.
-  factory WooProductDefaultAttribute.fake() => WooProductDefaultAttribute(
-        FakeHelper.integer(),
-        FakeHelper.word(),
-        FakeHelper.word(),
+  WooProductDefaultAttribute({this.id, this.name, this.option});
+  factory WooProductDefaultAttribute.fromJson(Map<String, dynamic> json) =>
+      WooProductDefaultAttribute(
+        id: WooJson.readInt(json, 'id'),
+        name: WooJson.readString(json, 'name'),
+        option: WooJson.readString(json, 'option'),
       );
-
-  /// Attribute ID.
+  factory WooProductDefaultAttribute.fake() => WooProductDefaultAttribute(
+        id: FakeHelper.integer(),
+        name: FakeHelper.word(),
+        option: FakeHelper.word(),
+      );
   final int? id;
-
-  /// Attribute name.
   final String? name;
-
-  /// Selected attribute term name.
   final String? option;
-
-  /// Converts the WooProductDefaultAttribute instance to JSON format.
-  Map<String, dynamic> toJson() => {'id': id, 'name': name, 'option': option};
-
-  /// Returns a string representation of the WooProductDefaultAttribute instance.
-  ///
-  /// Displays all main fields for debugging and logging purposes.
+  Map<String, dynamic> toJson() => <String, dynamic>{}
+    ..putIfPresent('id', id)
+    ..putIfPresent('name', name)
+    ..putIfPresent('option', option);
+  WooProductDefaultAttribute copyWith({
+    int? id,
+    String? name,
+    String? option,
+  }) =>
+      WooProductDefaultAttribute(
+        id: id ?? this.id,
+        name: name ?? this.name,
+        option: option ?? this.option,
+      );
   @override
-  String toString() {
-    return 'WooProductDefaultAttribute(id: $id, name: $name, option: $option)';
-  }
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is WooProductDefaultAttribute &&
+          other.id == id &&
+          other.name == name &&
+          other.option == option;
+  @override
+  int get hashCode => Object.hashAll([id, name, option]);
+  @override
+  String toString() =>
+      'WooProductDefaultAttribute(id: $id, name: $name, option: $option)';
 }

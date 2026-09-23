@@ -1,4 +1,9 @@
-import 'package:woocommerce_flutter_api/woocommerce_flutter_api.dart';
+import '../../base/models/metadata.dart';
+import '../../helpers/fake_helper.dart';
+import '../../json/woo_json.dart';
+import '../../order/models/billing.dart';
+import '../../order/models/shipping.dart';
+import '../enums/customer_role.dart';
 
 class WooCustomer {
   WooCustomer({
@@ -19,31 +24,30 @@ class WooCustomer {
     this.avatarUrl,
     this.metaData,
   });
-
-  WooCustomer.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    dateCreated = DateTime.tryParse(json['date_created']);
-    dateCreatedGmt = DateTime.tryParse(json['date_created_gmt']);
-    dateModified = DateTime.tryParse(json['date_modified']);
-    dateModifiedGmt = DateTime.tryParse(json['date_modified_gmt']);
-    email = json['email'];
-    firstName = json['first_name'];
-    lastName = json['last_name'];
-    role = json['role'];
-    username = json['username'];
-    billing =
-        json['billing'] != null ? WooBilling.fromJson(json['billing']) : null;
-    shipping = json['shipping'] != null
-        ? WooShipping.fromJson(json['shipping'])
-        : null;
-    isPayingCustomer = json['is_paying_customer'];
-    avatarUrl = json['avatar_url'];
-    metaData = (json['meta_data'] as List)
-        .map((i) => WooMetaData.fromJson(i))
-        .toList();
+  factory WooCustomer.fromJson(Map<String, dynamic> json) {
+    final billingJson = WooJson.readMap(json, 'billing');
+    final shippingJson = WooJson.readMap(json, 'shipping');
+    return WooCustomer(
+      id: WooJson.readInt(json, 'id'),
+      dateCreated: WooJson.readDate(json, 'date_created'),
+      dateCreatedGmt: WooJson.readDate(json, 'date_created_gmt'),
+      dateModified: WooJson.readDate(json, 'date_modified'),
+      dateModifiedGmt: WooJson.readDate(json, 'date_modified_gmt'),
+      email: WooJson.readString(json, 'email'),
+      firstName: WooJson.readString(json, 'first_name'),
+      lastName: WooJson.readString(json, 'last_name'),
+      role: WooJson.readEnum(json, 'role', WooCustomerRole.values),
+      username: WooJson.readString(json, 'username'),
+      password: WooJson.readString(json, 'password'),
+      billing: billingJson == null ? null : WooBilling.fromJson(billingJson),
+      shipping:
+          shippingJson == null ? null : WooShipping.fromJson(shippingJson),
+      isPayingCustomer: WooJson.readBool(json, 'is_paying_customer'),
+      avatarUrl: WooJson.readString(json, 'avatar_url'),
+      metaData: WooJson.readList(json, 'meta_data', WooMetaData.fromJson),
+    );
   }
-
-  factory WooCustomer.fake([int? id]) => WooCustomer(
+  factory WooCustomer.fake({int? id}) => WooCustomer(
         id: id ?? FakeHelper.integer(),
         firstName: FakeHelper.firstName(),
         lastName: FakeHelper.lastName(),
@@ -58,101 +62,119 @@ class WooCustomer {
         dateModifiedGmt: FakeHelper.datetime(),
         isPayingCustomer: FakeHelper.boolean(),
         metaData: FakeHelper.list(() => WooMetaData.fake()),
-        role: 'customer',
+        role: WooCustomerRole.customer,
         shipping: WooShipping.fake(),
       );
-
-  /// Unique identifier for the resource.
-  int? id;
-
-  /// The date the customer was created, in the site's timezone.
-  DateTime? dateCreated;
-
-  /// The date the customer was created, as GMT.
-  DateTime? dateCreatedGmt;
-
-  /// The date the customer was last modified, in the site's timezone.
-  DateTime? dateModified;
-
-  /// The date the customer was last modified, as GMT.
-  DateTime? dateModifiedGmt;
-
-  /// The email address for the customer.
-  String? email;
-
-  /// Customer first name.
-  String? firstName;
-
-  /// Customer last name.
-  String? lastName;
-
-  /// Customer role.
-  String? role;
-
-  /// Customer login name.
-  String? username;
-
-  /// Customer password.
-  String? password;
-
-  /// List of billing address data.
-  WooBilling? billing;
-
-  /// List of shipping address data.
-  WooShipping? shipping;
-
-  /// Is the customer a paying customer?
-  bool? isPayingCustomer;
-
-  /// Avatar URL.
-  String? avatarUrl;
-
-  /// Meta data.
-  List<WooMetaData>? metaData;
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['id'] = id;
-    data['date_created'] = dateCreated?.toIso8601String();
-    data['date_created_gmt'] = dateCreatedGmt?.toIso8601String();
-    data['date_modified'] = dateModified?.toIso8601String();
-    data['date_modified_gmt'] = dateModifiedGmt?.toIso8601String();
-    data['email'] = email;
-    if (firstName != null) {
-      data['first_name'] = firstName;
-    }
-    if (lastName != null) {
-      data['last_name'] = lastName;
-    }
-    data['role'] = role;
-    data['username'] = username;
-    data['password'] = password;
-    if (billing != null) {
-      data['billing'] = billing!.toJson();
-    }
-    if (shipping != null) {
-      data['shipping'] = shipping!.toJson();
-    }
-    data['is_paying_customer'] = isPayingCustomer;
-    data['avatar_url'] = avatarUrl;
-    if (metaData != null) {
-      data['meta_data'] = metaData!.map((v) => v.toJson()).toList();
-    }
-    return data;
-  }
-
+  final int? id;
+  final DateTime? dateCreated;
+  final DateTime? dateCreatedGmt;
+  final DateTime? dateModified;
+  final DateTime? dateModifiedGmt;
+  final String? email;
+  final String? firstName;
+  final String? lastName;
+  final WooCustomerRole? role;
+  final String? username;
+  final String? password;
+  final WooBilling? billing;
+  final WooShipping? shipping;
+  final bool? isPayingCustomer;
+  final String? avatarUrl;
+  final List<WooMetaData>? metaData;
+  Map<String, dynamic> toJson() => <String, dynamic>{}
+    ..putIfPresent('id', id)
+    ..putDate('date_created', dateCreated)
+    ..putDate('date_created_gmt', dateCreatedGmt)
+    ..putDate('date_modified', dateModified)
+    ..putDate('date_modified_gmt', dateModifiedGmt)
+    ..putIfPresent('email', email)
+    ..putIfPresent('first_name', firstName)
+    ..putIfPresent('last_name', lastName)
+    ..putEnum('role', role)
+    ..putIfPresent('username', username)
+    ..putIfPresent('password', password)
+    ..putIfPresent('billing', billing?.toJson())
+    ..putIfPresent('shipping', shipping?.toJson())
+    ..putIfPresent('is_paying_customer', isPayingCustomer)
+    ..putIfPresent('avatar_url', avatarUrl)
+    ..putIfPresent('meta_data', metaData?.map((m) => m.toJson()).toList());
+  WooCustomer copyWith({
+    int? id,
+    DateTime? dateCreated,
+    DateTime? dateCreatedGmt,
+    DateTime? dateModified,
+    DateTime? dateModifiedGmt,
+    String? email,
+    String? firstName,
+    String? lastName,
+    WooCustomerRole? role,
+    String? username,
+    String? password,
+    WooBilling? billing,
+    WooShipping? shipping,
+    bool? isPayingCustomer,
+    String? avatarUrl,
+    List<WooMetaData>? metaData,
+  }) =>
+      WooCustomer(
+        id: id ?? this.id,
+        dateCreated: dateCreated ?? this.dateCreated,
+        dateCreatedGmt: dateCreatedGmt ?? this.dateCreatedGmt,
+        dateModified: dateModified ?? this.dateModified,
+        dateModifiedGmt: dateModifiedGmt ?? this.dateModifiedGmt,
+        email: email ?? this.email,
+        firstName: firstName ?? this.firstName,
+        lastName: lastName ?? this.lastName,
+        role: role ?? this.role,
+        username: username ?? this.username,
+        password: password ?? this.password,
+        billing: billing ?? this.billing,
+        shipping: shipping ?? this.shipping,
+        isPayingCustomer: isPayingCustomer ?? this.isPayingCustomer,
+        avatarUrl: avatarUrl ?? this.avatarUrl,
+        metaData: metaData ?? this.metaData,
+      );
   @override
-  String toString() => toJson().toString();
-
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is WooCustomer &&
+          other.id == id &&
+          other.dateCreated == dateCreated &&
+          other.dateCreatedGmt == dateCreatedGmt &&
+          other.dateModified == dateModified &&
+          other.dateModifiedGmt == dateModifiedGmt &&
+          other.email == email &&
+          other.firstName == firstName &&
+          other.lastName == lastName &&
+          other.role == role &&
+          other.username == username &&
+          other.password == password &&
+          other.billing == billing &&
+          other.shipping == shipping &&
+          other.isPayingCustomer == isPayingCustomer &&
+          other.avatarUrl == avatarUrl &&
+          WooJson.listEquals(other.metaData, metaData);
   @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-
-    return other is WooCustomer && other.id == id;
-  }
-
+  int get hashCode => Object.hashAll([
+        id,
+        dateCreated,
+        dateCreatedGmt,
+        dateModified,
+        dateModifiedGmt,
+        email,
+        firstName,
+        lastName,
+        role,
+        username,
+        password,
+        billing,
+        shipping,
+        isPayingCustomer,
+        avatarUrl,
+        ...(metaData ?? const []),
+      ]);
   @override
-  int get hashCode {
-    return id.hashCode;
-  }
+  String toString() =>
+      'WooCustomer(id: $id, email: $email, firstName: $firstName, '
+      'lastName: $lastName, role: $role)';
 }

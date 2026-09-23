@@ -1,145 +1,137 @@
 import 'dart:convert';
-import 'dart:io';
-
 import 'package:dio/dio.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
+import 'base/enums/api.dart';
+import 'exceptions/woocommerce_exception.dart';
+import 'http/woo_error_interceptor.dart';
 
-/// The main WooCommerce API client class that provides access to all WooCommerce REST API endpoints.
-///
-/// This class serves as the central entry point for interacting with WooCommerce stores.
-/// It handles authentication, HTTP requests, and provides extensions for different API modules
-/// like products, orders, customers, etc.
-///
-/// ## Basic Usage
-///
-/// ```dart
-/// final woocommerce = WooCommerce(
-///   baseUrl: 'https://yourstore.com',
-///   username: 'ck_your_consumer_key',
-///   password: 'cs_your_consumer_secret',
-/// );
-///
-/// // Fetch products
-/// final products = await woocommerce.getProducts();
-/// ```
-///
-/// ## Development Mode
-///
-/// For development and testing, you can enable fake data mode:
-///
-/// ```dart
-/// final woocommerce = WooCommerce(
-///   baseUrl: 'https://yourstore.com',
-///   username: 'ck_your_consumer_key',
-///   password: 'cs_your_consumer_secret',
-///   useFaker: true, // Returns fake data instead of making real API calls
-/// );
-/// ```
-///
-/// ## Custom API Calls
-///
-/// If you need to call endpoints not yet implemented by this package,
-/// you can use the exposed [dio] instance:
-///
-/// ```dart
-/// final response = await woocommerce.dio.get('/custom-endpoint');
-/// ```
 class WooCommerce {
-  /// Creates a new WooCommerce API client instance.
-  ///
-  /// ## Required Parameters
-  ///
-  /// - [baseUrl]: The base URL of your WooCommerce store (e.g., 'https://yourstore.com')
-  /// - [username]: Your WooCommerce REST API consumer key (e.g., 'ck_12abc34n56j')
-  /// - [password]: Your WooCommerce REST API consumer secret (e.g., 'cs_1uab8h3s3op')
-  ///
-  /// ## Optional Parameters
-  ///
-  /// - [apiPath]: Custom API path (defaults to '/wp-json/wc/v3')
-  /// - [isDebug]: Enable debug logging (defaults to true)
-  /// - [useFaker]: Use fake data for development (defaults to false)
-  /// - [interceptors]: Additional Dio interceptors for custom functionality
-  ///
-  /// ## Example
-  ///
-  /// ```dart
-  /// final woocommerce = WooCommerce(
-  ///   baseUrl: 'https://yourstore.com',
-  ///   username: 'ck_your_consumer_key',
-  ///   password: 'cs_your_consumer_secret',
-  ///   isDebug: true,
-  ///   useFaker: false,
-  /// );
-  /// ```
   WooCommerce({
     required this.baseUrl,
-    required this.username,
-    required this.password,
-    this.apiPath = '/wp-json/wc/v3',
-    this.isDebug = true,
+    required this.consumerKey,
+    required this.consumerSecret,
+    this.apiVersion = WooApiVersion.v3,
+    String? apiPath,
+    this.authMethod = WooAuthMethod.basic,
+    this.isDebug = false,
     this.useFaker = false,
     List<Interceptor>? interceptors,
-  }) {
-    final authToken = base64.encode(utf8.encode('$username:$password'));
+  }) : apiPath = apiPath ?? '/wp-json/wc/${apiVersion.value}' {
     dio = Dio(
       BaseOptions(
-        baseUrl: '$baseUrl$apiPath',
-        headers: {
-          HttpHeaders.authorizationHeader: 'Basic $authToken',
+        baseUrl: '$baseUrl${this.apiPath}',
+        connectTimeout: const Duration(seconds: 30),
+        receiveTimeout: const Duration(seconds: 30),
+        headers: switch (authMethod) {
+          WooAuthMethod.basic => {
+              'Authorization':
+                  'Basic ${basicAuth(consumerKey, consumerSecret)}',
+            },
+          WooAuthMethod.queryString => const {},
+          _ => const {},
+        },
+        queryParameters: switch (authMethod) {
+          WooAuthMethod.basic => const {},
+          WooAuthMethod.queryString => {
+              'consumer_key': consumerKey,
+              'consumer_secret': consumerSecret,
+            },
+          _ => const {},
         },
       ),
     );
-
     if (isDebug) {
       dio.interceptors.add(PrettyDioLogger(
         requestHeader: true,
         requestBody: true,
       ));
     }
-
     if (interceptors != null) dio.interceptors.addAll(interceptors);
+    dio.interceptors.add(WooErrorInterceptor());
+  }
+  late final Dio dio;
+  final String baseUrl;
+  final String consumerKey;
+  final String consumerSecret;
+  final WooApiVersion apiVersion;
+  final String apiPath;
+  final WooAuthMethod authMethod;
+  final bool isDebug;
+  final bool useFaker;
+  static String basicAuth(String consumerKey, String consumerSecret) {
+    final credentials = '$consumerKey:$consumerSecret';
+    return base64Encode(utf8.encode(credentials));
   }
 
-  /// The Dio HTTP client instance used for making API requests.
-  ///
-  /// This instance is pre-configured with authentication headers and base URL.
-  /// You can use it directly for custom API calls or add additional interceptors.
-  late final Dio dio;
-
-  /// The base URL of your WooCommerce store.
-  ///
-  /// Should include the protocol (http:// or https://) and domain.
-  /// Example: 'https://yourstore.com' or 'http://localhost:8080'
-  final String baseUrl;
-
-  /// The consumer key for WooCommerce REST API authentication.
-  ///
-  /// This is the "Consumer Key" from your WooCommerce REST API settings.
-  /// Example: 'ck_12abc34n56j789xyz'
-  final String username;
-
-  /// The consumer secret for WooCommerce REST API authentication.
-  ///
-  /// This is the "Consumer Secret" from your WooCommerce REST API settings.
-  /// Example: 'cs_1uab8h3s3op456def'
-  final String password;
-
-  /// Custom API path for WooCommerce REST API.
-  ///
-  /// Defaults to '/wp-json/wc/v3'. Only change this if your WooCommerce
-  /// installation uses a different API path.
-  final String? apiPath;
-
-  /// Whether to enable debug logging for HTTP requests.
-  ///
-  /// When true, all HTTP requests and responses will be logged to the console.
-  /// Useful for development and debugging.
-  final bool isDebug;
-
-  /// Whether to use fake data instead of making real API calls.
-  ///
-  /// When true, all API methods will return fake data generated by the faker package.
-  /// This is useful for development when you don't have a live WooCommerce store
-  /// or want to test your app without affecting real data.
-  final bool useFaker;
+  Future<Response<T>> requestGet<T>(
+    String path, {
+    Map<String, dynamic>? queryParameters,
+    Options? options,
+    CancelToken? cancelToken,
+  }) =>
+      _request(
+        () => dio.get<T>(
+          path,
+          queryParameters: queryParameters,
+          options: options,
+          cancelToken: cancelToken,
+        ),
+      );
+  Future<Response<T>> requestPost<T>(
+    String path, {
+    Object? data,
+    Map<String, dynamic>? queryParameters,
+    Options? options,
+    CancelToken? cancelToken,
+  }) =>
+      _request(
+        () => dio.post<T>(
+          path,
+          data: data,
+          queryParameters: queryParameters,
+          options: options,
+          cancelToken: cancelToken,
+        ),
+      );
+  Future<Response<T>> requestPut<T>(
+    String path, {
+    Object? data,
+    Map<String, dynamic>? queryParameters,
+    Options? options,
+    CancelToken? cancelToken,
+  }) =>
+      _request(
+        () => dio.put<T>(
+          path,
+          data: data,
+          queryParameters: queryParameters,
+          options: options,
+          cancelToken: cancelToken,
+        ),
+      );
+  Future<Response<T>> requestDelete<T>(
+    String path, {
+    Object? data,
+    Map<String, dynamic>? queryParameters,
+    Options? options,
+    CancelToken? cancelToken,
+  }) =>
+      _request(
+        () => dio.delete<T>(
+          path,
+          data: data,
+          queryParameters: queryParameters,
+          options: options,
+          cancelToken: cancelToken,
+        ),
+      );
+  Future<Response<T>> _request<T>(Future<Response<T>> Function() send) async {
+    try {
+      return await send();
+    } on DioException catch (error) {
+      final mapped = error.error;
+      if (mapped is WooCommerceException) throw mapped;
+      throw WooCommerceException.fromDioException(error);
+    }
+  }
 }

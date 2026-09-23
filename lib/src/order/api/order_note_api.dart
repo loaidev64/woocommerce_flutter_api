@@ -1,248 +1,116 @@
-import 'package:woocommerce_flutter_api/woocommerce_flutter_api.dart';
-
+import '../../base/base.dart';
+import '../../exceptions/woocommerce_exception.dart';
+import '../../helpers/fake_helper.dart';
+import '../enums/order_note_type.dart';
+import '../models/order_note.dart';
+import '../../woocommerce_flutter_api_base.dart';
+import 'order_note_query.dart';
+export 'order_note_query.dart';
 part 'order_note_endpoints.dart';
 
-/// WooCommerce Order Note API Extension
-///
-/// This extension provides comprehensive order note management capabilities for WooCommerce stores.
-/// It allows you to retrieve, create, and delete order notes, which are comments or updates
-/// associated with specific orders.
-///
-/// ## Key Features
-///
-/// - **Retrieve Order Notes**: Get all notes for a specific order with filtering options
-/// - **Get Single Note**: Retrieve a specific order note by ID
-/// - **Create Notes**: Add new notes to orders (customer or internal)
-/// - **Delete Notes**: Remove order notes (with force deletion)
-///
-/// ## Example Usage
-///
-/// ```dart
-/// // Get all order notes
-/// final notes = await wooCommerce.getOrderNotes(123);
-///
-/// // Create a new order note
-/// final note = WooOrderNote(
-///   note: 'Order processed successfully',
-///   customerNote: true,
-/// );
-/// final created = await wooCommerce.createOrderNote(123, note);
-/// ```
 extension WooOrderNoteApi on WooCommerce {
-  /// Retrieves a list of order notes for a specific order.
-  ///
-  /// This method fetches all notes associated with the given order ID, supporting
-  /// filtering by note type and context scope.
-  /// https://woocommerce.github.io/woocommerce-rest-api-docs/#list-all-order-notes
-  ///
-  /// ## Parameters
-  ///
-  /// * [orderId] - The ID of the order to retrieve notes for
-  /// * [context] - Scope under which the request is made; determines fields present in response.
-  ///   - `WooContext.view`: Returns basic note information (default)
-  ///   - `WooContext.edit`: Returns full note details including sensitive data
-  /// * [type] - Limit result to customers or internal notes.
-  ///   - `WooOrderNoteType.any`: Returns all notes (default)
-  ///   - `WooOrderNoteType.customer`: Returns only customer-visible notes
-  ///   - `WooOrderNoteType.internal`: Returns only internal notes
-  /// * [useFaker] - When true, returns fake data for testing purposes
-  ///
-  /// ## Returns
-  ///
-  /// A `Future<List<WooOrderNote>>` containing the order note objects.
-  ///
-  /// ## Throws
-  ///
-  /// * `WooCommerceException` if the request fails or access is denied
-  ///
-  /// ## Example Usage
-  ///
-  /// ```dart
-  /// // Get all notes for an order
-  /// final notes = await wooCommerce.getOrderNotes(123);
-  ///
-  /// // Get only customer notes
-  /// final customerNotes = await wooCommerce.getOrderNotes(
-  ///   123,
-  ///   type: WooOrderNoteType.customer,
-  /// );
-  /// ```
-  Future<List<WooOrderNote>> getOrderNotes(
+  Future<WooPage<WooOrderNote>> getOrderNotes(
     int orderId, {
     WooContext context = WooContext.view,
     WooOrderNoteType type = WooOrderNoteType.any,
+    int? page,
+    int? perPage,
     bool? useFaker,
   }) async {
     final isUsingFaker = useFaker ?? this.useFaker;
-
     if (isUsingFaker) {
-      return FakeHelper.list(WooOrderNote.fake);
+      return WooPage(
+        items: FakeHelper.list(WooOrderNote.fake),
+        page: page ?? 1,
+      );
     }
-
-    final response = await dio.get(
-      _OrderNoteEndpoints.notes(orderId),
-      queryParameters: _resolveQueryParametersForGettingOrderNotes(
-        context: context,
-        type: type,
-      ),
+    final query = WooOrderNoteQuery(
+      context: context,
+      type: type,
+      page: page,
+      perPage: perPage,
     );
-
-    return (response.data as List)
-        .map((item) => WooOrderNote.fromJson(item))
-        .toList();
-  }
-
-  Map<String, dynamic> _resolveQueryParametersForGettingOrderNotes({
-    required WooContext context,
-    required WooOrderNoteType type,
-  }) {
-    final map = <String, dynamic>{
-      'context': context.name,
-      'page': type.name,
-    };
-
-    return map;
-  }
-
-  /// Retrieves a specific order note by its ID.
-  ///
-  /// This method fetches a single order note associated with the given order ID and note ID.
-  /// https://woocommerce.github.io/woocommerce-rest-api-docs/#retrieve-an-order-note
-  ///
-  /// ## Parameters
-  ///
-  /// * [orderId] - The ID of the order that contains the note
-  /// * [noteId] - The ID of the specific note to retrieve
-  /// * [useFaker] - When true, returns fake data for testing purposes
-  ///
-  /// ## Returns
-  ///
-  /// A `Future<WooOrderNote>` containing the order note object.
-  ///
-  /// ## Throws
-  ///
-  /// * `WooCommerceException` if the request fails or access is denied
-  ///
-  /// ## Example Usage
-  ///
-  /// ```dart
-  /// // Get a specific order note
-  /// final note = await wooCommerce.getOrderNote(123, 456);
-  /// ```
-  Future<WooOrderNote> getOrderNote(int orderId, int noteId,
-      {bool? useFaker}) async {
-    final isUsingFaker = useFaker ?? this.useFaker;
-
-    if (isUsingFaker) {
-      return WooOrderNote.fake();
-    }
-
-    final response =
-        await dio.get(_OrderNoteEndpoints.singleNote(orderId, noteId));
-
-    return WooOrderNote.fromJson(response.data as Map<String, dynamic>);
-  }
-
-  /// Creates a new order note for a specific order.
-  ///
-  /// This method adds a new note to the specified order. The note can be either
-  /// customer-visible or internal, depending on the note configuration.
-  /// https://woocommerce.github.io/woocommerce-rest-api-docs/#create-an-order-note
-  ///
-  /// ## Parameters
-  ///
-  /// * [orderId] - The ID of the order to add the note to
-  /// * [note] - The WooOrderNote object containing the note data
-  /// * [useFaker] - When true, returns fake data for testing purposes
-  ///
-  /// ## Returns
-  ///
-  /// A `Future<WooOrderNote>` containing the created order note object.
-  ///
-  /// ## Throws
-  ///
-  /// * `WooCommerceException` if the request fails or access is denied
-  ///
-  /// ## Example Usage
-  ///
-  /// ```dart
-  /// // Create a customer note
-  /// final note = WooOrderNote(
-  ///   note: 'Order shipped via express delivery',
-  ///   customerNote: true,
-  /// );
-  /// final created = await wooCommerce.createOrderNote(123, note);
-  ///
-  /// // Create an internal note
-  /// final internalNote = WooOrderNote(
-  ///   note: 'Customer called to change shipping address',
-  ///   customerNote: false,
-  /// );
-  /// final createdInternal = await wooCommerce.createOrderNote(123, internalNote);
-  /// ```
-  Future<WooOrderNote> createOrderNote(int orderId, WooOrderNote note,
-      {bool? useFaker}) async {
-    final isUsingFaker = useFaker ?? this.useFaker;
-
-    if (isUsingFaker) {
-      return note;
-    }
-
-    final response = await dio.post(
+    final response = await requestGet<List<dynamic>>(
       _OrderNoteEndpoints.notes(orderId),
-      data: note.toJson(),
+      queryParameters: query.toMap(),
     );
-
-    return WooOrderNote.fromJson(response.data as Map<String, dynamic>);
+    final items = response.data
+            ?.whereType<Map<String, dynamic>>()
+            .map(WooOrderNote.fromJson)
+            .toList() ??
+        const <WooOrderNote>[];
+    return WooPage.parse(response: response, items: items, page: page ?? 1);
   }
 
-  /// Deletes a specific order note.
-  ///
-  /// This method permanently removes an order note from the specified order.
-  /// Note: The force parameter is required to be true as order notes do not support trashing.
-  /// https://woocommerce.github.io/woocommerce-rest-api-docs/#delete-an-order-note
-  ///
-  /// ## Parameters
-  ///
-  /// * [orderId] - The ID of the order that contains the note
-  /// * [noteId] - The ID of the note to delete
-  /// * [useFaker] - When true, simulates successful deletion for testing purposes
-  ///
-  /// ## Returns
-  ///
-  /// A `Future<bool>` indicating whether the deletion was successful.
-  ///
-  /// ## Throws
-  ///
-  /// * `WooCommerceException` if the request fails or access is denied
-  ///
-  /// ## Example Usage
-  ///
-  /// ```dart
-  /// // Delete an order note
-  /// final success = await wooCommerce.deleteOrderNote(123, 456);
-  /// if (success) {
-  ///   print('Order note deleted successfully');
-  /// }
-  /// ```
-  Future<bool> deleteOrderNote(
+  Future<WooOrderNote> getOrderNote(
     int orderId,
     int noteId, {
     bool? useFaker,
   }) async {
     final isUsingFaker = useFaker ?? this.useFaker;
-
     if (isUsingFaker) {
-      return true;
+      return WooOrderNote.fake();
     }
-
-    await dio.delete(
+    final response = await requestGet<Map<String, dynamic>>(
       _OrderNoteEndpoints.singleNote(orderId, noteId),
-      queryParameters: {
-        'force': true,
-      },
     );
+    final data = response.data;
+    if (data == null) {
+      throw WooCommerceParseException(
+        message: 'Failed to parse order note response',
+        statusCode: response.statusCode,
+        path: _OrderNoteEndpoints.singleNote(orderId, noteId),
+      );
+    }
+    return WooOrderNote.fromJson(data);
+  }
 
-    return true;
+  Future<WooOrderNote> createOrderNote(
+    int orderId,
+    WooOrderNote note, {
+    bool? useFaker,
+  }) async {
+    final isUsingFaker = useFaker ?? this.useFaker;
+    if (isUsingFaker) {
+      return note;
+    }
+    final response = await requestPost<Map<String, dynamic>>(
+      _OrderNoteEndpoints.notes(orderId),
+      data: note.toJson()..remove('id'),
+    );
+    return WooOrderNote.fromJson(response.data!);
+  }
+
+  Future<WooOrderNote> updateOrderNote(
+    int orderId,
+    int noteId,
+    WooOrderNote note, {
+    bool? useFaker,
+  }) async {
+    final isUsingFaker = useFaker ?? this.useFaker;
+    if (isUsingFaker) {
+      return note;
+    }
+    final response = await requestPut<Map<String, dynamic>>(
+      _OrderNoteEndpoints.singleNote(orderId, noteId),
+      data: note.toJson()..remove('id'),
+    );
+    return WooOrderNote.fromJson(response.data!);
+  }
+
+  Future<WooDeleteResult> deleteOrderNote(
+    int orderId,
+    int noteId, {
+    bool? useFaker,
+  }) async {
+    final isUsingFaker = useFaker ?? this.useFaker;
+    if (isUsingFaker) {
+      return WooDeleteResult(id: noteId, deleted: true);
+    }
+    final response = await requestDelete<Map<String, dynamic>>(
+      _OrderNoteEndpoints.singleNote(orderId, noteId),
+      queryParameters: {'force': true},
+    );
+    return WooDeleteResult.fromJson(response.data!);
   }
 }

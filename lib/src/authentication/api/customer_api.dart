@@ -1,298 +1,202 @@
-import 'package:woocommerce_flutter_api/woocommerce_flutter_api.dart';
-
+import '../../base/enums/context.dart';
+import '../../base/enums/sort.dart';
+import '../../base/models/woo_delete_result.dart';
+import '../../exceptions/woocommerce_exception.dart';
+import '../../helpers/fake_helper.dart';
+import '../../pagination/woo_page.dart';
+import '../../woocommerce_flutter_api_base.dart';
+import '../models/customer.dart';
+import '../models/customer_batch_request.dart';
+import '../models/customer_batch_response.dart';
+import '../models/customer_download.dart';
+import '../enums/customer_role.dart';
+import 'customer_query.dart';
+export 'customer_query.dart';
 part 'customer_endpoints.dart';
 
-extension WooCustomernApi on WooCommerce {
-  /// [context]	Scope under which the request is made; determines fields present in response. Options: view and edit. Default is view.
-  ///
-  /// [page] integer	Current page of the collection. Default is 1.
-  ///
-  /// [perPage] integer	Maximum number of items to be returned in result set. Default is 10.
-  ///
-  /// [search] Limit results to those matching a string.
-  ///
-  /// [exclude] Ensure result set excludes specific IDs.
-  ///
-  /// [include] Limit result set to specific ids.
-  ///
-  /// [offset] Offset the result set by a specific number of items.
-  ///
-  /// [order] Order sort attribute ascending or descending. Options: asc and desc. Default is asc.
-  ///
-  /// [orderby] Sort collection by object attribute. Options: id, include, name and registered_date. Default is name.
-  ///
-  /// [email] Limit result set to resources with a specific email.
-  ///
-  /// [role] Limit result set to resources with a specific role. Options: all, administrator, editor, author, contributor, subscriber, customer and shop_manager. Default is customer.
-  ///
-  Future<List<WooCustomer>> getCustomers({
-    WooContext context = WooContext.view,
-    int page = 1,
-    int perPage = 10,
+extension WooCustomerApi on WooCommerce {
+  Future<WooPage<WooCustomer>> getCustomers({
+    WooContext? context,
+    int? page,
+    int? perPage,
     String? search,
     List<int>? exclude,
     List<int>? include,
     int? offset,
-    WooSortOrder order = WooSortOrder.asc,
-    WooCustomerSort orderby = WooCustomerSort.name,
+    WooSort? order,
+    WooOrderBy? orderBy,
     String? email,
-    WooCustomerRole role = WooCustomerRole.customer,
+    WooCustomerRole? role,
     bool? useFaker,
   }) async {
     final isUsingFaker = useFaker ?? this.useFaker;
-
     if (isUsingFaker) {
-      return List.generate(perPage, (index) => WooCustomer.fake());
+      return WooPage(
+        items: List.generate(perPage ?? 10, (_) => WooCustomer.fake()),
+        page: page ?? 1,
+      );
     }
-
-    final response = await dio.get(
-      _CustomerEndpoints.customers,
-      queryParameters: _resolveQueryParametersForGettingCustomers(
-        context: context,
-        page: page,
-        perPage: perPage,
-        search: search,
-        exclude: exclude,
-        include: include,
-        offset: offset,
-        order: order,
-        orderBy: orderby,
-        email: email,
-        role: role,
-      ),
+    final query = WooCustomerQuery(
+      context: context,
+      page: page,
+      perPage: perPage,
+      order: order,
+      orderBy: orderBy,
+      search: search,
+      offset: offset,
+      email: email,
+      role: role,
     );
-
-    return (response.data as List)
-        .map((item) => WooCustomer.fromJson(item))
-        .toList();
-  }
-
-  Map<String, dynamic> _resolveQueryParametersForGettingCustomers({
-    required WooContext context,
-    required int page,
-    required int perPage,
-    required String? search,
-    required List<int>? exclude,
-    required List<int>? include,
-    required int? offset,
-    required WooSortOrder order,
-    required WooCustomerSort orderBy,
-    required String? email,
-    required WooCustomerRole role,
-  }) {
-    final map = <String, dynamic>{
-      'context': context.name,
-      'page': page,
-      'per_page': perPage,
-      'order': order.name,
-      'orderby': orderBy.name,
-      'role': role.name,
-    };
-
-    if (search != null) {
-      map['search'] = search;
-    }
-
-    if (exclude != null) {
-      map['exclude'] = exclude.join(',');
-    }
-
-    if (include != null) {
-      map['include'] = include.join(',');
-    }
-
-    if (offset != null) {
-      map['offset'] = offset;
-    }
-
-    if (email != null) {
-      map['email'] = email;
-    }
-
-    return map;
+    final response = await requestGet<List<dynamic>>(
+      _CustomerEndpoints.customers,
+      queryParameters: query.toMap(),
+    );
+    final items = response.data
+            ?.whereType<Map<String, dynamic>>()
+            .map(WooCustomer.fromJson)
+            .toList() ??
+        const [];
+    return WooPage.parse(response: response, items: items, page: page ?? 1);
   }
 
   Future<WooCustomer> getCustomer(int id, {bool? useFaker}) async {
     final isUsingFaker = useFaker ?? this.useFaker;
-
     if (isUsingFaker) {
-      return WooCustomer.fake(id);
+      return WooCustomer.fake(id: id);
     }
-
-    final response = await dio.get(
-      _CustomerEndpoints.singleCustomer(id),
-    );
-
-    return WooCustomer.fromJson(response.data as Map<String, dynamic>);
+    final response =
+        await requestGet<Map<String, dynamic>>(_CustomerEndpoints.customer(id));
+    final data = response.data;
+    if (data == null) {
+      throw WooCommerceParseException(
+        message: 'Expected a customer object but the response body was empty',
+        statusCode: response.statusCode,
+        path: _CustomerEndpoints.customer(id),
+      );
+    }
+    return WooCustomer.fromJson(data);
   }
 
-  Future<WooCustomer> createCustomer(WooCustomer customer,
-      {bool? useFaker}) async {
+  Future<WooCustomer> createCustomer(
+    WooCustomer customer, {
+    bool? useFaker,
+  }) async {
     final isUsingFaker = useFaker ?? this.useFaker;
-
     if (isUsingFaker) {
       return customer;
     }
-
-    final response = await dio.post(
+    final response = await requestPost<Map<String, dynamic>>(
       _CustomerEndpoints.customers,
       data: customer.toJson(),
     );
-
-    return WooCustomer.fromJson(response.data as Map<String, dynamic>);
+    final data = response.data;
+    if (data == null) {
+      throw WooCommerceParseException(
+        message: 'Expected a customer object but the response body was empty',
+        statusCode: response.statusCode,
+        path: _CustomerEndpoints.customers,
+      );
+    }
+    return WooCustomer.fromJson(data);
   }
 
-  Future<WooCustomer> updateCustomer(WooCustomer customer,
-      {bool? useFaker}) async {
+  Future<WooCustomer> updateCustomer(
+    int id,
+    WooCustomer customer, {
+    bool? useFaker,
+  }) async {
     final isUsingFaker = useFaker ?? this.useFaker;
-
     if (isUsingFaker) {
       return customer;
     }
-
-    final response = await dio.put(
-      _CustomerEndpoints.singleCustomer(customer.id!),
+    final response = await requestPut<Map<String, dynamic>>(
+      _CustomerEndpoints.customer(id),
       data: customer.toJson(),
     );
-
-    return WooCustomer.fromJson(response.data as Map<String, dynamic>);
+    final data = response.data;
+    if (data == null) {
+      throw WooCommerceParseException(
+        message: 'Expected a customer object but the response body was empty',
+        statusCode: response.statusCode,
+        path: _CustomerEndpoints.customer(id),
+      );
+    }
+    return WooCustomer.fromJson(data);
   }
 
-  /// [useFaker] When `true`, returns fake data instead of performing the real delete request.
-  ///
-  /// [reassign] User ID to reassign posts to.
-  Future<bool> deleteCustomer(
+  Future<WooDeleteResult> deleteCustomer(
     int id, {
-    bool? useFaker,
     int? reassign,
+    bool? useFaker,
   }) async {
     final isUsingFaker = useFaker ?? this.useFaker;
-
     if (isUsingFaker) {
-      return true;
+      return WooDeleteResult(id: id, deleted: true);
     }
-
-    await dio.delete(
-      _CustomerEndpoints.singleCustomer(id),
+    final response = await requestDelete<Map<String, dynamic>>(
+      _CustomerEndpoints.customer(id),
       queryParameters: {
         'force': true,
         if (reassign != null) 'reassign': reassign,
       },
     );
-
-    return true;
+    final data = response.data;
+    if (data == null) {
+      throw WooCommerceParseException(
+        message: 'Expected a delete result but the response body was empty',
+        statusCode: response.statusCode,
+        path: _CustomerEndpoints.customer(id),
+      );
+    }
+    return WooDeleteResult.fromJson(data);
   }
 
-  Future<List<WooCustomerDownload>> getCustomerDownloads(
+  Future<WooPage<WooCustomerDownload>> getCustomerDownloads(
     int customerId, {
     bool? useFaker,
   }) async {
     final isUsingFaker = useFaker ?? this.useFaker;
-
     if (isUsingFaker) {
-      return FakeHelper.list(() => WooCustomerDownload.fake());
+      return WooPage(
+        items: FakeHelper.list(() => WooCustomerDownload.fake()),
+        page: 1,
+      );
     }
-
-    final response = await dio.get(_CustomerEndpoints.downloads(customerId));
-
-    return (response.data as List)
-        .map((item) => WooCustomerDownload.fromJson(item))
-        .toList();
+    final response = await requestGet<List<dynamic>>(
+      _CustomerEndpoints.downloads(customerId),
+    );
+    final items = response.data
+            ?.whereType<Map<String, dynamic>>()
+            .map(WooCustomerDownload.fromJson)
+            .toList() ??
+        const [];
+    return WooPage.parse(response: response, items: items, page: 1);
   }
 
-  /// Performs batch operations on customers (create, update, delete) in a single request.
-  ///
-  /// This method allows you to create, update, and delete multiple customers
-  /// efficiently in a single API call, reducing the number of requests needed
-  /// for bulk operations.
-  /// https://woocommerce.github.io/woocommerce-rest-api-docs/#batch-update-customers
-  ///
-  /// ## Parameters
-  ///
-  /// * [request] - The batch request containing customers to create, update, and/or delete
-  ///   - `create`: List of `WooCustomer` objects to create (should not have IDs)
-  ///   - `update`: List of `WooCustomer` objects to update (must include valid IDs)
-  ///   - `delete`: List of customer IDs (integers) to delete
-  /// * [useFaker] - When true, returns fake data for testing purposes
-  ///
-  /// ## Returns
-  ///
-  /// A `Future<WooCustomerBatchResponse>` containing the results of all batch operations:
-  /// - `create`: List of successfully created customers with server-assigned IDs
-  /// - `update`: List of successfully updated customers
-  /// - `delete`: List of successfully deleted customers
-  ///
-  /// ## Throws
-  ///
-  /// * `WooCommerceException` if the batch operation fails or validation errors occur
-  ///
-  /// ## Example Usage
-  ///
-  /// ```dart
-  /// // Create a batch request with multiple operations
-  /// final batchRequest = WooCustomerBatchRequest(
-  ///   create: [
-  ///     WooCustomer(
-  ///       email: 'customer1@example.com',
-  ///       firstName: 'John',
-  ///       lastName: 'Doe',
-  ///       username: 'johndoe',
-  ///     ),
-  ///     WooCustomer(
-  ///       email: 'customer2@example.com',
-  ///       firstName: 'Jane',
-  ///       lastName: 'Smith',
-  ///       username: 'janesmith',
-  ///     ),
-  ///   ],
-  ///   update: [
-  ///     existingCustomer..firstName = 'Updated Name',
-  ///   ],
-  ///   delete: [123, 456],
-  /// );
-  ///
-  /// // Execute the batch operation
-  /// final response = await wooCommerce.batchUpdateCustomers(batchRequest);
-  ///
-  /// // Process results
-  /// print('Created ${response.create?.length ?? 0} customers');
-  /// print('Updated ${response.update?.length ?? 0} customers');
-  /// print('Deleted ${response.delete?.length ?? 0} customers');
-  ///
-  /// // Access individual results
-  /// for (final customer in response.create ?? []) {
-  ///   print('Created customer: ${customer.email} with ID: ${customer.id}');
-  /// }
-  /// ```
-  ///
-  /// ## Batch Operations Best Practices
-  ///
-  /// - **Create operations**: Customers should not have IDs assigned
-  /// - **Update operations**: Customers must have valid IDs and will be updated with provided values
-  /// - **Delete operations**: Provide only the IDs of customers to delete
-  /// - **Mixed operations**: You can combine create, update, and delete in a single request
-  /// - **Error handling**: If any operation fails, the entire batch may fail depending on API behavior
   Future<WooCustomerBatchResponse> batchUpdateCustomers(
     WooCustomerBatchRequest request, {
     bool? useFaker,
   }) async {
     final isUsingFaker = useFaker ?? this.useFaker;
-
     if (isUsingFaker) {
       return WooCustomerBatchResponse(
-        create: request.create?.map((customer) => WooCustomer.fake()).toList(),
+        create: request.create?.map((_) => WooCustomer.fake()).toList(),
         update: request.update,
-        delete: request.delete?.map((id) => WooCustomer.fake(id)).toList(),
+        delete: request.delete?.map((id) => WooCustomer.fake(id: id)).toList(),
       );
     }
-
-    final response = await dio.post(
-      _CustomerEndpoints.batchCustomers(),
+    final response = await requestPost<Map<String, dynamic>>(
+      _CustomerEndpoints.batch,
       data: request.toJson(),
     );
-
-    return WooCustomerBatchResponse.fromJson(
-      response.data as Map<String, dynamic>,
-    );
+    final data = response.data;
+    if (data == null) {
+      throw WooCommerceParseException(
+        message: 'Expected a batch response but the response body was empty',
+        statusCode: response.statusCode,
+        path: _CustomerEndpoints.batch,
+      );
+    }
+    return WooCustomerBatchResponse.fromJson(data);
   }
 }

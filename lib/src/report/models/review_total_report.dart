@@ -1,53 +1,34 @@
-import 'package:woocommerce_flutter_api/woocommerce_flutter_api.dart';
+import '../../helpers/fake_helper.dart';
 
-/// Represents a product review total report with basic information.
-///
-/// Brief description of the model's purpose and usage.
 class WooProductReviewTotalReport {
-  /// Creates a new WooProductReviewTotalReport instance.
-  WooProductReviewTotalReport({
-    this.slug,
-    this.name,
-    this.total,
-  });
-
-  /// Creates a WooProductReviewTotalReport instance from JSON data.
-  WooProductReviewTotalReport.fromJson(Map<String, dynamic> json)
-      : slug = json['slug'],
-        name = json['name'],
-        total = json['total']?.toString();
-
+  WooProductReviewTotalReport({this.slug, this.name, this.total});
+  factory WooProductReviewTotalReport.fromJson(Map<String, dynamic> json) =>
+      WooProductReviewTotalReport(
+        slug: json['slug']?.toString(),
+        name: json['name']?.toString(),
+        total: json['total']?.toString(),
+      );
   factory WooProductReviewTotalReport.fake() => WooProductReviewTotalReport(
         slug: FakeHelper.word(),
         name: FakeHelper.word(),
         total: FakeHelper.integer().toString(),
       );
-
-  /// An alphanumeric identifier for the resource.
-  String? slug;
-
-  /// Review type name.
-  String? name;
-
-  /// Amount of reviews.
-  String? total;
-
-  Map<String, dynamic> _toJson() => {
-        'slug': slug,
-        'name': name,
-        'total': total,
-      };
-
-  /// Returns a string representation of the WooProductReviewTotalReport instance.
-  ///
-  /// Displays all main fields for debugging and logging purposes.
-  @override
-  String toString() => _toJson().toString();
-
+  final String? slug;
+  final String? name;
+  final String? total;
+  WooProductReviewTotalReport copyWith({
+    String? slug,
+    String? name,
+    String? total,
+  }) =>
+      WooProductReviewTotalReport(
+        slug: slug ?? this.slug,
+        name: name ?? this.name,
+        total: total ?? this.total,
+      );
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
-
     return other is WooProductReviewTotalReport &&
         other.slug == slug &&
         other.name == name &&
@@ -55,5 +36,8 @@ class WooProductReviewTotalReport {
   }
 
   @override
-  int get hashCode => slug.hashCode ^ name.hashCode ^ total.hashCode;
+  int get hashCode => Object.hashAll([slug, name, total]);
+  @override
+  String toString() =>
+      'WooProductReviewTotalReport(slug: $slug, name: $name, total: $total)';
 }

@@ -1,7 +1,7 @@
-import 'package:woocommerce_flutter_api/src/cart/models/cart_item.dart';
-import 'package:woocommerce_flutter_api/src/helpers/fake_helper.dart';
+import '../../helpers/fake_helper.dart';
+import '../../json/woo_json.dart';
+import 'cart_item.dart';
 
-//TODO:: is not compatable with plugin yet
 class WooCart {
   WooCart({
     this.itemsCount,
@@ -10,20 +10,13 @@ class WooCart {
     this.needsPayment,
     this.totalPrice,
   });
-
-  WooCart.fromJson(Map<String, dynamic> json) {
-    itemsCount = json['item_count'];
-    if (json['items'] != null) {
-      items = <WooCartItem>[];
-      json['items'].forEach((v) {
-        items!.add(WooCartItem.fromJson(v));
-      });
-    }
-    needsShipping = json['needs_shipping'];
-    needsPayment = json['needs_payment'];
-    totalPrice = double.tryParse(json['total_price']);
-  }
-
+  factory WooCart.fromJson(Map<String, dynamic> json) => WooCart(
+        itemsCount: WooJson.readInt(json, 'item_count'),
+        items: WooJson.readList(json, 'items', WooCartItem.fromJson),
+        needsShipping: WooJson.readBool(json, 'needs_shipping'),
+        needsPayment: WooJson.readBool(json, 'needs_payment'),
+        totalPrice: WooJson.readDouble(json, 'total_price'),
+      );
   factory WooCart.fake() => WooCart(
         itemsCount: FakeHelper.integer(),
         needsPayment: FakeHelper.boolean(),
@@ -31,34 +24,49 @@ class WooCart {
         totalPrice: FakeHelper.decimal(),
         items: FakeHelper.list(() => WooCartItem.fake()),
       );
-
-  /// Count of items in cart.
-  int? itemsCount;
-
-  /// Cart Items.
-  List<WooCartItem>? items;
-
-  /// If the cart needs shipping.
-  bool? needsShipping;
-
-  /// If the cart needs payment.
-  bool? needsPayment;
-
-  /// If the cart needs payment.
-  double? totalPrice;
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['item_count'] = itemsCount;
-    if (items != null) {
-      data['items'] = items!.map((v) => v.toJson()).toList();
-    }
-    data['needs_shipping'] = needsShipping;
-    data['needs_payment'] = needsPayment;
-    data['total_price'] = totalPrice;
-    return data;
-  }
-
+  final int? itemsCount;
+  final List<WooCartItem>? items;
+  final bool? needsShipping;
+  final bool? needsPayment;
+  final double? totalPrice;
+  Map<String, dynamic> toJson() => <String, dynamic>{}
+    ..putIfPresent('item_count', itemsCount)
+    ..putIfPresent('items', items?.map((item) => item.toJson()).toList())
+    ..putIfPresent('needs_shipping', needsShipping)
+    ..putIfPresent('needs_payment', needsPayment)
+    ..putIfPresent('total_price', totalPrice);
+  WooCart copyWith({
+    int? itemsCount,
+    List<WooCartItem>? items,
+    bool? needsShipping,
+    bool? needsPayment,
+    double? totalPrice,
+  }) =>
+      WooCart(
+        itemsCount: itemsCount ?? this.itemsCount,
+        items: items ?? this.items,
+        needsShipping: needsShipping ?? this.needsShipping,
+        needsPayment: needsPayment ?? this.needsPayment,
+        totalPrice: totalPrice ?? this.totalPrice,
+      );
   @override
-  String toString() => toJson().toString();
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is WooCart &&
+          other.itemsCount == itemsCount &&
+          WooJson.listEquals(other.items, items) &&
+          other.needsShipping == needsShipping &&
+          other.needsPayment == needsPayment &&
+          other.totalPrice == totalPrice;
+  @override
+  int get hashCode => Object.hashAll([
+        itemsCount,
+        ...(items ?? const []),
+        needsShipping,
+        needsPayment,
+        totalPrice,
+      ]);
+  @override
+  String toString() =>
+      'WooCart(itemsCount: $itemsCount, totalPrice: $totalPrice)';
 }

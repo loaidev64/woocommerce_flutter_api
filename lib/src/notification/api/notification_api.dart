@@ -1,47 +1,61 @@
-import 'package:woocommerce_flutter_api/woocommerce_flutter_api.dart';
-
+import 'package:meta/meta.dart';
+import '../../helpers/fake_helper.dart';
+import '../../helpers/local_storage_helper.dart';
+import '../../json/woo_json.dart';
+import '../../pagination/woo_page.dart';
+import '../../woocommerce_flutter_api_base.dart';
+import '../models/notification.dart';
 part 'endpoints.dart';
 
 extension WooNotificationApi on WooCommerce {
-  /// Gets all of the notifications of the logged in user
-  ///
-  /// [useFaker], fakes the api request
-  Future<List<WooNotification>> getNotifications({bool? useFaker}) async {
+  @experimental
+  Future<WooPage<WooNotification>> getNotifications({bool? useFaker}) async {
     final isUsingFaker = useFaker ?? this.useFaker;
-
     if (isUsingFaker) {
-      return List.generate(
-          FakeHelper.integer(), (index) => WooNotification.fake());
+      return WooPage(
+        items:
+            List.generate(FakeHelper.integer(), (_) => WooNotification.fake()),
+        page: 1,
+      );
     }
-
-    final response =
-        await dio.get(_NotificationEndpoints.notifications, queryParameters: {
-      'user_id': await LocalStorageHelper.getSecurityUserId(),
-    });
-
-    return (response.data as List)
-        .map((item) => WooNotification.fromJson(item))
-        .toList();
+    final userId = await LocalStorageHelper.getSecurityUserId();
+    final response = await requestGet<List<dynamic>>(
+      _NotificationEndpoints.notifications,
+      queryParameters: {
+        if (userId != null) 'user_id': userId,
+      },
+    );
+    final items = response.data
+            ?.whereType<Map<String, dynamic>>()
+            .map(WooNotification.fromJson)
+            .toList() ??
+        const [];
+    return WooPage.parse(response: response, items: items, page: 1);
   }
 
-  /// Reads all of the notifications of the logged in user
+  @experimental
   Future<bool> readNotifications() async {
-    final response =
-        await dio.post(_NotificationEndpoints.readNotifications, data: {
-      'user_id': await LocalStorageHelper.getSecurityUserId(),
-    });
-
-    return (response.data as Map<String, dynamic>)['message'] == 'success';
+    final userId = await LocalStorageHelper.getSecurityUserId();
+    final response = await requestPost<Map<String, dynamic>>(
+      _NotificationEndpoints.readNotifications,
+      data: {
+        if (userId != null) 'user_id': userId,
+      },
+    );
+    return (response.data ?? const <String, dynamic>{})['message'] == 'success';
   }
 
-  /// Stores fcm tokens
+  @experimental
   Future<bool> storeFcm(String token) async {
-    final response = await dio.post(_NotificationEndpoints.fcm, data: {
-      'current_user': await LocalStorageHelper.getSecurityUserId(),
-      'gen_token': token,
-      'device_id': 'mobile',
-    });
-
-    return (response.data as Map<String, dynamic>)['status'];
+    final userId = await LocalStorageHelper.getSecurityUserId();
+    final response = await requestPost<Map<String, dynamic>>(
+      _NotificationEndpoints.fcm,
+      data: {
+        if (userId != null) 'current_user': userId,
+        'gen_token': token,
+        'device_id': 'mobile',
+      },
+    );
+    return WooJson.readBool(response.data ?? const {}, 'status') ?? false;
   }
 }

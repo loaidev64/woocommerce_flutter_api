@@ -1,177 +1,86 @@
-/// Represents WooCommerce product category API links.
-///
-/// This class models the API links associated with a product category,
-/// including self-referencing links and collection links.
+import '../../helpers/fake_helper.dart';
+import '../../json/woo_json.dart';
+
 class WooProductCategoryLinks {
-  /// Creates a new WooProductCategoryLinks instance.
-  ///
-  /// ## Optional Parameters
-  ///
-  /// * [self] - Self-referencing API links
-  /// * [collection] - Collection API links
   WooProductCategoryLinks({this.self, this.collection});
-
-  /// Creates a WooProductCategoryLinks instance from JSON data.
-  ///
-  /// This factory constructor is used to deserialize links data received
-  /// from the WooCommerce REST API.
-  ///
-  /// ## Parameters
-  ///
-  /// * [json] - A Map containing the links data in JSON format
-  ///
-  /// ## Returns
-  ///
-  /// A `WooProductCategoryLinks` instance populated with data from the JSON.
-  ///
-  /// ## Example Usage
-  ///
-  /// ```dart
-  /// final links = WooProductCategoryLinks.fromJson(jsonData);
-  /// ```
-  WooProductCategoryLinks.fromJson(Map<String, dynamic> json) {
-    if (json['self'] != null) {
-      self = <WooProductCategorySelf>[];
-      json['self'].forEach((v) {
-        self!.add(WooProductCategorySelf.fromJson(v));
-      });
-    }
-    if (json['collection'] != null) {
-      collection = <WooProductCategoryCollection>[];
-      json['collection'].forEach((v) {
-        collection!.add(WooProductCategoryCollection.fromJson(v));
-      });
-    }
-  }
-
-  /// Self-referencing API links for the category
-  List<WooProductCategorySelf>? self;
-
-  /// Collection API links for the category
-  List<WooProductCategoryCollection>? collection;
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    if (self != null) {
-      data['self'] = self!.map((v) => v.toJson()).toList();
-    }
-    if (collection != null) {
-      data['collection'] = collection!.map((v) => v.toJson()).toList();
-    }
-    return data;
-  }
+  factory WooProductCategoryLinks.fromJson(Map<String, dynamic> json) =>
+      WooProductCategoryLinks(
+        self: WooJson.readList(json, 'self', WooProductCategorySelf.fromJson),
+        collection: WooJson.readList(
+            json, 'collection', WooProductCategoryCollection.fromJson),
+      );
+  factory WooProductCategoryLinks.fake() => WooProductCategoryLinks(
+        self: FakeHelper.list(WooProductCategorySelf.fake),
+        collection: FakeHelper.list(WooProductCategoryCollection.fake),
+      );
+  final List<WooProductCategorySelf>? self;
+  final List<WooProductCategoryCollection>? collection;
+  Map<String, dynamic> toJson() => <String, dynamic>{}
+    ..putIfPresent('self', self?.map((link) => link.toJson()).toList())
+    ..putIfPresent(
+        'collection', collection?.map((link) => link.toJson()).toList());
+  WooProductCategoryLinks copyWith({
+    List<WooProductCategorySelf>? self,
+    List<WooProductCategoryCollection>? collection,
+  }) =>
+      WooProductCategoryLinks(
+        self: self ?? this.self,
+        collection: collection ?? this.collection,
+      );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is WooProductCategoryLinks &&
+          WooJson.listEquals(other.self, self) &&
+          WooJson.listEquals(other.collection, collection);
+  @override
+  int get hashCode => Object.hashAll([
+        ...(self ?? const []),
+        ...(collection ?? const []),
+      ]);
+  @override
+  String toString() => 'WooProductCategoryLinks(self: ${self?.length ?? 0}, '
+      'collection: ${collection?.length ?? 0})';
 }
 
-/// Represents a self-referencing API link for a WooCommerce product category.
-///
-/// This class models a single self-referencing link that points to the category itself.
 class WooProductCategorySelf {
-  /// Creates a new WooProductCategorySelf instance.
-  ///
-  /// ## Optional Parameters
-  ///
-  /// * [href] - The URL of the self-referencing link
   WooProductCategorySelf({this.href});
-
-  /// Creates a WooProductCategorySelf instance from JSON data.
-  ///
-  /// This factory constructor is used to deserialize self link data received
-  /// from the WooCommerce REST API.
-  ///
-  /// ## Parameters
-  ///
-  /// * [json] - A Map containing the self link data in JSON format
-  ///
-  /// ## Returns
-  ///
-  /// A `WooProductCategorySelf` instance populated with data from the JSON.
-  ///
-  /// ## Example Usage
-  ///
-  /// ```dart
-  /// final selfLink = WooProductCategorySelf.fromJson(jsonData);
-  /// ```
-  WooProductCategorySelf.fromJson(Map<String, dynamic> json) {
-    href = json['href'];
-  }
-
-  /// The URL of the self-referencing link
-  String? href;
-
-  /// Converts the WooProductCategorySelf instance to JSON format
-  ///
-  /// This method serializes the self link data into a Map that can be sent
-  /// to the WooCommerce REST API.
-  ///
-  /// ## Returns
-  ///
-  /// A `Map<String, dynamic>` containing the self link data in JSON format.
-  ///
-  /// ## Example Usage
-  ///
-  /// ```dart
-  /// final jsonData = selfLink.toJson();
-  /// ```
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['href'] = href;
-    return data;
-  }
+  factory WooProductCategorySelf.fromJson(Map<String, dynamic> json) =>
+      WooProductCategorySelf(href: WooJson.readString(json, 'href'));
+  factory WooProductCategorySelf.fake() =>
+      WooProductCategorySelf(href: FakeHelper.url());
+  final String? href;
+  Map<String, dynamic> toJson() =>
+      <String, dynamic>{}..putIfPresent('href', href);
+  WooProductCategorySelf copyWith({String? href}) =>
+      WooProductCategorySelf(href: href ?? this.href);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is WooProductCategorySelf && other.href == href;
+  @override
+  int get hashCode => Object.hashAll([href]);
+  @override
+  String toString() => 'WooProductCategorySelf(href: $href)';
 }
 
-/// Represents a collection API link for a WooCommerce product category.
-///
-/// This class models a single collection link that points to related category resources.
 class WooProductCategoryCollection {
-  /// Creates a new WooProductCategoryCollection instance.
-  ///
-  /// ## Optional Parameters
-  ///
-  /// * [href] - The URL of the collection link
   WooProductCategoryCollection({this.href});
-
-  /// Creates a WooProductCategoryCollection instance from JSON data.
-  ///
-  /// This factory constructor is used to deserialize collection link data received
-  /// from the WooCommerce REST API.
-  ///
-  /// ## Parameters
-  ///
-  /// * [json] - A Map containing the collection link data in JSON format
-  ///
-  /// ## Returns
-  ///
-  /// A `WooProductCategoryCollection` instance populated with data from the JSON.
-  ///
-  /// ## Example Usage
-  ///
-  /// ```dart
-  /// final collectionLink = WooProductCategoryCollection.fromJson(jsonData);
-  /// ```
-  WooProductCategoryCollection.fromJson(Map<String, dynamic> json) {
-    href = json['href'];
-  }
-
-  /// The URL of the collection link
-  String? href;
-
-  /// Converts the WooProductCategoryCollection instance to JSON format
-  ///
-  /// This method serializes the collection link data into a Map that can be sent
-  /// to the WooCommerce REST API.
-  ///
-  /// ## Returns
-  ///
-  /// A `Map<String, dynamic>` containing the collection link data in JSON format.
-  ///
-  /// ## Example Usage
-  ///
-  /// ```dart
-  /// final jsonData = collectionLink.toJson();
-  /// ```
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['href'] = href;
-    return data;
-  }
+  factory WooProductCategoryCollection.fromJson(Map<String, dynamic> json) =>
+      WooProductCategoryCollection(href: WooJson.readString(json, 'href'));
+  factory WooProductCategoryCollection.fake() =>
+      WooProductCategoryCollection(href: FakeHelper.url());
+  final String? href;
+  Map<String, dynamic> toJson() =>
+      <String, dynamic>{}..putIfPresent('href', href);
+  WooProductCategoryCollection copyWith({String? href}) =>
+      WooProductCategoryCollection(href: href ?? this.href);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is WooProductCategoryCollection && other.href == href;
+  @override
+  int get hashCode => Object.hashAll([href]);
+  @override
+  String toString() => 'WooProductCategoryCollection(href: $href)';
 }

@@ -1,108 +1,20 @@
-import 'package:woocommerce_flutter_api/woocommerce_flutter_api.dart';
-
+import 'package:meta/meta.dart';
+import '../../base/base.dart';
+import '../../exceptions/woocommerce_exception.dart';
+import '../enums/order_status.dart';
+import '../models/order.dart';
+import '../models/order_batch_request.dart';
+import '../models/order_batch_response.dart';
+import '../../woocommerce_flutter_api_base.dart';
+import 'order_query.dart';
+export 'order_query.dart';
 part 'order_endpoints.dart';
 
-/// WooCommerce Order API Extension
-///
-/// This extension provides comprehensive order management capabilities for WooCommerce stores.
-/// Orders represent customer purchases and contain all the information needed for fulfillment.
-///
-/// ## Key Features
-///
-/// - **Order Retrieval**: Get orders with extensive filtering and pagination
-/// - **Order Management**: Create, update, and delete orders
-/// - **Order Status Management**: Track order lifecycle from pending to completed
-/// - **Customer Orders**: Retrieve orders for specific customers
-/// - **Order Notifications**: Send order details to customers via email
-/// - **Advanced Filtering**: Filter by status, customer, product, date, and more
-///
-/// ## Example Usage
-///
-/// ```dart
-/// // Get all orders
-/// final orders = await wooCommerce.getOrders();
-///
-/// // Create a new order
-/// final order = WooOrder(
-///   id: 0,
-///   status: WooOrderStatus.pending,
-///   total: 99.99,
-/// );
-/// final createdOrder = await wooCommerce.createOrder(order);
-///
-/// // Get orders for a specific customer
-/// final customerOrders = await wooCommerce.getOrders(
-///   customer: 123,
-///   status: [WooOrderStatus.completed],
-/// );
-/// ```
 extension WooOrderApi on WooCommerce {
-  /// Retrieves a list of orders from the WooCommerce store.
-  ///
-  /// This method supports extensive filtering and pagination options to help you
-  /// find exactly the orders you need for order management and reporting.
-  /// https://woocommerce.github.io/woocommerce-rest-api-docs/#list-all-orders
-  ///
-  /// ## Parameters
-  ///
-  /// * [context] - Scope under which the request is made; determines fields present in response.
-  ///   - `WooContext.view`: Returns basic order information (default)
-  ///   - `WooContext.edit`: Returns full order details including sensitive data
-  ///
-  /// * [page] - Current page of the collection (default: 1)
-  /// * [perPage] - Maximum number of items to return (default: 10, max: 100)
-  /// * [search] - Limit results to orders matching a search string
-  /// * [after] - Limit response to orders created after this date
-  /// * [before] - Limit response to orders created before this date
-  /// * [modifiedAfter] - Limit response to orders modified after this date
-  /// * [modifiedBefore] - Limit response to orders modified before this date
-  /// * [datesAreGmt] - Whether to consider GMT dates when filtering by date
-  /// * [exclude] - Exclude orders with specific IDs from results
-  /// * [include] - Only include orders with specific IDs
-  /// * [offset] - Offset the result set by a specific number of items
-  /// * [order] - Sort order: `WooSortOrder.asc` or `WooSortOrder.desc` (default: desc)
-  /// * [orderBy] - Sort by: `WooOrderOrderBy.date`, `WooOrderOrderBy.id`, etc. (default: date)
-  /// * [parent] - Limit result set to orders with specific parent IDs
-  /// * [parentExclude] - Exclude orders with specific parent IDs
-  /// * [status] - Filter by order status (default: any)
-  /// * [customer] - Filter by customer ID
-  /// * [product] - Filter by product ID
-  /// * [dp] - Number of decimal points to use in each resource (default: 2)
-  /// * [useFaker] - When true, returns fake data for testing purposes
-  ///
-  /// ## Returns
-  ///
-  /// A `Future<List<WooOrder>>` containing the order objects.
-  ///
-  /// ## Throws
-  ///
-  /// * `WooCommerceException` if the request fails or access is denied
-  ///
-  /// ## Example Usage
-  ///
-  /// ```dart
-  /// // Get all pending orders
-  /// final pendingOrders = await wooCommerce.getOrders(
-  ///   status: [WooOrderStatus.pending],
-  ///   perPage: 50,
-  /// );
-  ///
-  /// // Get orders for a specific customer
-  /// final customerOrders = await wooCommerce.getOrders(
-  ///   customer: 123,
-  ///   orderBy: WooOrderOrderBy.date,
-  ///   order: WooSortOrder.desc,
-  /// );
-  ///
-  /// // Get orders from the last 30 days
-  /// final recentOrders = await wooCommerce.getOrders(
-  ///   after: DateTime.now().subtract(Duration(days: 30)),
-  /// );
-  /// ```
-  Future<List<WooOrder>> getOrders({
+  Future<WooPage<WooOrder>> getOrders({
     WooContext context = WooContext.view,
-    int page = 1,
-    int perPage = 10,
+    int? page,
+    int? perPage,
     String? search,
     DateTime? after,
     DateTime? before,
@@ -112,507 +24,137 @@ extension WooOrderApi on WooCommerce {
     List<int>? exclude,
     List<int>? include,
     int? offset,
-    WooSortOrder order = WooSortOrder.desc,
-    WooOrderOrderBy orderBy = WooOrderOrderBy.date,
+    WooSort? order,
+    WooOrderBy? orderBy,
     List<int>? parent,
     List<int>? parentExclude,
     List<WooOrderStatus> status = const [WooOrderStatus.any],
     int? customer,
     int? product,
     int? dp,
+    String? currency,
     bool? useFaker,
   }) async {
     final isUsingFaker = useFaker ?? this.useFaker;
-
     if (isUsingFaker) {
-      return List.generate(perPage, (index) => WooOrder.fake());
+      return WooPage(
+        items: List.generate(perPage ?? 10, (index) => WooOrder.fake()),
+        page: page ?? 1,
+      );
     }
-
-    final response = await dio.get(
-      _OrderEndpoints.orders,
-      queryParameters: _resolveQueryParametersForGettingOrders(
-        context: context,
-        page: page,
-        perPage: perPage,
-        search: search,
-        after: after,
-        before: before,
-        modifiedAfter: modifiedAfter,
-        modifiedBefore: modifiedBefore,
-        datesAreGmt: datesAreGmt,
-        exclude: exclude,
-        include: include,
-        offset: offset,
-        order: order,
-        orderBy: orderBy,
-        parent: parent,
-        parentExclude: parentExclude,
-        status: status,
-        customer: customer,
-        product: product,
-        dp: dp,
-      ),
+    final query = WooOrderQuery(
+      context: context,
+      page: page,
+      perPage: perPage,
+      search: search,
+      after: after,
+      before: before,
+      modifiedAfter: modifiedAfter,
+      modifiedBefore: modifiedBefore,
+      datesAreGmt: datesAreGmt,
+      exclude: exclude,
+      include: include,
+      offset: offset,
+      order: order,
+      orderBy: orderBy,
+      parent: parent,
+      parentExclude: parentExclude,
+      status: status,
+      customer: customer,
+      product: product,
+      dp: dp,
+      currency: currency,
     );
-
-    return (response.data as List)
-        .map((item) => WooOrder.fromJson(item))
-        .toList();
+    final response = await requestGet<List<dynamic>>(
+      _OrderEndpoints.orders,
+      queryParameters: query.toMap(),
+    );
+    final items = response.data
+            ?.whereType<Map<String, dynamic>>()
+            .map(WooOrder.fromJson)
+            .toList() ??
+        const <WooOrder>[];
+    return WooPage.parse(response: response, items: items, page: page ?? 1);
   }
 
-  /// Resolves query parameters for the getOrders method.
-  ///
-  /// This private helper method converts the method parameters into the appropriate
-  /// query parameters format expected by the WooCommerce REST API.
-  ///
-  /// ## Parameters
-  ///
-  /// All parameters correspond to the getOrders method parameters.
-  ///
-  /// ## Returns
-  ///
-  /// A `Map<String, dynamic>` containing the formatted query parameters.
-  Map<String, dynamic> _resolveQueryParametersForGettingOrders({
-    required WooContext context,
-    required int page,
-    required int perPage,
-    required String? search,
-    required DateTime? after,
-    required DateTime? before,
-    required DateTime? modifiedAfter,
-    required DateTime? modifiedBefore,
-    required bool? datesAreGmt,
-    required List<int>? exclude,
-    required List<int>? include,
-    required int? offset,
-    required WooSortOrder order,
-    required WooOrderOrderBy orderBy,
-    required List<int>? parent,
-    required List<int>? parentExclude,
-    required List<WooOrderStatus> status,
-    required int? customer,
-    required int? product,
-    required int? dp,
-  }) {
-    final map = <String, dynamic>{
-      'context': context.name,
-      'page': page,
-      'per_page': perPage,
-      'order': order.name,
-      'orderby': orderBy.name,
-      'status': status.map((item) => item.name).join(','),
-    };
-
-    if (search != null) {
-      map['search'] = search;
-    }
-
-    if (after != null) {
-      map['after'] = after.toIso8601String();
-    }
-
-    if (before != null) {
-      map['before'] = before.toIso8601String();
-    }
-
-    if (modifiedAfter != null) {
-      map['modified_after'] = modifiedAfter.toIso8601String();
-    }
-
-    if (modifiedBefore != null) {
-      map['modified_before'] = modifiedBefore.toIso8601String();
-    }
-
-    if (datesAreGmt != null) {
-      map['dates_are_gmt'] = datesAreGmt;
-    }
-
-    if (exclude != null) {
-      map['exclude'] = exclude.join(',');
-    }
-
-    if (include != null) {
-      map['include'] = include.join(',');
-    }
-
-    if (offset != null) {
-      map['offset'] = offset;
-    }
-
-    if (parent != null) {
-      map['parent'] = parent.join(',');
-    }
-
-    if (parentExclude != null) {
-      map['parent_exclude'] = parentExclude.join(',');
-    }
-
-    if (customer != null) {
-      map['customer'] = customer;
-    }
-
-    if (product != null) {
-      map['product'] = product;
-    }
-
-    if (dp != null) {
-      map['dp'] = dp;
-    }
-
-    return map;
-  }
-
-  /// Retrieves a single order by its ID.
-  ///
-  /// This method fetches detailed information about a specific order,
-  /// including all order data, line items, customer information, and metadata.
-  /// https://woocommerce.github.io/woocommerce-rest-api-docs/#retrieve-an-order
-  ///
-  /// ## Parameters
-  ///
-  /// * [id] - The unique identifier of the order to retrieve
-  /// * [useFaker] - When true, returns fake data for testing purposes
-  ///
-  /// ## Returns
-  ///
-  /// A `Future<WooOrder>` containing the order object with all details.
-  ///
-  /// ## Throws
-  ///
-  /// * `WooCommerceException` if the order is not found or access is denied
-  ///
-  /// ## Example Usage
-  ///
-  /// ```dart
-  /// // Get a specific order
-  /// final order = await wooCommerce.getOrder(123);
-  /// print('Order ${order.number}: \$${order.total}');
-  ///
-  /// // Get order with customer details
-  /// if (order.billing != null) {
-  ///   print('Customer: ${order.billing!.firstName} ${order.billing!.lastName}');
-  /// }
-  ///
-  /// // Check order status
-  /// if (order.status == WooOrderStatus.completed) {
-  ///   print('Order has been fulfilled');
-  /// }
-  /// ```
   Future<WooOrder> getOrder(int id, {bool? useFaker}) async {
     final isUsingFaker = useFaker ?? this.useFaker;
-
     if (isUsingFaker) {
       return WooOrder.fake();
     }
-
-    final response = await dio.get(_OrderEndpoints.singleOrder(id));
-
-    return WooOrder.fromJson(response.data as Map<String, dynamic>);
+    final response =
+        await requestGet<Map<String, dynamic>>(_OrderEndpoints.singleOrder(id));
+    final data = response.data;
+    if (data == null) {
+      throw WooCommerceParseException(
+        message: 'Failed to parse order response',
+        statusCode: response.statusCode,
+        path: _OrderEndpoints.singleOrder(id),
+      );
+    }
+    return WooOrder.fromJson(data);
   }
 
-  /// Creates a new order in the WooCommerce store.
-  ///
-  /// This method creates a new order with all the provided details including
-  /// customer information, line items, billing, shipping, and payment data.
-  /// https://woocommerce.github.io/woocommerce-rest-api-docs/#create-an-order
-  ///
-  /// ## Parameters
-  ///
-  /// * [order] - The order object containing all order details
-  /// * [useFaker] - When true, returns fake data for testing purposes
-  ///
-  /// ## Returns
-  ///
-  /// A `Future<WooOrder>` containing the created order with assigned ID.
-  ///
-  /// ## Throws
-  ///
-  /// * `WooCommerceException` if the order creation fails or validation errors occur
-  ///
-  /// ## Example Usage
-  ///
-  /// ```dart
-  /// // Create a new order
-  /// final order = WooOrder(
-  ///   id: 0, // Will be assigned by WooCommerce
-  ///   status: WooOrderStatus.pending,
-  ///   currency: WooOrderCurrency.usd,
-  ///   customerId: 123,
-  ///   billing: WooBilling(
-  ///     firstName: 'John',
-  ///     lastName: 'Doe',
-  ///     email: 'john@example.com',
-  ///   ),
-  ///   lineItems: [
-  ///     WooLineItem(
-  ///       productId: 456,
-  ///       quantity: 2,
-  ///       total: 59.98,
-  ///     ),
-  ///   ],
-  ///   total: 59.98,
-  /// );
-  ///
-  /// final createdOrder = await wooCommerce.createOrder(order);
-  /// print('Created order ID: ${createdOrder.id}');
-  /// ```
   Future<WooOrder> createOrder(WooOrder order, {bool? useFaker}) async {
     final isUsingFaker = useFaker ?? this.useFaker;
-
     if (isUsingFaker) {
       return order;
     }
-
-    final response = await dio.post(
+    final response = await requestPost<Map<String, dynamic>>(
       _OrderEndpoints.orders,
       data: order.toJson(),
     );
-
-    return WooOrder.fromJson(response.data as Map<String, dynamic>);
+    return WooOrder.fromJson(response.data!);
   }
 
-  /// Updates an existing order in the WooCommerce store.
-  ///
-  /// This method updates an existing order with new information. You can modify
-  /// order status, customer details, line items, billing, shipping, and other order data.
-  /// https://woocommerce.github.io/woocommerce-rest-api-docs/#update-an-order
-  ///
-  /// ## Parameters
-  ///
-  /// * [order] - The order object with updated information (must include valid ID)
-  /// * [useFaker] - When true, returns fake data for testing purposes
-  ///
-  /// ## Returns
-  ///
-  /// A `Future<WooOrder>` containing the updated order with all changes applied.
-  ///
-  /// ## Throws
-  ///
-  /// * `WooCommerceException` if the order update fails or the order doesn't exist
-  ///
-  /// ## Example Usage
-  ///
-  /// ```dart
-  /// // Update order status
-  /// final updatedOrder = order.copyWith(
-  ///   status: WooOrderStatus.processing,
-  ///   setPaid: true,
-  /// );
-  /// final result = await wooCommerce.updateOrder(updatedOrder);
-  ///
-  /// // Update customer information
-  /// final orderWithNewBilling = order.copyWith(
-  ///   billing: WooBilling(
-  ///     firstName: 'Jane',
-  ///     lastName: 'Smith',
-  ///     email: 'jane@example.com',
-  ///   ),
-  /// );
-  /// await wooCommerce.updateOrder(orderWithNewBilling);
-  /// ```
-  Future<WooOrder> updateOrder(WooOrder order, {bool? useFaker}) async {
+  Future<WooOrder> updateOrder(int id, WooOrder order, {bool? useFaker}) async {
     final isUsingFaker = useFaker ?? this.useFaker;
-
     if (isUsingFaker) {
       return order;
     }
-
-    final response = await dio.put(
-      _OrderEndpoints.orders,
-      data: order.toJson(),
+    final response = await requestPut<Map<String, dynamic>>(
+      _OrderEndpoints.singleOrder(id),
+      data: order.toJson()..remove('id'),
     );
-
-    return WooOrder.fromJson(response.data as Map<String, dynamic>);
+    return WooOrder.fromJson(response.data!);
   }
 
-  /// Deletes an order from the WooCommerce store.
-  ///
-  /// This method removes an order from the store. By default, orders are moved to trash
-  /// and can be restored. Use the force parameter to permanently delete the order.
-  /// https://woocommerce.github.io/woocommerce-rest-api-docs/#delete-an-order
-  ///
-  /// ## Parameters
-  ///
-  /// * [id] - The unique identifier of the order to delete
-  /// * [force] - Whether to permanently delete the order (default: false - move to trash)
-  /// * [useFaker] - When true, returns fake data for testing purposes
-  ///
-  /// ## Returns
-  ///
-  /// A `Future<bool>` indicating whether the deletion was successful.
-  ///
-  /// ## Throws
-  ///
-  /// * `WooCommerceException` if the order deletion fails or the order doesn't exist
-  ///
-  /// ## Example Usage
-  ///
-  /// ```dart
-  /// // Move order to trash (default)
-  /// final deleted = await wooCommerce.deleteOrder(123);
-  /// if (deleted) {
-  ///   print('Order moved to trash');
-  /// }
-  ///
-  /// // Permanently delete order
-  /// final permanentlyDeleted = await wooCommerce.deleteOrder(123, force: true);
-  /// if (permanentlyDeleted) {
-  ///   print('Order permanently deleted');
-  /// }
-  /// ```
-  Future<bool> deleteOrder(
+  Future<WooDeleteResult> deleteOrder(
     int id, {
     bool? useFaker,
     bool force = false,
   }) async {
     final isUsingFaker = useFaker ?? this.useFaker;
-
     if (isUsingFaker) {
-      return true;
+      return WooDeleteResult(id: id, deleted: true);
     }
-
-    await dio.delete(
+    final response = await requestDelete<Map<String, dynamic>>(
       _OrderEndpoints.singleOrder(id),
-      queryParameters: {
-        'force': force,
-      },
+      queryParameters: {'force': force},
     );
-
-    return true;
+    return WooDeleteResult.fromJson(response.data!);
   }
 
-  /// Sends order details to the customer via email.
-  ///
-  /// This method triggers an email notification to the customer containing
-  /// their order details, including items, totals, and shipping information.
-  /// The email is only sent if the order contains a valid customer email address.
-  /// https://woocommerce.github.io/woocommerce-rest-api-docs/#send-order-details-to-customer
-  ///
-  /// ## Parameters
-  ///
-  /// * [orderId] - The unique identifier of the order
-  /// * [useFaker] - When true, returns fake data for testing purposes
-  ///
-  /// ## Returns
-  ///
-  /// A `Future<String>` containing the confirmation message about the email send.
-  ///
-  /// ## Throws
-  ///
-  /// * `WooCommerceException` if the email sending fails or the order doesn't exist
-  ///
-  /// ## Example Usage
-  ///
-  /// ```dart
-  /// // Send order confirmation email
-  /// final message = await wooCommerce.sendOrderDetailsToCustomer(123);
-  /// print('Email status: $message');
-  ///
-  /// // Send email after order completion
-  /// if (order.status == WooOrderStatus.completed) {
-  ///   final emailResult = await wooCommerce.sendOrderDetailsToCustomer(order.id!);
-  ///   print('Customer notified: $emailResult');
-  /// }
-  /// ```
+  @experimental
   Future<String> sendOrderDetailsToCustomer(
     int orderId, {
     bool? useFaker,
   }) async {
     final isUsingFaker = useFaker ?? this.useFaker;
-
     if (isUsingFaker) {
       return 'Order details sent to woo@example.com, via REST API.';
     }
-
-    final response = await dio.post(_OrderEndpoints.sendOrderDetails(orderId));
-
-    return (response.data as Map<String, String>)['message']!;
+    final response = await requestPost<Map<String, dynamic>>(
+      _OrderEndpoints.sendOrderDetails(orderId),
+    );
+    return response.data?['message'] as String? ?? '';
   }
 
-  /// Performs batch operations on orders (create, update, delete) in a single request.
-  ///
-  /// This method allows you to create, update, and delete multiple orders
-  /// efficiently in a single API call, reducing the number of requests needed
-  /// for bulk operations.
-  /// https://woocommerce.github.io/woocommerce-rest-api-docs/#batch-update-orders
-  ///
-  /// ## Parameters
-  ///
-  /// * [request] - The batch request containing orders to create, update, and/or delete
-  ///   - `create`: List of `WooOrder` objects to create (should have id: 0)
-  ///   - `update`: List of `WooOrder` objects to update (must include valid IDs)
-  ///   - `delete`: List of order IDs (integers) to delete
-  /// * [useFaker] - When true, returns fake data for testing purposes
-  ///
-  /// ## Returns
-  ///
-  /// A `Future<WooOrderBatchResponse>` containing the results of all batch operations:
-  /// - `create`: List of successfully created orders with server-assigned IDs
-  /// - `update`: List of successfully updated orders
-  /// - `delete`: List of successfully deleted orders
-  ///
-  /// ## Throws
-  ///
-  /// * `WooCommerceException` if the batch operation fails or validation errors occur
-  ///
-  /// ## Example Usage
-  ///
-  /// ```dart
-  /// // Create a batch request with multiple operations
-  /// final batchRequest = WooOrderBatchRequest(
-  ///   create: [
-  ///     WooOrder(
-  ///       id: 0,
-  ///       status: WooOrderStatus.pending,
-  ///       currency: WooOrderCurrency.usd,
-  ///       total: 99.99,
-  ///       customerId: 123,
-  ///       billing: WooBilling(
-  ///         firstName: 'John',
-  ///         lastName: 'Doe',
-  ///         email: 'john@example.com',
-  ///       ),
-  ///     ),
-  ///     WooOrder(
-  ///       id: 0,
-  ///       status: WooOrderStatus.pending,
-  ///       currency: WooOrderCurrency.usd,
-  ///       total: 149.99,
-  ///       customerId: 456,
-  ///     ),
-  ///   ],
-  ///   update: [
-  ///     existingOrder..status = WooOrderStatus.processing,
-  ///   ],
-  ///   delete: [789, 101112],
-  /// );
-  ///
-  /// // Execute the batch operation
-  /// final response = await wooCommerce.batchUpdateOrders(batchRequest);
-  ///
-  /// // Process results
-  /// print('Created ${response.create?.length ?? 0} orders');
-  /// print('Updated ${response.update?.length ?? 0} orders');
-  /// print('Deleted ${response.delete?.length ?? 0} orders');
-  ///
-  /// // Access individual results
-  /// for (final order in response.create ?? []) {
-  ///   print('Created order: ${order.number} with ID: ${order.id}');
-  /// }
-  /// ```
-  ///
-  /// ## Batch Operations Best Practices
-  ///
-  /// - **Create operations**: Orders should have id set to 0 (will be assigned by WooCommerce)
-  /// - **Update operations**: Orders must have valid IDs and will be updated with provided values
-  /// - **Delete operations**: Provide only the IDs of orders to delete
-  /// - **Mixed operations**: You can combine create, update, and delete in a single request
-  /// - **Error handling**: If any operation fails, the entire batch may fail depending on API behavior
   Future<WooOrderBatchResponse> batchUpdateOrders(
     WooOrderBatchRequest request, {
     bool? useFaker,
   }) async {
     final isUsingFaker = useFaker ?? this.useFaker;
-
     if (isUsingFaker) {
       return WooOrderBatchResponse(
         create: request.create?.map((order) => WooOrder.fake()).toList(),
@@ -620,14 +162,10 @@ extension WooOrderApi on WooCommerce {
         delete: request.delete?.map((id) => WooOrder.fake()).toList(),
       );
     }
-
-    final response = await dio.post(
+    final response = await requestPost<Map<String, dynamic>>(
       _OrderEndpoints.batchOrders(),
       data: request.toJson(),
     );
-
-    return WooOrderBatchResponse.fromJson(
-      response.data as Map<String, dynamic>,
-    );
+    return WooOrderBatchResponse.fromJson(response.data!);
   }
 }

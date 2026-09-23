@@ -1,0 +1,11 @@
+export 'product_api.dart';
+export 'product_attribute_api.dart';
+export 'product_attribute_query.dart';
+export 'product_attribute_term_query.dart';
+export 'product_query.dart';
+export 'product_review_api.dart';
+export 'product_review_query.dart';
+export 'product_shipping_class_api.dart';
+export 'product_shipping_class_query.dart';
+export 'product_tag_api.dart';
+export 'product_tag_query.dart';

@@ -1,53 +1,38 @@
-import 'package:woocommerce_flutter_api/woocommerce_flutter_api.dart';
+import '../../helpers/fake_helper.dart';
 
-/// Represents a top sellers report with basic information.
-///
-/// Brief description of the model's purpose and usage.
 class WooTopSellersReport {
-  /// Creates a new WooTopSellersReport instance.
-  WooTopSellersReport({
-    this.title,
-    this.productId,
-    this.quantity,
-  });
-
-  /// Creates a WooTopSellersReport instance from JSON data.
-  WooTopSellersReport.fromJson(Map<String, dynamic> json)
-      : title = json['title'],
-        productId = json['product_id'],
-        quantity = json['quantity'];
-
+  WooTopSellersReport({this.title, this.productId, this.quantity});
+  factory WooTopSellersReport.fromJson(Map<String, dynamic> json) =>
+      WooTopSellersReport(
+        title: json['title']?.toString(),
+        productId: json['product_id'] is int
+            ? json['product_id'] as int
+            : int.tryParse('${json['product_id']}'),
+        quantity: json['quantity'] is int
+            ? json['quantity'] as int
+            : int.tryParse('${json['quantity']}'),
+      );
   factory WooTopSellersReport.fake() => WooTopSellersReport(
         title: FakeHelper.word(),
         productId: FakeHelper.integer(),
         quantity: FakeHelper.integer(),
       );
-
-  /// Product title.
-  String? title;
-
-  /// Product ID.
-  int? productId;
-
-  /// Total number of purchases.
-  int? quantity;
-
-  Map<String, dynamic> _toJson() => {
-        'title': title,
-        'product_id': productId,
-        'quantity': quantity,
-      };
-
-  /// Returns a string representation of the WooTopSellersReport instance.
-  ///
-  /// Displays all main fields for debugging and logging purposes.
-  @override
-  String toString() => _toJson().toString();
-
+  final String? title;
+  final int? productId;
+  final int? quantity;
+  WooTopSellersReport copyWith({
+    String? title,
+    int? productId,
+    int? quantity,
+  }) =>
+      WooTopSellersReport(
+        title: title ?? this.title,
+        productId: productId ?? this.productId,
+        quantity: quantity ?? this.quantity,
+      );
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
-
     return other is WooTopSellersReport &&
         other.title == title &&
         other.productId == productId &&
@@ -55,5 +40,9 @@ class WooTopSellersReport {
   }
 
   @override
-  int get hashCode => title.hashCode ^ productId.hashCode ^ quantity.hashCode;
+  int get hashCode => Object.hashAll([title, productId, quantity]);
+  @override
+  String toString() =>
+      'WooTopSellersReport(title: $title, productId: $productId, '
+      'quantity: $quantity)';
 }

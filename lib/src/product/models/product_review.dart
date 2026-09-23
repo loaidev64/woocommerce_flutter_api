@@ -1,10 +1,8 @@
-import 'package:woocommerce_flutter_api/woocommerce_flutter_api.dart';
+import '../../helpers/fake_helper.dart';
+import '../../json/woo_json.dart';
+import '../enums/product_review_status.dart';
 
-/// Represents a product review with rating and metadata.
-///
-/// Brief description of the model's purpose and usage for product reviews.
 class WooProductReview {
-  /// Creates a new WooProductReview instance.
   WooProductReview({
     this.id,
     this.dateCreated,
@@ -17,22 +15,25 @@ class WooProductReview {
     this.rating,
     this.verified,
   });
-
-  /// Creates a WooProductReview instance from JSON data.
-  WooProductReview.fromJson(Map<String, dynamic> json)
-      : id = json['id'],
-        dateCreated = DateTime.tryParse(json['date_created']),
-        dateCreatedGmt = DateTime.tryParse(json['date_created_gmt']),
-        productId = json['product_id'],
-        status = WooProductReviewStatus.fromApi(json['status']),
-        reviewer = json['reviewer'],
-        reviewerEmail = json['reviewer_email'],
-        review = json['review'],
-        rating = json['rating'],
-        verified = json['verified'];
-
-  /// Creates a fake WooProductReview instance for testing purposes.
-  factory WooProductReview.fake([int? id]) => WooProductReview(
+  factory WooProductReview.fromJson(Map<String, dynamic> json) =>
+      WooProductReview(
+        id: WooJson.readInt(json, 'id'),
+        dateCreated: WooJson.readDate(json, 'date_created'),
+        dateCreatedGmt: WooJson.readDate(json, 'date_created_gmt'),
+        productId: WooJson.readInt(json, 'product_id'),
+        status: WooJson.readEnum(
+              json,
+              'status',
+              WooProductReviewStatus.values,
+            ) ??
+            WooProductReviewStatus.approved,
+        reviewer: WooJson.readString(json, 'reviewer'),
+        reviewerEmail: WooJson.readString(json, 'reviewer_email'),
+        review: WooJson.readString(json, 'review'),
+        rating: WooJson.readInt(json, 'rating'),
+        verified: WooJson.readBool(json, 'verified'),
+      );
+  factory WooProductReview.fake({int? id}) => WooProductReview(
         id: id ?? FakeHelper.integer(),
         dateCreated: FakeHelper.datetime(),
         dateCreatedGmt: FakeHelper.datetime(),
@@ -44,61 +45,80 @@ class WooProductReview {
         rating: FakeHelper.integer(min: 0, max: 5),
         verified: FakeHelper.boolean(),
       );
-
-  /// Unique identifier for the resource. Read-only.
-  int? id;
-
-  /// The date the review was created, in the site's timezone. Read-only.
-  DateTime? dateCreated;
-
-  /// The date the review was created, as GMT. Read-only.
-  DateTime? dateCreatedGmt;
-
-  /// Unique identifier for the product that the review belongs to.
-  int? productId;
-
-  /// Status of the review. Options: approved, hold, spam, unspam, trash, and untrash. Defaults to approved.
-  WooProductReviewStatus? status;
-
-  /// Reviewer name.
-  String? reviewer;
-
-  /// Reviewer email.
-  String? reviewerEmail;
-
-  /// The content of the review.
-  String? review;
-
-  /// Review rating (0 to 5).
-  int? rating;
-
-  /// Shows if the reviewer bought the product or not.
-  bool? verified;
-
-  /// Converts the WooProductReview instance to JSON format.
-  Map<String, dynamic> toJson() => {
-        'id': id,
-        'date_created': dateCreated?.toIso8601String(),
-        'date_created_gmt': dateCreatedGmt?.toIso8601String(),
-        'product_id': productId,
-        'status': status?.name,
-        'reviewer': reviewer,
-        'reviewer_email': reviewerEmail,
-        'review': review,
-        'rating': rating,
-        'verified': verified,
-      };
-
+  final int? id;
+  final DateTime? dateCreated;
+  final DateTime? dateCreatedGmt;
+  final int? productId;
+  final WooProductReviewStatus? status;
+  final String? reviewer;
+  final String? reviewerEmail;
+  final String? review;
+  final int? rating;
+  final bool? verified;
+  Map<String, dynamic> toJson() => <String, dynamic>{}
+    ..putIfPresent('id', id)
+    ..putDate('date_created', dateCreated)
+    ..putDate('date_created_gmt', dateCreatedGmt)
+    ..putIfPresent('product_id', productId)
+    ..putEnum('status', status)
+    ..putIfPresent('reviewer', reviewer)
+    ..putIfPresent('reviewer_email', reviewerEmail)
+    ..putIfPresent('review', review)
+    ..putIfPresent('rating', rating)
+    ..putIfPresent('verified', verified);
+  WooProductReview copyWith({
+    int? id,
+    DateTime? dateCreated,
+    DateTime? dateCreatedGmt,
+    int? productId,
+    WooProductReviewStatus? status,
+    String? reviewer,
+    String? reviewerEmail,
+    String? review,
+    int? rating,
+    bool? verified,
+  }) =>
+      WooProductReview(
+        id: id ?? this.id,
+        dateCreated: dateCreated ?? this.dateCreated,
+        dateCreatedGmt: dateCreatedGmt ?? this.dateCreatedGmt,
+        productId: productId ?? this.productId,
+        status: status ?? this.status,
+        reviewer: reviewer ?? this.reviewer,
+        reviewerEmail: reviewerEmail ?? this.reviewerEmail,
+        review: review ?? this.review,
+        rating: rating ?? this.rating,
+        verified: verified ?? this.verified,
+      );
   @override
-  String toString() => toJson().toString();
-
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is WooProductReview &&
+          other.id == id &&
+          other.dateCreated == dateCreated &&
+          other.dateCreatedGmt == dateCreatedGmt &&
+          other.productId == productId &&
+          other.status == status &&
+          other.reviewer == reviewer &&
+          other.reviewerEmail == reviewerEmail &&
+          other.review == review &&
+          other.rating == rating &&
+          other.verified == verified;
   @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-
-    return other is WooProductReview && other.id == id;
-  }
-
+  int get hashCode => Object.hashAll([
+        id,
+        dateCreated,
+        dateCreatedGmt,
+        productId,
+        status,
+        reviewer,
+        reviewerEmail,
+        review,
+        rating,
+        verified,
+      ]);
   @override
-  int get hashCode => id.hashCode;
+  String toString() =>
+      'WooProductReview(id: $id, productId: $productId, status: $status, '
+      'rating: $rating, reviewer: $reviewer)';
 }

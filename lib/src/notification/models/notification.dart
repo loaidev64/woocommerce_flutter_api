@@ -1,30 +1,9 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'package:woocommerce_flutter_api/src/helpers/fake_helper.dart';
-import 'package:woocommerce_flutter_api/src/notification/enums/object_type.dart';
+import '../../helpers/fake_helper.dart';
+import '../../json/woo_json.dart';
+import '../enums/object_type.dart';
 
 class WooNotification {
-  /// Notification id.
-  final int? id;
-
-  /// Notification title.
-  final String? title;
-
-  /// Notification body.
-  final String? body;
-
-  /// Notification object id for now it's always an order id.
-  final int? objectId;
-
-  /// Notification object type for now it's always an order.
-  final WooNotificationObjectType? objectType;
-
-  /// If notification is read or not by defualt is false.
-  final bool? isRead;
-
-  /// The date the notification was created.
-  final DateTime? createdAt;
-
-  const WooNotification({
+  WooNotification({
     this.id,
     this.title,
     this.body,
@@ -33,22 +12,20 @@ class WooNotification {
     this.isRead,
     this.createdAt,
   });
-
-  factory WooNotification.fromJson(Map<String, dynamic> map) {
-    return WooNotification(
-      id: map['id'] != null ? map['id'] as int : null,
-      title: map['title'] != null ? map['title'] as String : null,
-      body: map['body'] != null ? map['body'] as String : null,
-      objectId: map['object_id'] != null ? map['object_id'] as int : null,
-      objectType: map['object_type'] != null
-          ? WooNotificationObjectType.fromString(map['object_type'])
-          : null,
-      isRead: map['is_read'] != null ? map['is_read'] as bool : null,
-      createdAt:
-          map['created_at'] != null ? DateTime.parse(map['created_at']) : null,
-    );
-  }
-
+  factory WooNotification.fromJson(Map<String, dynamic> json) =>
+      WooNotification(
+        id: WooJson.readInt(json, 'id'),
+        title: WooJson.readString(json, 'title'),
+        body: WooJson.readString(json, 'body'),
+        objectId: WooJson.readInt(json, 'object_id'),
+        objectType: WooJson.readEnum(
+          json,
+          'object_type',
+          WooNotificationObjectType.values,
+        ),
+        isRead: WooJson.readBool(json, 'is_read'),
+        createdAt: WooJson.readDate(json, 'created_at'),
+      );
   factory WooNotification.fake() => WooNotification(
         id: FakeHelper.integer(),
         title: FakeHelper.word(),
@@ -58,4 +35,60 @@ class WooNotification {
         isRead: FakeHelper.boolean(),
         createdAt: FakeHelper.datetime(),
       );
+  final int? id;
+  final String? title;
+  final String? body;
+  final int? objectId;
+  final WooNotificationObjectType? objectType;
+  final bool? isRead;
+  final DateTime? createdAt;
+  Map<String, dynamic> toJson() => <String, dynamic>{}
+    ..putIfPresent('id', id)
+    ..putIfPresent('title', title)
+    ..putIfPresent('body', body)
+    ..putIfPresent('object_id', objectId)
+    ..putEnum('object_type', objectType)
+    ..putIfPresent('is_read', isRead)
+    ..putDate('created_at', createdAt);
+  WooNotification copyWith({
+    int? id,
+    String? title,
+    String? body,
+    int? objectId,
+    WooNotificationObjectType? objectType,
+    bool? isRead,
+    DateTime? createdAt,
+  }) =>
+      WooNotification(
+        id: id ?? this.id,
+        title: title ?? this.title,
+        body: body ?? this.body,
+        objectId: objectId ?? this.objectId,
+        objectType: objectType ?? this.objectType,
+        isRead: isRead ?? this.isRead,
+        createdAt: createdAt ?? this.createdAt,
+      );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is WooNotification &&
+          other.id == id &&
+          other.title == title &&
+          other.body == body &&
+          other.objectId == objectId &&
+          other.objectType == objectType &&
+          other.isRead == isRead &&
+          other.createdAt == createdAt;
+  @override
+  int get hashCode => Object.hashAll([
+        id,
+        title,
+        body,
+        objectId,
+        objectType,
+        isRead,
+        createdAt,
+      ]);
+  @override
+  String toString() => 'WooNotification(id: $id, title: $title)';
 }

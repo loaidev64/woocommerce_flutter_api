@@ -1,11 +1,7 @@
-import 'package:woocommerce_flutter_api/woocommerce_flutter_api.dart';
+import '../../helpers/fake_helper.dart';
+import '../../json/woo_json.dart';
 
-/// Represents an order note in a WooCommerce order.
-///
-/// Contains note information, author details, and visibility settings for notes
-/// added to an order. Used for order communication and tracking.
 class WooOrderNote {
-  /// Creates a new WooOrderNote instance.
   WooOrderNote({
     required this.note,
     this.id,
@@ -15,18 +11,15 @@ class WooOrderNote {
     this.customerNote = false,
     this.addedByUser = false,
   });
-
-  /// Creates a WooOrderNote instance from JSON data.
-  WooOrderNote.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    author = json['author'];
-    dateCreated = DateTime.tryParse(json['date_created']);
-    dateCreatedGmt = DateTime.tryParse(json['date_created_gmt']);
-    note = json['note'];
-    customerNote = json['customer_note'];
-    addedByUser = json['added_by_user'];
-  }
-
+  factory WooOrderNote.fromJson(Map<String, dynamic> json) => WooOrderNote(
+        note: WooJson.readString(json, 'note'),
+        id: WooJson.readInt(json, 'id'),
+        author: WooJson.readString(json, 'author'),
+        dateCreated: WooJson.readDate(json, 'date_created'),
+        dateCreatedGmt: WooJson.readDate(json, 'date_created_gmt'),
+        customerNote: WooJson.readBool(json, 'customer_note'),
+        addedByUser: WooJson.readBool(json, 'added_by_user'),
+      );
   factory WooOrderNote.fake() => WooOrderNote(
         id: FakeHelper.integer(),
         author: FakeHelper.firstName(),
@@ -36,55 +29,63 @@ class WooOrderNote {
         customerNote: FakeHelper.boolean(),
         addedByUser: FakeHelper.boolean(),
       );
-
-  /// Unique identifier for the order note.
-  int? id;
-
-  /// Author of the order note.
-  String? author;
-
-  /// Date when the note was created (local time).
-  DateTime? dateCreated;
-
-  /// Date when the note was created (GMT).
-  DateTime? dateCreatedGmt;
-
-  /// Content of the order note.
-  String? note;
-
-  /// Whether the note is visible to customers.
-  bool? customerNote;
-
-  /// Whether the note was added by a user.
-  bool? addedByUser;
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['id'] = id;
-    data['author'] = author;
-    data['date_created'] = dateCreated?.toIso8601String();
-    data['date_created_gmt'] = dateCreatedGmt?.toIso8601String();
-    data['note'] = note;
-    data['customer_note'] = customerNote;
-    data['added_by_user'] = addedByUser;
-    return data;
-  }
-
-  /// Returns a string representation of the WooOrderNote instance.
-  ///
-  /// Displays all main fields for debugging and logging purposes.
+  final int? id;
+  final String? author;
+  final DateTime? dateCreated;
+  final DateTime? dateCreatedGmt;
+  final String? note;
+  final bool? customerNote;
+  final bool? addedByUser;
+  Map<String, dynamic> toJson() => <String, dynamic>{}
+    ..putIfPresent('id', id)
+    ..putIfPresent('author', author)
+    ..putDate('date_created', dateCreated)
+    ..putDate('date_created_gmt', dateCreatedGmt)
+    ..putIfPresent('note', note)
+    ..putIfPresent('customer_note', customerNote)
+    ..putIfPresent('added_by_user', addedByUser);
+  WooOrderNote copyWith({
+    String? note,
+    int? id,
+    String? author,
+    DateTime? dateCreated,
+    DateTime? dateCreatedGmt,
+    bool? customerNote,
+    bool? addedByUser,
+  }) =>
+      WooOrderNote(
+        note: note ?? this.note,
+        id: id ?? this.id,
+        author: author ?? this.author,
+        dateCreated: dateCreated ?? this.dateCreated,
+        dateCreatedGmt: dateCreatedGmt ?? this.dateCreatedGmt,
+        customerNote: customerNote ?? this.customerNote,
+        addedByUser: addedByUser ?? this.addedByUser,
+      );
   @override
   String toString() {
     return 'WooOrderNote(id: $id, author: $author, note: $note, customerNote: $customerNote)';
   }
 
   @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-
-    return other is WooOrderNote && other.id == id;
-  }
-
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is WooOrderNote &&
+          other.id == id &&
+          other.author == author &&
+          other.dateCreated == dateCreated &&
+          other.dateCreatedGmt == dateCreatedGmt &&
+          other.note == note &&
+          other.customerNote == customerNote &&
+          other.addedByUser == addedByUser;
   @override
-  int get hashCode => id.hashCode;
+  int get hashCode => Object.hashAll([
+        id,
+        author,
+        dateCreated,
+        dateCreatedGmt,
+        note,
+        customerNote,
+        addedByUser,
+      ]);
 }

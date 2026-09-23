@@ -1,5 +1,6 @@
-import 'package:faker/faker.dart';
-import 'package:woocommerce_flutter_api/woocommerce_flutter_api.dart';
+import '../../helpers/fake_helper.dart';
+import '../../json/woo_json.dart';
+import '../../product/models/product_image.dart';
 
 class WooCartItem {
   WooCartItem({
@@ -14,86 +15,103 @@ class WooCartItem {
     this.linePrice,
     this.variations,
   });
-
-  WooCartItem.fromJson(Map<String, dynamic> json) {
-    key = json['key'];
-    id = json['id'];
-    quantity = json['quantity'];
-    name = json['name'];
-    sku = json['sku'];
-    permalink = json['permalink'];
-    if (json['images'] != null) {
-      images = <WooProductImage>[];
-      json['images'].forEach((v) {
-        images!.add(WooProductImage.fromJson(v));
-      });
-    }
-    price = double.tryParse(json['price']);
-    linePrice = double.tryParse(json['line_price']);
-    if (json['variation'] != null) {
-      variations = <int>[];
-      json['variation'].forEach((v) {
-        variations!.add(v);
-      });
-    }
-  }
-
+  factory WooCartItem.fromJson(Map<String, dynamic> json) => WooCartItem(
+        key: WooJson.readString(json, 'key'),
+        id: WooJson.readInt(json, 'id'),
+        quantity: WooJson.readInt(json, 'quantity'),
+        name: WooJson.readString(json, 'name'),
+        sku: WooJson.readString(json, 'sku'),
+        permalink: WooJson.readString(json, 'permalink'),
+        images: WooJson.readList(json, 'images', WooProductImage.fromJson),
+        price: WooJson.readDouble(json, 'price'),
+        linePrice: WooJson.readDouble(json, 'line_price'),
+        variations: WooJson.readIntList(json, 'variation'),
+      );
   factory WooCartItem.fake() => WooCartItem(
         id: FakeHelper.integer(),
-        key: Faker().guid.guid(),
+        key: FakeHelper.word(),
         name: FakeHelper.word(),
         permalink: FakeHelper.url(),
         price: FakeHelper.decimal(),
         quantity: FakeHelper.integer(),
-        sku: Faker().guid.guid(),
+        sku: FakeHelper.word(),
         linePrice: FakeHelper.decimal(),
         images: FakeHelper.list(() => WooProductImage.fake()),
         variations: FakeHelper.listOfIntegers(),
       );
-
-  /// Cart Item Key.
-  String? key;
-
-  /// Product ID.
-  int? id;
-
-  /// Cart Item quantity.
-  int? quantity;
-
-  /// Cart Item name.
-  String? name;
-
-  /// Unique identifier.
-  String? sku;
-
-  /// Product URL.
-  String? permalink;
-
-  /// Cart Item images.
-  List<WooProductImage>? images;
-
-  /// Cart Item price.
-  double? price;
-
-  /// Cart Item line price.
-  double? linePrice;
-
-  /// Cart Item variations.
-  List<int>? variations;
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-
-    data['key'] = key;
-    data['id'] = id;
-    data['quantity'] = quantity;
-    data['name'] = name;
-    data['sku'] = sku;
-    data['permalink'] = permalink;
-    data['price'] = price;
-    data['line_price'] = linePrice;
-    data['variation'] = variations;
-
-    return data;
-  }
+  final String? key;
+  final int? id;
+  final int? quantity;
+  final String? name;
+  final String? sku;
+  final String? permalink;
+  final List<WooProductImage>? images;
+  final double? price;
+  final double? linePrice;
+  final List<int>? variations;
+  Map<String, dynamic> toJson() => <String, dynamic>{}
+    ..putIfPresent('key', key)
+    ..putIfPresent('id', id)
+    ..putIfPresent('quantity', quantity)
+    ..putIfPresent('name', name)
+    ..putIfPresent('sku', sku)
+    ..putIfPresent('permalink', permalink)
+    ..putIfPresent('images', images?.map((image) => image.toJson()).toList())
+    ..putIfPresent('price', price)
+    ..putIfPresent('line_price', linePrice)
+    ..putIfPresent('variation', variations);
+  WooCartItem copyWith({
+    String? key,
+    int? id,
+    int? quantity,
+    String? name,
+    String? sku,
+    String? permalink,
+    List<WooProductImage>? images,
+    double? price,
+    double? linePrice,
+    List<int>? variations,
+  }) =>
+      WooCartItem(
+        key: key ?? this.key,
+        id: id ?? this.id,
+        quantity: quantity ?? this.quantity,
+        name: name ?? this.name,
+        sku: sku ?? this.sku,
+        permalink: permalink ?? this.permalink,
+        images: images ?? this.images,
+        price: price ?? this.price,
+        linePrice: linePrice ?? this.linePrice,
+        variations: variations ?? this.variations,
+      );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is WooCartItem &&
+          other.key == key &&
+          other.id == id &&
+          other.quantity == quantity &&
+          other.name == name &&
+          other.sku == sku &&
+          other.permalink == permalink &&
+          WooJson.listEquals(other.images, images) &&
+          other.price == price &&
+          other.linePrice == linePrice &&
+          WooJson.listEquals(other.variations, variations);
+  @override
+  int get hashCode => Object.hashAll([
+        key,
+        id,
+        quantity,
+        name,
+        sku,
+        permalink,
+        ...(images ?? const []),
+        price,
+        linePrice,
+        ...(variations ?? const []),
+      ]);
+  @override
+  String toString() =>
+      'WooCartItem(id: $id, quantity: $quantity, price: $price)';
 }

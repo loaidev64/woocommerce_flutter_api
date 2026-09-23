@@ -1,7 +1,7 @@
 part of 'tax_class_api.dart';
 
-abstract class _TaxRateEndpoints {
-  static String get taxeClasses => '/taxes/classes';
+abstract class _TaxClassEndpoints {
+  static String get classes => '/taxes/classes';
 
-  static String singleTaxClass(String slug) => '/taxes/classes/$slug';
+  static String singleClass(String slug) => '/taxes/classes/$slug';
 }
