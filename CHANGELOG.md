@@ -2,6 +2,15 @@
 
 All notable changes to this project are documented in this file.
 
+## 2.0.1
+
+### Fixed
+
+- **`WooProductItemAttribute.fromJson` now handles variation attributes** — the
+  WooCommerce REST API returns a single `option` field (string) for variation
+  attributes instead of `options` (array). `fromJson` now falls back to reading
+  `option` when `options` is not a list. Fixes #34.
+
 ## 2.0.0
 
 Major release with a redesigned, safer public API. See [MIGRATION.md](MIGRATION.md)

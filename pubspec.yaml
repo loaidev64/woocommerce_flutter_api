@@ -1,6 +1,6 @@
 name: woocommerce_flutter_api
 description: A typed, null-safe Flutter/Dart client for the WooCommerce REST API. Manage products, orders, customers, coupons, taxes, shipping and more with pagination, typed exceptions and fake-data mode.
-version: 2.0.0
+version: 2.0.1
 repository: https://github.com/loaidev64/woocommerce_flutter_api.git
 issue_tracker: https://github.com/loaidev64/woocommerce_flutter_api/issues
 topics:

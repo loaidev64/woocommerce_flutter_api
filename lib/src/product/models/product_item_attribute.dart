@@ -24,7 +24,9 @@ class WooProductItemAttribute {
               for (final option in rawOptions)
                 if (option != null) option.toString()
             ]
-          : null,
+          : json['option'] != null
+              ? [json['option'] as String]
+              : null,
     );
   }
   factory WooProductItemAttribute.fake() => WooProductItemAttribute(
