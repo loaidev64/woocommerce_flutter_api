@@ -1,20 +1,20 @@
 ---
 name: woocommerce-flutter-api-migration-guide
-description: Use when helping a developer migrate code from woocommerce_flutter_api v1.x to v2.x, or from v2.x to v3.x — client construction, error handling, pagination, update/delete signatures, sort enums, currencies, renamed members, unknown enum values, and the v3 Store API cart/checkout replacement for the old plugin cart. Read this skill before rewriting any older code that uses the package.
+description: Use when helping a developer migrate code from woocommerce_flutter_api v1.x to v2.x, or from v2.0.x to v2.1.x — client construction, error handling, pagination, update/delete signatures, sort enums, currencies, renamed members, unknown enum values, and the v2.1 Store API cart/checkout replacement for the old plugin cart. Read this skill before rewriting any older code that uses the package.
 ---
 
 # Migration Guide: woocommerce_flutter_api
 
 This skill covers two breaking migrations:
 
-- **v2.x → v3.0** — the old experimental plugin cart is removed and replaced
+- **v2.0.x → v2.1.0** — the old experimental plugin cart is removed and replaced
   by the public Store API cart & checkout.
 - **v1.x → v2.0** — the correctness release (parsing, enums, errors,
   pagination, signatures).
 
-## v2.x → v3.0
+## v2.0.x → v2.1.0
 
-Version 3.0 adds real cart and checkout on WooCommerce's public **Store API**
+Version 2.1 adds real cart and checkout on WooCommerce's public **Store API**
 (`/wp-json/wc/store/v1`) and removes the experimental custom-plugin cart. The
 `WooCommerce` constructor is unchanged — `baseUrl`, `consumerKey` and
 `consumerSecret` remain required — but cart and checkout calls do not send
@@ -30,13 +30,13 @@ those credentials.
 `updateCart(List<WooCartItem>)` are gone. Migrate:
 
 ```dart
-// v2 (custom plugin)
+// v2.0 (custom plugin)
 final cart = await woo.getCart();                       // WooCart
 await woo.updateCart(<WooCartItem>[                     // replace whole cart
   WooCartItem(id: 38, quantity: 2),
 ]);
 
-// v3 (public Store API)
+// v2.1 (public Store API)
 final cart = await woo.getCart();                       // WooStoreCart
 await woo.addToCart(id: 38, quantity: 2);
 await woo.updateCartItem(key: cart.items.first.key, quantity: 3);
@@ -80,7 +80,7 @@ by default. Pass a `WooCartTokenStore` to the constructor (or
 `woo.cartSession.adopt(token)` / `woo.cartSession.clear()`. Use `woo.storeDio`
 or `woo.requestStoreGet/Post/Put/Delete` for unwrapped Store API routes.
 
-### Migration checklist (v2 → v3)
+### Migration checklist (v2.0 → v2.1)
 
 1. Replace `WooCart`/`WooCartItem` with `WooStoreCart`/`WooStoreCartItem`.
 2. Replace `updateCart(List<WooCartItem>)` with `addToCart` /
@@ -247,8 +247,8 @@ and require a custom WordPress plugin. Core endpoints (products, orders,
 customers, coupons, taxes, shipping, webhooks, reports, settings, data, system
 status) are unaffected.
 
-> As of v3 the cart is no longer experimental and no longer plugin-based: it
-> uses the public Store API. See the v2.x → v3.0 guide above.
+> As of v2.1 the cart is no longer experimental and no longer plugin-based: it
+> uses the public Store API. See the v2.0.x → v2.1.0 guide above.
 
 ## 10. Custom endpoints
 

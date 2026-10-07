@@ -1,8 +1,8 @@
 # Migration Guides
 
-## v2.x → v3.0
+## v2.0.x → v2.1.0
 
-Version 3.0 adds real cart and checkout support through WooCommerce's public
+Version 2.1 adds real cart and checkout support through WooCommerce's public
 **Store API** (`/wp-json/wc/store/v1`), and removes the old experimental
 custom-plugin cart. The `WooCommerce` constructor is unchanged: `baseUrl`,
 `consumerKey` and `consumerSecret` are still required. Cart and checkout calls
@@ -19,17 +19,17 @@ a cart with a `Cart-Token` this client manages for you.
 part of a custom WordPress plugin (they called a `/cart` route with a
 `user_id`). They have been replaced by Store API models and methods:
 
-| v2 (plugin) | v3 (Store API) |
+| v2.0 (plugin) | v2.1 (Store API) |
 |---|---|
 | `getCart()` → `WooCart` | `getCart()` → `WooStoreCart` |
 | `updateCart([WooCartItem(...)])` | `addToCart`, `updateCartItem`, `removeCartItem`, `clearCart` |
 | `WooCart` / `WooCartItem` | `WooStoreCart` / `WooStoreCartItem` + totals, coupons, shipping, addresses |
 
 ```dart
-// v2 — replace the whole cart with a list
+// v2.0 — replace the whole cart with a list
 await woo.updateCart(<WooCartItem>[WooCartItem(id: 38, quantity: 2)]);
 
-// v3 — granular, and each call returns the recalculated cart
+// v2.1 — granular, and each call returns the recalculated cart
 await woo.addToCart(id: 38, quantity: 2);
 final cart = await woo.getCart();
 await woo.updateCartItem(key: cart.items.first.key, quantity: 3);
@@ -239,8 +239,8 @@ WooCommerce REST API and require a custom WordPress plugin. Core WooCommerce
 endpoints (products, orders, customers, coupons, taxes, shipping, webhooks,
 reports, settings, data, system status) are unaffected.
 
-> As of v3, the cart is no longer experimental: it is backed by the public
-> Store API. See the v2.x → v3.0 guide above.
+> As of v2.1, the cart is no longer experimental: it is backed by the public
+> Store API. See the v2.0.x → v2.1.0 guide above.
 
 ## Custom endpoints
 

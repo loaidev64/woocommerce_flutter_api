@@ -2,7 +2,11 @@
 
 All notable changes to this project are documented in this file.
 
-## 3.0.0
+## 2.1.0
+
+> **Breaking despite the minor version.** This release removes the old
+> experimental custom-plugin cart API (see *Removed* below). If you use it,
+> read [MIGRATION.md](MIGRATION.md) before upgrading.
 
 ### Added
 

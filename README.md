@@ -12,8 +12,8 @@ exceptions and a fake-data mode for development.
 > signatures, sort enums and currencies all changed, and several members were
 > renamed. Your v1 code will not compile without changes.
 
-> **Note:** v3 also adds cart & checkout on the public Store API and removes
-> the old experimental plugin cart. See the v2.x → v3.0 section in
+> **Note:** v2.1 also adds cart & checkout on the public Store API and removes
+> the old experimental plugin cart. See the v2.0.x → v2.1.0 section in
 > [MIGRATION.md](MIGRATION.md).
 
 You have two ways to migrate:
@@ -305,7 +305,7 @@ Cart and checkout are also supported through the public Store API
 
 This package ships **AI agent skills** so your coding assistant knows how to
 use it correctly — full API documentation, conventions and the migration
-guide (v1 → v2 and v2 → v3) — without guessing or hallucinating APIs.
+guide (v1 → v2 and v2.0 → v2.1) — without guessing or hallucinating APIs.
 
 The skills follow the official [Agent Skills
 specification](https://agentskills.io/specification) and are installed with
@@ -327,7 +327,7 @@ Two skills are installed:
   WooCommerce REST API docs. Activate automatically whenever you write or
   review code that uses this package.
 - **`woocommerce-flutter-api-migration-guide`** — the v1.x → v2.0 and
-  v2.x → v3.0 breaking changes with before/after examples. Activate when
+  v2.0.x → v2.1.0 breaking changes with before/after examples. Activate when
   migrating existing code.
 
 The skills work with Antigravity, Claude Code, Codex, Cursor, GitHub
