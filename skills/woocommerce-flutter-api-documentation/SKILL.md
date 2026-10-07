@@ -1,6 +1,6 @@
 ---
 name: woocommerce-flutter-api-documentation
-description: Use when writing, reviewing, or fixing code that uses the woocommerce_flutter_api package — client setup, API methods, models, enums, JSON serialization, error handling, pagination, or fake-data mode. Covers every module (products, orders, customers, coupons, taxes, shipping, webhooks, reports, settings, and more) with examples and links to the official WooCommerce REST API docs.
+description: Use when writing, reviewing, or fixing code that uses the woocommerce_flutter_api package — client setup, API methods, models, enums, JSON serialization, error handling, pagination, fake-data mode, or cart & checkout on the public Store API. Covers every module (products, orders, customers, coupons, taxes, shipping, webhooks, reports, settings, cart & checkout, and more) with examples and links to the official WooCommerce REST API docs.
 ---
 
 # WooCommerce Flutter API — Usage Guide
@@ -35,7 +35,7 @@ every class, field, method and enum (including REST API doc links):
 | `references/data.md` | Continents, countries, currencies, data index |
 | `references/report.md` | Sales reports, top sellers, totals reports |
 | `references/webhook.md` | Webhooks and deliveries |
-| `references/cart.md` | Experimental cart API |
+| `references/store.md` | Cart, shipping rates, addresses, money and checkout (public Store API) |
 | `references/notification.md` | Experimental FCM notification API |
 | `references/base.md` | `WooContext`, `WooSort`, `WooOrderBy`, `WooFilterStatus`, `WooMetaData`, `WooDeleteResult`, query classes |
 | `references/exceptions.md` | The `WooCommerceException` hierarchy |
@@ -181,13 +181,74 @@ final data = await wooCommerce.requestGet<Map<String, dynamic>>(
 );
 ```
 
+## Cart & checkout (public Store API)
+
+Cart and checkout use WooCommerce's public **Store API**
+(`/wp-json/wc/store/v1`) — **no consumer key is sent on those calls**, and the
+cart is identified by a `Cart-Token` the client captures and replays for you.
+The `WooCommerce` constructor still requires `consumerKey`/`consumerSecret`
+because the rest of the API needs them.
+
+> **Requires WooCommerce 8.0+** (the Store API came from WooCommerce Blocks
+> and was merged into core in 8.0). This is unrelated to the package version.
+
+```dart
+final cart = await woo.getCart();
+await woo.addToCart(id: 799, quantity: 2);
+await woo.addToCart(id: 815, variation: {'pa_colour': 'blue'});
+await woo.updateCartItem(key: cart.items.first.key, quantity: 3);
+await woo.removeCartItem(cart.items.first.key);
+await woo.clearCart();                    // one batch request
+await woo.applyCoupon('SAVE10');          // lowercased for the store
+await woo.updateCartCustomer(
+  shippingAddress: const WooStoreAddress(postcode: 'N1 7GU', country: 'GB'),
+);
+await woo.selectShippingRate(packageId: 0, rateId: 'flat_rate:10');
+
+final checkout = await woo.getCheckout();          // creates a draft order
+await woo.updateCheckout(paymentMethod: 'cod', orderNotes: 'Ring bell');
+final result = await woo.checkout(
+  billingAddress: address,
+  paymentMethod: 'cod',
+  expectedTotal: cart.totals.totalPrice,
+);
+await woo.checkoutAndClear(...);                   // clears the token when paid
+await woo.payOrder(result.orderId, paymentMethod: 'bacs');
+```
+
+Conventions specific to the Store API:
+
+- Every cart call returns the **whole recalculated** `WooStoreCart`; render it
+  directly.
+- Money is `WooStoreMoney` + `WooStoreCurrency`: values are integer minor
+  units (`"8256"` = `$82.56`) and `toString()` prints the store's own format.
+  Use `minorUnits` for arithmetic, never `double`.
+- Addresses are `WooStoreAddress`; only a country and postcode are needed for
+  shipping quotes.
+- `expectedTotal` makes the store refuse a moved total with
+  `WooCommerceTotalMismatchException` (which carries the refreshed cart in
+  `.cart`) instead of charging a different amount.
+- `WooStorePaymentResult.needsRedirect`/`redirectUrl` handle off-site
+  gateways; only `WooStoreCheckout.isPaid` means done.
+- Persist the basket with a `WooCartTokenStore`: the default
+  `SecureStorageWooCartTokenStore` uses `flutter_secure_storage`; use
+  `InMemoryWooCartTokenStore` for tests and pure-Dart/server use.
+  `woo.cartSession.adopt(token)` / `woo.cartSession.clear()` manage it
+  directly.
+- Escape hatches: `woo.storeDio` (credential-free) and
+  `woo.requestStoreGet/Post/Put/Delete<T>(...)` for unwrapped Store API
+  routes.
+- New exceptions: `WooCommerceTotalMismatchException` and
+  `WooCommerceCartException` (a batch reported failed entries).
+
 ## Experimental modules
 
-`login`, `register`, `forgotPassword`, `changePassword`, the cart API and
-the notification API are `@experimental`: they are NOT part of the
-WooCommerce REST API and require a custom WordPress plugin. Prefer the core
-endpoints (products, orders, customers, coupons, taxes, shipping, webhooks,
-reports, settings, data, system status) unless the app owns such a plugin.
+`login`, `register`, `forgotPassword`, `changePassword` and the notification
+API are `@experimental`: they are NOT part of the WooCommerce REST API and
+require a custom WordPress plugin. The cart is **no longer** experimental — it
+uses the public Store API. Prefer the core endpoints (products, orders,
+customers, coupons, taxes, shipping, webhooks, reports, settings, data,
+system status) unless the app owns such a plugin.
 
 ## When using a module
 

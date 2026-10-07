@@ -2,6 +2,47 @@
 
 All notable changes to this project are documented in this file.
 
+## 3.0.0
+
+### Added
+
+- **Cart and checkout on the public Store API** (`/wp-json/wc/store/v1`).
+  New flat methods on `WooCommerce`: `getCart`, `addToCart`,
+  `updateCartItem`, `removeCartItem`, `clearCart`, `applyCoupon`,
+  `removeCoupon`, `updateCartCustomer`, `selectShippingRate`, `getCheckout`,
+  `updateCheckout`, `checkout`, `payOrder` and `checkoutAndClear`. The Store
+  API is keyless and identifies a cart with a `Cart-Token`, which the client
+  captures and replays automatically. **Requires WooCommerce 8.0+.**
+- **`WooCartSession`** with a pluggable `WooCartTokenStore` — the default
+  `SecureStorageWooCartTokenStore` (via `flutter_secure_storage`) keeps a
+  basket across launches; `InMemoryWooCartTokenStore` for tests and
+  pure-Dart use.
+- **Money models** `WooStoreMoney`/`WooStoreCurrency`: amounts parse as
+  integer minor units and print in the store's own format.
+- **Store API models**: `WooStoreCart`, `WooStoreCartItem`,
+  `WooStoreCartTotals`, `WooStoreCartCoupon`, `WooStoreCartError`,
+  `WooStoreImage`, `WooStoreQuantityLimits`, `WooStoreShippingPackage`,
+  `WooStoreShippingRate`, `WooStoreAddress`, `WooStoreCheckout`,
+  `WooStorePaymentResult`, `WooStorePaymentStatus`.
+- **New exceptions**: `WooCommerceTotalMismatchException` (checkout total
+  moved; carries the refreshed cart) and `WooCommerceCartException` (a Store
+  API batch reported failed entries).
+- **Escape hatches**: `storeDio` (credential-free Dio for the Store API),
+  `storeApiPath`, and `requestStoreGet/Post/Put/Delete`.
+
+### Removed (breaking)
+
+- **The experimental custom-plugin cart API**: `getCart`/`updateCart` and the
+  `WooCart`/`WooCartItem` models are gone, replaced by the Store API above.
+  `getCart()` now returns a `WooStoreCart`; `updateCart(List<WooCartItem>)` is
+  replaced by `addToCart`/`updateCartItem`/`removeCartItem`/`clearCart`.
+
+### Changed
+
+- The `WooCommerce` constructor still requires `consumerKey`/`consumerSecret`;
+  cart and checkout calls simply do not send them. New optional constructor
+  parameters: `storeApiPath` and `cartTokenStore`.
+
 ## 2.0.1
 
 ### Fixed

@@ -20,6 +20,8 @@ Maps a `DioException` to the appropriate subclass:
   `data.details` body section).
 - 401/403 → `WooCommerceAuthException`.
 - 404 → `WooCommerceNotFoundException`.
+- 409 with code `woocommerce_rest_checkout_total_mismatch` →
+  `WooCommerceTotalMismatchException` (with `cart` from `data.cart`).
 - 429 → `WooCommerceRateLimitException` (with `retryAfterSeconds` parsed
   from the `Retry-After` header).
 - 500/502/503/504 → `WooCommerceServerException`.
@@ -92,3 +94,22 @@ returned). Thrown by API methods when the payload cannot be parsed.
 ### String? path
 
 The API path that produced the unparseable response.
+
+## class WooCommerceTotalMismatchException extends WooCommerceException
+
+409 from Store API checkout when a request carried `expectedTotal` and the
+cart total has since changed. Nothing was charged.
+
+### Map<String, dynamic>? cart
+
+The store's refreshed cart, so the new total can be shown without another
+round trip. Parse it with `WooStoreCart.fromJson`.
+
+## class WooCommerceCartException extends WooCommerceException
+
+A Store API cart batch operation reported one or more failed entries (the
+batch endpoint returns `200` with per-request statuses inside).
+
+### List<Map<String, dynamic>> failures
+
+The failed batch entries, as the store sent them.

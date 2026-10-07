@@ -1,6 +1,8 @@
 library;
+
 // ignore_for_file: avoid_print
 import 'package:woocommerce_flutter_api/woocommerce_flutter_api.dart';
+
 final _baseUrl = 'https://yourstore.com';
 final _consumerKey = 'ck_your_consumer_key';
 final _consumerSecret = 'cs_your_consumer_secret';
@@ -12,6 +14,7 @@ WooCommerce createClient({bool useFaker = true}) => WooCommerce(
 void main() {
   fakeDataExample();
 }
+
 Future<void> productsExample() async {
   final woocommerce = createClient(useFaker: false);
   final created = await woocommerce.createProduct(
@@ -36,6 +39,7 @@ Future<void> productsExample() async {
   final deleted = await woocommerce.deleteProduct(created.id!);
   print('Deleted: ${deleted.deleted}');
 }
+
 Future<void> paginationExample() async {
   final woocommerce = createClient(useFaker: false);
   var page = await woocommerce.getProducts(perPage: 20);
@@ -46,6 +50,7 @@ Future<void> paginationExample() async {
     print('Page ${page.page}: ${page.items.length} items');
   }
 }
+
 Future<void> ordersExample() async {
   final woocommerce = createClient(useFaker: false);
   final ordersPage = await woocommerce.getOrders(
@@ -67,6 +72,7 @@ Future<void> ordersExample() async {
     print('Currency (ISO code): ${completed.currency ?? WooCurrency.usd}');
   }
 }
+
 Future<void> productAttributesExample() async {
   final woocommerce = createClient(useFaker: false);
   final attribute = await woocommerce.createProductAttribute(
@@ -87,6 +93,7 @@ Future<void> productAttributesExample() async {
   final terms = await woocommerce.getProductAttributeTerms(attribute.id!);
   print('${terms.totalItems} terms on this attribute');
 }
+
 Future<void> errorHandlingExample() async {
   final woocommerce = createClient(useFaker: false);
   try {
@@ -103,8 +110,53 @@ Future<void> errorHandlingExample() async {
     print('${e.statusCode}: ${e.message}');
   }
 }
+
+Future<void> cartAndCheckoutExample() async {
+  final woocommerce = createClient(useFaker: false);
+
+  await woocommerce.addToCart(id: 799, quantity: 2);
+  await woocommerce.addToCart(
+    id: 815,
+    variation: {'pa_colour': 'blue'},
+  );
+
+  final cart = await woocommerce.getCart();
+  print('${cart.itemsCount} items — ${cart.totals.totalPrice}');
+
+  final quoted = await woocommerce.updateCartCustomer(
+    shippingAddress: const WooStoreAddress(postcode: 'N1 7GU', country: 'GB'),
+  );
+  for (final package in quoted.shippingPackages) {
+    for (final rate in package.rates) {
+      print('${rate.name} — $rate');
+    }
+  }
+
+  await woocommerce.applyCoupon('SAVE10');
+
+  final result = await woocommerce.checkoutAndClear(
+    billingAddress: const WooStoreAddress(
+      firstName: 'Ada',
+      lastName: 'Lovelace',
+      address1: '12 Analytical Way',
+      city: 'London',
+      postcode: 'N1 7GU',
+      country: 'GB',
+      email: 'ada@example.com',
+    ),
+    paymentMethod: 'cod',
+    expectedTotal: quoted.totals.totalPrice,
+  );
+
+  if (result.paymentResult.needsRedirect) {
+    print('Finish paying at ${result.paymentResult.redirectUrl}');
+  } else if (result.isPaid) {
+    print('Order ${result.orderId} placed');
+  }
+}
+
 void fakeDataExample() {
-  final woocommerce = createClient(); 
+  final woocommerce = createClient();
   final products = woocommerce.getProducts(perPage: 5);
   products.then((page) {
     for (final product in page.items) {

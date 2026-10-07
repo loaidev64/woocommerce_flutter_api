@@ -53,6 +53,22 @@ class WooCommerceException implements Exception {
           code: errorCode,
           requestId: requestId,
         );
+      case 409:
+        if (errorCode == 'woocommerce_rest_checkout_total_mismatch') {
+          return WooCommerceTotalMismatchException(
+            message: errorMessage,
+            statusCode: statusCode,
+            code: errorCode,
+            requestId: requestId,
+            cart: parsed.cart,
+          );
+        }
+        return WooCommerceException(
+          message: errorMessage,
+          statusCode: statusCode,
+          code: errorCode,
+          requestId: requestId,
+        );
       case 429:
         return WooCommerceRateLimitException(
           message: errorMessage,
@@ -169,11 +185,34 @@ class WooCommerceParseException extends WooCommerceException {
   final String? path;
 }
 
+class WooCommerceTotalMismatchException extends WooCommerceException {
+  WooCommerceTotalMismatchException({
+    required super.message,
+    required super.statusCode,
+    required super.code,
+    required super.requestId,
+    this.cart,
+  });
+  final Map<String, dynamic>? cart;
+}
+
+class WooCommerceCartException extends WooCommerceException {
+  WooCommerceCartException({
+    required super.message,
+    super.statusCode,
+    super.code,
+    super.requestId,
+    this.failures = const [],
+  });
+  final List<Map<String, dynamic>> failures;
+}
+
 class _ParsedError {
   const _ParsedError({
     this.code,
     this.message,
     this.fieldErrors = const {},
+    this.cart,
   });
   factory _ParsedError.from(Map<String, dynamic> body) {
     final data = body['data'];
@@ -182,10 +221,14 @@ class _ParsedError {
       code: body['code'] is String ? body['code'] as String : null,
       message: body['message'] is String ? body['message'] as String : null,
       fieldErrors: details is Map<String, dynamic> ? details : const {},
+      cart: data is Map<String, dynamic> && data['cart'] is Map<String, dynamic>
+          ? data['cart'] as Map<String, dynamic>
+          : null,
     );
   }
   static const empty = _ParsedError();
   final String? code;
   final String? message;
   final Map<String, dynamic> fieldErrors;
+  final Map<String, dynamic>? cart;
 }

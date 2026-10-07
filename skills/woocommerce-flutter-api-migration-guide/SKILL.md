@@ -1,9 +1,97 @@
 ---
 name: woocommerce-flutter-api-migration-guide
-description: Use when helping a developer migrate code from woocommerce_flutter_api v1.x to v2.x — client construction, error handling, pagination, update/delete signatures, sort enums, currencies, renamed members, and unknown enum values. Read this skill before rewriting any v1 code that uses the package.
+description: Use when helping a developer migrate code from woocommerce_flutter_api v1.x to v2.x, or from v2.x to v3.x — client construction, error handling, pagination, update/delete signatures, sort enums, currencies, renamed members, unknown enum values, and the v3 Store API cart/checkout replacement for the old plugin cart. Read this skill before rewriting any older code that uses the package.
 ---
 
-# Migration Guide: woocommerce_flutter_api v1.x → v2.0
+# Migration Guide: woocommerce_flutter_api
+
+This skill covers two breaking migrations:
+
+- **v2.x → v3.0** — the old experimental plugin cart is removed and replaced
+  by the public Store API cart & checkout.
+- **v1.x → v2.0** — the correctness release (parsing, enums, errors,
+  pagination, signatures).
+
+## v2.x → v3.0
+
+Version 3.0 adds real cart and checkout on WooCommerce's public **Store API**
+(`/wp-json/wc/store/v1`) and removes the experimental custom-plugin cart. The
+`WooCommerce` constructor is unchanged — `baseUrl`, `consumerKey` and
+`consumerSecret` remain required — but cart and checkout calls do not send
+those credentials.
+
+> **Requires WooCommerce 8.0+** (the Store API came from WooCommerce Blocks
+> and was merged into core in 8.0). Older stores need the WooCommerce Blocks
+> plugin. Unrelated to the package version.
+
+### Removed: the plugin cart API
+
+`WooCart`, `WooCartItem`, `getCart()` (old shape) and
+`updateCart(List<WooCartItem>)` are gone. Migrate:
+
+```dart
+// v2 (custom plugin)
+final cart = await woo.getCart();                       // WooCart
+await woo.updateCart(<WooCartItem>[                     // replace whole cart
+  WooCartItem(id: 38, quantity: 2),
+]);
+
+// v3 (public Store API)
+final cart = await woo.getCart();                       // WooStoreCart
+await woo.addToCart(id: 38, quantity: 2);
+await woo.updateCartItem(key: cart.items.first.key, quantity: 3);
+await woo.removeCartItem(cart.items.first.key);
+await woo.clearCart();
+```
+
+### Added: cart, shipping, coupons, addresses
+
+`addToCart`, `updateCartItem`, `removeCartItem`, `clearCart`, `applyCoupon`,
+`removeCoupon`, `updateCartCustomer`, `selectShippingRate`. Every call returns
+the recalculated `WooStoreCart`.
+
+```dart
+await woo.addToCart(id: 815, variation: {'pa_colour': 'blue'});
+await woo.updateCartCustomer(
+  shippingAddress: const WooStoreAddress(postcode: 'N1 7GU', country: 'GB'),
+);
+await woo.selectShippingRate(packageId: 0, rateId: 'flat_rate:10');
+```
+
+### Added: money
+
+Store API amounts are integer minor units with store formatting, modelled by
+`WooStoreMoney`/`WooStoreCurrency`. `toString()` prints the store's format;
+sum `minorUnits`, never `amount`.
+
+### Added: checkout
+
+`getCheckout`, `updateCheckout`, `checkout`, `payOrder`, `checkoutAndClear`.
+Pass `expectedTotal`; a moved total throws
+`WooCommerceTotalMismatchException` (carries the refreshed cart). Check
+`WooStorePaymentResult.needsRedirect` for off-site gateways; only `isPaid`
+means done.
+
+### Added: cart token persistence
+
+The basket is identified by a `Cart-Token`, stored in `flutter_secure_storage`
+by default. Pass a `WooCartTokenStore` to the constructor (or
+`InMemoryWooCartTokenStore` for pure-Dart use); manage it with
+`woo.cartSession.adopt(token)` / `woo.cartSession.clear()`. Use `woo.storeDio`
+or `woo.requestStoreGet/Post/Put/Delete` for unwrapped Store API routes.
+
+### Migration checklist (v2 → v3)
+
+1. Replace `WooCart`/`WooCartItem` with `WooStoreCart`/`WooStoreCartItem`.
+2. Replace `updateCart(List<WooCartItem>)` with `addToCart` /
+   `updateCartItem` / `removeCartItem` / `clearCart`.
+3. Add a `WooCartTokenStore` if the basket must survive restarts.
+4. Handle `WooCommerceTotalMismatchException` around checkout.
+5. Confirm the store runs WooCommerce 8.0+.
+
+---
+
+# Migration Guide: v1.x → v2.0
 
 Version 2.0 is a breaking release focused on correctness: safe JSON parsing,
 real enum round-trips, typed errors, pagination metadata and consistent
@@ -153,11 +241,14 @@ if (order.status == WooOrderStatus.unknown) {
 
 ## 9. Experimental modules
 
-`login`/`register`/`forgotPassword`/`changePassword`, the cart API, the
-notification API and `LocalStorageHelper` are `@experimental`: not part of
-the WooCommerce REST API and require a custom WordPress plugin. Core
-endpoints (products, orders, customers, coupons, taxes, shipping, webhooks,
-reports, settings, data, system status) are unaffected.
+`login`/`register`/`forgotPassword`/`changePassword`, the notification API and
+`LocalStorageHelper` are `@experimental`: not part of the WooCommerce REST API
+and require a custom WordPress plugin. Core endpoints (products, orders,
+customers, coupons, taxes, shipping, webhooks, reports, settings, data, system
+status) are unaffected.
+
+> As of v3 the cart is no longer experimental and no longer plugin-based: it
+> uses the public Store API. See the v2.x → v3.0 guide above.
 
 ## 10. Custom endpoints
 

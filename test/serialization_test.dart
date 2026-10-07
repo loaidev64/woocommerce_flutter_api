@@ -1,5 +1,6 @@
 import 'package:test/test.dart';
 import 'package:woocommerce_flutter_api/woocommerce_flutter_api.dart';
+
 void main() {
   group('model round-trips (real WooCommerce v3 payloads)', () {
     test('WooProduct', () {

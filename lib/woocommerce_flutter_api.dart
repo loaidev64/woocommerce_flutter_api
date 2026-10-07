@@ -1,4 +1,5 @@
 library;
+
 export 'src/woocommerce_flutter_api_base.dart';
 export 'src/base/base.dart';
 export 'src/exceptions/woocommerce_exception.dart';
@@ -44,8 +45,9 @@ export 'src/webhook/models/models.dart';
 export 'src/notification/api/notification_api.dart';
 export 'src/notification/enums/enums.dart';
 export 'src/notification/models/models.dart';
-export 'src/cart/api/cart_api.dart';
-export 'src/cart/models/models.dart';
+export 'src/store/api/api.dart';
+export 'src/store/models/models.dart';
+export 'src/store/session.dart';
 export 'src/report/api/report_api.dart';
 export 'src/report/enums/enums.dart';
 export 'src/report/models/models.dart';

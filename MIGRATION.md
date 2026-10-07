@@ -1,3 +1,108 @@
+# Migration Guides
+
+## v2.x → v3.0
+
+Version 3.0 adds real cart and checkout support through WooCommerce's public
+**Store API** (`/wp-json/wc/store/v1`), and removes the old experimental
+custom-plugin cart. The `WooCommerce` constructor is unchanged: `baseUrl`,
+`consumerKey` and `consumerSecret` are still required. Cart and checkout calls
+simply do not send those credentials — the Store API is keyless and identifies
+a cart with a `Cart-Token` this client manages for you.
+
+> **Requires WooCommerce 8.0+.** The Store API shipped with WooCommerce Blocks
+> and was merged into core in 8.0. Older stores need the WooCommerce Blocks
+> plugin. Note that this is unrelated to the version of this package.
+
+### The old plugin cart is gone
+
+`WooCart`, `WooCartItem`, `getCart()` and `updateCart(List<WooCartItem>)` were
+part of a custom WordPress plugin (they called a `/cart` route with a
+`user_id`). They have been replaced by Store API models and methods:
+
+| v2 (plugin) | v3 (Store API) |
+|---|---|
+| `getCart()` → `WooCart` | `getCart()` → `WooStoreCart` |
+| `updateCart([WooCartItem(...)])` | `addToCart`, `updateCartItem`, `removeCartItem`, `clearCart` |
+| `WooCart` / `WooCartItem` | `WooStoreCart` / `WooStoreCartItem` + totals, coupons, shipping, addresses |
+
+```dart
+// v2 — replace the whole cart with a list
+await woo.updateCart(<WooCartItem>[WooCartItem(id: 38, quantity: 2)]);
+
+// v3 — granular, and each call returns the recalculated cart
+await woo.addToCart(id: 38, quantity: 2);
+final cart = await woo.getCart();
+await woo.updateCartItem(key: cart.items.first.key, quantity: 3);
+await woo.removeCartItem(cart.items.first.key);
+await woo.clearCart();
+```
+
+### Cart, coupons, shipping and addresses
+
+```dart
+final cart = await woo.getCart();
+
+await woo.addToCart(id: 815, variation: {'pa_colour': 'blue'});
+await woo.updateCartCustomer(
+  shippingAddress: const WooStoreAddress(postcode: 'N1 7GU', country: 'GB'),
+);
+for (final package in cart.shippingPackages) {
+  for (final rate in package.rates) {
+    print('${rate.name} — $rate');
+  }
+}
+await woo.selectShippingRate(packageId: 0, rateId: 'flat_rate:10');
+await woo.applyCoupon('SAVE10');
+```
+
+### Money
+
+Store API amounts arrive as integer minor units (`"8256"` = `$82.56`) with the
+store's own formatting. They are modelled by `WooStoreMoney` /
+`WooStoreCurrency`; `toString()` prints what the store would print.
+
+```dart
+print(cart.totals.totalPrice);        // $82.56
+cart.totals.totalPrice.minorUnits;    // 8256
+```
+
+### Checkout
+
+```dart
+final result = await woo.checkout(
+  billingAddress: address,
+  paymentMethod: 'cod',
+  expectedTotal: cart.totals.totalPrice,
+);
+
+if (result.paymentResult.needsRedirect) {
+  // PayPal and friends finish off-site
+} else if (result.isPaid) {
+  // done
+}
+```
+
+Pass `expectedTotal` and the store refuses a moved total with
+`WooCommerceTotalMismatchException` (carrying the refreshed cart) instead of
+charging a different amount. `checkoutAndClear` forgets the basket only when
+the payment went through.
+
+### Keeping the basket
+
+The cart is identified by a `Cart-Token`. It lives in
+`flutter_secure_storage` by default; pass your own `WooCartTokenStore` to the
+constructor (or `InMemoryWooCartTokenStore` for pure-Dart use) to control it.
+Use `woo.cartSession.adopt(token)` / `woo.cartSession.clear()`, and
+`woo.storeDio` / `woo.requestStoreGet<...>` for Store API routes this package
+does not wrap.
+
+### New exceptions
+
+- `WooCommerceTotalMismatchException` — checkout total moved; exposes `cart`.
+- `WooCommerceCartException` — a Store API batch reported failed entries.
+
+---
+
 # Migration Guide: v1.x → v2.0
 
 Version 2.0 is a breaking release focused on correctness: safe JSON parsing,
@@ -128,11 +233,14 @@ Custom/plugin values (e.g. a custom order status) now map to the enum's
 
 ## Experimental modules
 
-`login`/`register`/`forgotPassword`/`changePassword`, the cart API, the
-notification API and `LocalStorageHelper` are marked `@experimental`: they are
-not part of the WooCommerce REST API and require a custom WordPress plugin.
-Core WooCommerce endpoints (products, orders, customers, coupons, taxes,
-shipping, webhooks, reports, settings, data, system status) are unaffected.
+`login`/`register`/`forgotPassword`/`changePassword`, the notification API and
+`LocalStorageHelper` are marked `@experimental`: they are not part of the
+WooCommerce REST API and require a custom WordPress plugin. Core WooCommerce
+endpoints (products, orders, customers, coupons, taxes, shipping, webhooks,
+reports, settings, data, system status) are unaffected.
+
+> As of v3, the cart is no longer experimental: it is backed by the public
+> Store API. See the v2.x → v3.0 guide above.
 
 ## Custom endpoints
 

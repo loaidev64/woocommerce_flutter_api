@@ -69,4 +69,34 @@ void main() {
     expect(woo.isDebug, isFalse);
     expect(woo.dio.interceptors.whereType<WooLogInterceptor>(), isEmpty);
   });
+
+  test('package barrel exposes the Store API cart & checkout surface', () {
+    final woo = WooCommerce(
+      baseUrl: 'https://store.test',
+      consumerKey: 'ck',
+      consumerSecret: 'cs',
+      cartTokenStore: InMemoryWooCartTokenStore(),
+    );
+    expect(woo.storeApiPath, '/wp-json/wc/store/v1');
+    expect(
+        woo.storeDio.options.baseUrl, 'https://store.test/wp-json/wc/store/v1');
+    expect(woo.storeDio.options.headers.containsKey('Authorization'), isFalse);
+    expect(woo.cartSession, isA<WooCartSession>());
+
+    final cart = WooStoreCart.fromJson(<String, dynamic>{
+      'items': <Object?>[],
+      'totals': <String, dynamic>{
+        'currency_code': 'USD',
+        'currency_minor_unit': 2,
+        'currency_prefix': r'$',
+        'total_price': '8256',
+      },
+    });
+    expect(cart.totals.totalPrice.toString(), r'$82.56');
+    expect(const WooStoreAddress(country: 'GB').country, 'GB');
+    expect(
+      const WooStoreMoney(1800, WooStoreCurrency()).amount,
+      18,
+    );
+  });
 }

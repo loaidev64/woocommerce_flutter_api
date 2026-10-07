@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:test/test.dart';
 import 'package:woocommerce_flutter_api/woocommerce_flutter_api.dart';
+
 class _FakeStoreInterceptor extends Interceptor {
   _FakeStoreInterceptor({this.error});
   final DioException? error;
@@ -41,6 +42,7 @@ class _FakeStoreInterceptor extends Interceptor {
     );
   }
 }
+
 WooCommerce _client(List<Interceptor> interceptors) => WooCommerce(
       baseUrl: 'https://store.test',
       consumerKey: 'ck_test',

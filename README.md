@@ -12,6 +12,10 @@ exceptions and a fake-data mode for development.
 > signatures, sort enums and currencies all changed, and several members were
 > renamed. Your v1 code will not compile without changes.
 
+> **Note:** v3 also adds cart & checkout on the public Store API and removes
+> the old experimental plugin cart. See the v2.x → v3.0 section in
+> [MIGRATION.md](MIGRATION.md).
+
 You have two ways to migrate:
 
 1. **Read [MIGRATION.md](MIGRATION.md)** — the complete list of breaking
@@ -41,6 +45,10 @@ You have two ways to migrate:
   development and tests without touching a real store.
 - **Debug logging that can't leak secrets** — credentials are never logged.
 - **Web support** — no `dart:io` anywhere in the core client.
+- **Cart & checkout** — add to cart and place orders through the public
+  **Store API** (no consumer key is sent), with `Cart-Token` sessions,
+  coupons, shipping rates and money printed in the store's own format.
+  Requires WooCommerce 8.0+.
 
 ## Installation
 
@@ -187,13 +195,89 @@ Or use the raw [dio] instance for full control:
 final response = await woocommerce.dio.get('/custom-endpoint');
 ```
 
+### Cart and checkout (Store API)
+
+> **Requires WooCommerce 8.0+.** Cart and checkout use WooCommerce's public
+> [Store API](https://developer.woocommerce.com/docs/apis/store-api/) at
+> `/wp-json/wc/store/v1`. It shipped with WooCommerce Blocks and was merged
+> into core in 8.0; older stores need the WooCommerce Blocks plugin.
+
+The client's constructor still requires your consumer key and secret (the rest
+of the API needs them), but cart and checkout calls **do not send them** — the
+Store API is public and identifies a cart with a `Cart-Token` this client
+captures and replays for you.
+
+```dart
+final woo = WooCommerce(
+  baseUrl: 'https://yourstore.com',
+  consumerKey: 'ck_...',
+  consumerSecret: 'cs_...',
+  // cartTokenStore: SecureStorageWooCartTokenStore(), // default
+);
+
+final cart = await woo.getCart();
+await woo.addToCart(id: 799, quantity: 2);
+await woo.addToCart(
+  id: 815,
+  variation: {'pa_colour': 'blue'}, // the variation's id
+);
+
+// A country and postcode are enough to quote shipping.
+final quoted = await woo.updateCartCustomer(
+  shippingAddress: const WooStoreAddress(postcode: 'N1 7GU', country: 'GB'),
+);
+for (final package in quoted.shippingPackages) {
+  for (final rate in package.rates) {
+    print('${rate.name} — $rate'); // money prints like the store does
+  }
+}
+
+await woo.applyCoupon('SAVE10');
+
+// Checkout
+final address = WooStoreAddress(
+  firstName: 'Ada',
+  lastName: 'Lovelace',
+  address1: '12 Analytical Way',
+  city: 'London',
+  postcode: 'N1 7GU',
+  country: 'GB',
+  email: 'ada@example.com',
+);
+final result = await woo.checkout(
+  billingAddress: address,
+  paymentMethod: 'cod',
+  expectedTotal: quoted.totals.totalPrice,
+);
+
+if (result.paymentResult.needsRedirect) {
+  // PayPal and friends finish off-site.
+  await launchUrl(Uri.parse(result.paymentResult.redirectUrl));
+} else if (result.isPaid) {
+  print('Order ${result.orderId} placed');
+}
+```
+
+Every cart call returns the whole recalculated cart. Money is modelled by
+`WooStoreMoney`/`WooStoreCurrency`, so `toString()` gives the store's own
+format (`$82.56`). Pass `expectedTotal` to `checkout` and the store refuses a
+total that moved with `WooCommerceTotalMismatchException` (which carries the
+refreshed cart) instead of charging a different amount. `checkoutAndClear`
+forgets the basket only when the payment went through.
+
+To keep a shopper's basket across app launches, pass a `WooCartTokenStore`
+(the default uses `flutter_secure_storage`; use `InMemoryWooCartTokenStore`
+for pure-Dart/server use). `woo.cartSession.adopt(token)` and
+`woo.cartSession.clear()` manage it directly. For Store API routes this
+package does not wrap, use `woo.requestStoreGet<Map<String, dynamic>>(...)` or
+the credential-free `woo.storeDio`.
+
 ### Experimental modules (require a custom WordPress plugin)
 
 The following are **not** part of the WooCommerce REST API. They target a
 custom WordPress plugin and are marked `@experimental`:
 
 - `login`, `register`, `forgotPassword`, `changePassword`
-- the cart API (`getCart`, `updateCart`)
 - the notification API (`getNotifications`, FCM registration)
 
 ```dart
@@ -204,7 +288,6 @@ final woo = WooCommerce(
 );
 
 // Requires the custom plugin:
-final cart = await woo.getCart();
 final notifications = await woo.getNotifications();
 ```
 
@@ -215,12 +298,14 @@ product categories, tags, shipping classes, reviews, orders (+ notes,
 refunds), customers, coupons, taxes (rates and classes), shipping zones and
 methods, payment gateways, settings, system status (+ tools), data
 (continents, countries, currencies), reports, webhooks (+ deliveries).
+Cart and checkout are also supported through the public Store API
+(WooCommerce 8.0+).
 
 ## AI skills for your coding assistant
 
 This package ships **AI agent skills** so your coding assistant knows how to
-use it correctly — full API documentation, conventions and the v1 → v2
-migration guide — without guessing or hallucinating APIs.
+use it correctly — full API documentation, conventions and the migration
+guide (v1 → v2 and v2 → v3) — without guessing or hallucinating APIs.
 
 The skills follow the official [Agent Skills
 specification](https://agentskills.io/specification) and are installed with
@@ -241,8 +326,9 @@ Two skills are installed:
   webhooks, reports, settings, …) with examples and links to the official
   WooCommerce REST API docs. Activate automatically whenever you write or
   review code that uses this package.
-- **`woocommerce-flutter-api-migration-guide`** — the v1.x → v2.0 breaking
-  changes with before/after examples. Activate when migrating existing code.
+- **`woocommerce-flutter-api-migration-guide`** — the v1.x → v2.0 and
+  v2.x → v3.0 breaking changes with before/after examples. Activate when
+  migrating existing code.
 
 The skills work with Antigravity, Claude Code, Codex, Cursor, GitHub
 Copilot and OpenCode.
@@ -253,6 +339,7 @@ Copilot and OpenCode.
 - [x] Typed errors and pagination metadata
 - [x] Product attributes & terms CRUD
 - [x] Webhook deliveries
+- [x] Cart & checkout via the public Store API
 - [ ] WooCommerce v4 (beta) resource coverage
 - [ ] Downloadable product / customer download flow helpers
 
